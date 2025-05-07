@@ -78,8 +78,6 @@ class Pregame:
         # pandas will find the first <table> and return it as a DataFrame
         df = pd.read_html(StringIO(resp.text))[0]
         # the “Team” column holds exactly what you want:
-        print(df["Team"].tolist())
-        input()
         return df["Team"].tolist()
     
     def map_team_name(self, espn_name: str) -> str:
