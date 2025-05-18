@@ -97,9 +97,18 @@ class Prediction(Base):
     team2_predicted       = Column(Integer, nullable=False)
     model_name            = Column(String,  nullable=False)
 
+class ProcessStatus(Base):
+    """
+    Tracks whether we've run pre- and post-processing for each sport/date.
+    """
+    __tablename__ = 'process_status'
+    sport         = Column(Enum(SportEnum), primary_key=True)
+    date          = Column(Date,            primary_key=True)
+    preprocessed  = Column(Boolean, default=False, nullable=False)
+    postprocessed = Column(Boolean, default=False, nullable=False)
 
 def main():
-    engine = create_engine('sqlite:///sports_test.db', echo=False)
+    engine = create_engine('sqlite:///sports.db', echo=False)
     Base.metadata.create_all(engine)
     print("✅ Created/updated sports.db with tables: team_name_map, games, predictions")
 
