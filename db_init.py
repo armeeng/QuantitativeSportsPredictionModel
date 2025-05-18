@@ -41,6 +41,9 @@ class Game(Base):
     # ESPN IDs can be non-numeric or have leading zeros
     game_id               = Column(String,  primary_key=True)
     date                  = Column(Date,    nullable=False)
+    days_since_epoch      = Column(Integer, nullable=False)
+    day_of_the_week       = Column(Integer, nullable=False)
+    game_time             = Column(String,  nullable=False)
     sport                 = Column(Enum(SportEnum), nullable=False)
 
     # teams
@@ -57,6 +60,7 @@ class Game(Base):
     team2_logo            = Column(String,  nullable=True)
 
     # location
+    venue_id              = Column(String,  nullable=True)
     city                  = Column(String,  nullable=True)
     state                 = Column(String,  nullable=True)
     country               = Column(String,  nullable=True)
@@ -69,6 +73,7 @@ class Game(Base):
     # your combined JSON blob (team/player/weather/misc)
     stats                 = Column(JSON,    nullable=False)
     normalized_stats      = Column(JSON,    nullable=False)
+
     # pre-game odds
     team1_moneyline       = Column(Float,   nullable=True)
     team2_moneyline       = Column(Float,   nullable=True)

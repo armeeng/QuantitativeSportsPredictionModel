@@ -5,7 +5,7 @@
 # final scores = ESPN API
 
 import requests
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from bs4 import BeautifulSoup
 import difflib
 import sqlite3
@@ -14,6 +14,7 @@ from io import StringIO
 import logging
 import re
 from urllib.parse import urlparse
+import json
 
 class Pregame:
 
@@ -43,7 +44,156 @@ class Pregame:
 
     # MAIN METHOD TO BE CALLED
     def populate_pregame_data(self):
-        pass
+        """
+        For each game on self.date/self.sport:
+          - Fetch team1/team2 raw & normalized stats
+          - Fetch odds & weather
+          - Build two JSON blobs (raw_stats, normalized_stats)
+          - INSERT OR REPLACE into games table
+        """
+        games = self.get_games_for_date()
+        inserted = 0
+
+        for g in games:
+            # -- validate/convert venue_id --
+            vid = g.get("venue_id")
+            if vid is not None:
+                try:
+                    venue_int = int(vid)
+                except (TypeError, ValueError):
+                    logging.error(f"Bad venue_id {vid!r}, skipping game {g['id']}")
+                    continue
+            else:
+                venue_int = None
+
+            # -- pull team stats --
+            t1 = self.get_team_stats(g["team1_name"])
+            t2 = self.get_team_stats(g["team2_name"])
+            if t1 is None or t2 is None:
+                logging.error(f"Could not fetch stats for {g['team1_name']} or {g['team2_name']}, skipping")
+                continue
+
+            # split out raw vs normalized
+            raw_t1 = {slug: info["raw"] for slug, info in t1.items()}
+            raw_t2 = {slug: info["raw"] for slug, info in t2.items()}
+            norm_t1 = {slug: info["normalized"] for slug, info in t1.items()}
+            norm_t2 = {slug: info["normalized"] for slug, info in t2.items()}
+
+            # -- fetch weather --
+            weather = self.get_weather_info(
+                time_iso=g["game_time"] + "Z",
+                city=g["city"],
+                state=g["state"],
+                country=g["country"]
+            )
+
+            # -- fetch odds --
+            odds = self.get_betting_odds(g["id"])
+
+            # -- compute date parts & day-of-week & float time --
+            dt = datetime.fromisoformat(g["date"].replace("Z", "+00:00"))
+            day, month, year = dt.day, dt.month, dt.year
+            dow = g["day_of_the_week"]  # Monday=0…Sunday=6
+            time_float = dt.hour + dt.minute/60 + dt.second/3600
+
+            # -- assemble JSON blobs --
+            stats_blob = {
+                "day": day,
+                "month": month,
+                "year": year,
+                "days_since_epoch": g["days_since_epoch"],
+                "game_time": time_float,
+                "day_of_week": dow,
+                "team1_id": g["team1_id"],
+                "team2_id": g["team2_id"],
+                "venue_id": venue_int,
+                "is_neutral": g["is_neutral"],
+                "is_conference": g["is_conference"],
+                "season_type": g.get("season_type"),
+                "team1_stats": raw_t1,
+                "team2_stats": raw_t2,
+                "weather": weather
+            }
+
+            normalized_blob = {
+                "day": day,
+                "month": month,
+                "year": year,
+                "days_since_epoch": g["days_since_epoch"],
+                "game_time": time_float,
+                "day_of_week": dow,
+                "team1_id": g["team1_id"],
+                "team2_id": g["team2_id"],
+                "venue_id": venue_int,
+                "is_neutral": g["is_neutral"],
+                "is_conference": g["is_conference"],
+                "season_type": g.get("season_type"),
+                "team1_stats": norm_t1,
+                "team2_stats": norm_t2,
+                "weather": weather
+            }
+
+            # -- upsert into SQLite --
+            self.conn.execute("""
+                INSERT OR REPLACE INTO games (
+                    game_id, date, days_since_epoch, day_of_the_week, game_time, sport,
+                    team1_id, team1_name, team1_color, team1_alt_color, team1_logo,
+                    team2_id, team2_name, team2_color, team2_alt_color, team2_logo,
+                    venue_id, city, state, country, is_neutral, is_conference, season_type,
+                    stats, normalized_stats,
+                    team1_moneyline, team2_moneyline,
+                    team1_spread,  team2_spread,
+                    total_score
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?,
+                    ?, ?, ?
+                )
+            """, (
+                g["id"],
+                self.date.isoformat(),
+                g["days_since_epoch"],
+                dow,
+                g["game_time"],
+                self.sport,
+
+                g["team1_id"],
+                g["team1_name"],
+                g["team1_color"],
+                g["team1_alternate_color"],
+                g["team1_logo"],
+
+                g["team2_id"],
+                g["team2_name"],
+                g["team2_color"],
+                g["team2_alternate_color"],
+                g["team2_logo"],
+
+                venue_int,
+                g["city"],
+                g["state"],
+                g["country"],
+                int(g["is_neutral"]),
+                int(g["is_conference"]),
+                g.get("season_type"),
+
+                json.dumps(stats_blob),
+                json.dumps(normalized_blob),
+
+                odds.get("team1_moneyline"),
+                odds.get("team2_moneyline"),
+                odds.get("team1_spread"),
+                odds.get("team2_spread"),
+                odds.get("total_score"),
+            )
+            )
+            inserted += 1
+
+        self.conn.commit()
+        logging.info(f"populate_pregame_data: inserted/updated {inserted} rows.")
 
     def _create_team_map_table(self):
         """Create mapping table if it doesn't exist."""
@@ -127,16 +277,28 @@ class Pregame:
         # 2) ESPN expects dates=YYYYMMDD
         date_str = self.date.strftime("%Y%m%d")
         resp = requests.get(url, params={"dates": date_str})
-        print(resp.url)
-        input()
         resp.raise_for_status()
         data = resp.json()
 
+        now_utc = datetime.now(timezone.utc)
         games = []
+
         for event in data.get("events", []):
             comp = event["competitions"][0]
+            # original UTC datetime from ESPN
             dt = datetime.fromisoformat(event["date"].replace("Z", "+00:00"))
+
+            # if the game is in the past, subtract local offset
+            if dt < now_utc:
+                if self.sport in ("CFB", "NFL"):
+                    dt -= timedelta(hours=5, minutes=30)
+                elif self.sport in ("CBB", "NBA"):
+                    dt -= timedelta(hours=4, minutes=30)
+                # otherwise no adjustment
+
+            # recompute these from the (possibly adjusted) dt
             days_since_epoch = (dt - datetime(1970, 1, 1, tzinfo=timezone.utc)).days
+            day_of_week = dt.weekday()  # Monday=0…Sunday=6
 
             teams = {c["homeAway"]: c for c in comp["competitors"]}
             away = teams["away"]
@@ -145,24 +307,22 @@ class Pregame:
             venue = comp.get("venue", {})
             addr  = venue.get("address", {})
 
-            # season type
             season_type = event.get("season", {}).get("type")
 
             games.append({
                 "id":                    event["id"],
-                "date":                  event["date"],
+                "date":                  dt.isoformat(),  # original ISO timestamp
                 "days_since_epoch":      days_since_epoch,
+                "day_of_the_week":       day_of_week,
                 "game_time":             dt.time().isoformat(),
 
                 "team1_id":              int(away["team"]["id"]),
-                # THIS WILL NOT WORK FOR NFL OR NBA TEAMS, SO THE NAMES HAVE JUST BEEN MANUALLY MAPPED IN THE DATABASE
                 "team1_name":            self.map_team_name(away["team"]["shortDisplayName"]),
                 "team1_color":           away["team"].get("color"),
                 "team1_alternate_color": away["team"].get("alternateColor"),
                 "team1_logo":            away["team"].get("logo"),
 
                 "team2_id":              int(home["team"]["id"]),
-                # THIS WILL NOT WORK FOR NFL OR NBA TEAMS, SO THE NAMES HAVE JUST BEEN MANUALLY MAPPED IN THE DATABASE
                 "team2_name":            self.map_team_name(home["team"]["shortDisplayName"]),
                 "team2_color":           home["team"].get("color"),
                 "team2_alternate_color": home["team"].get("alternateColor"),
@@ -491,6 +651,7 @@ class Pregame:
             return {}
 
         times = hourly.get("time", [])
+        dt = dt.replace(minute=0, second=0, microsecond=0)
         target = dt.strftime("%Y-%m-%dT%H:%M")
         if target not in times:
             logging.error(f"Hour {target} not found in weather data for {city}")
@@ -507,25 +668,66 @@ class Pregame:
 
         return output
 
-    def insert_pregame_row(self, game_id, team1_id, team2_id, stats, team2_moneyline, team2_spread, total_score):
-        """
-        Inserts the compiled pregame data into the pregame_data table.
-        """
-        pass
-
     def update_final_scores(self):
         """
-        Scrape or call an API to fetch final scores for all games
-        of self.sport on self.date, and write them back to the database.
-
-        Workflow:
-            1. Query DB for all game IDs on this date+sport.
-            2. For each game ID:
-            a. Fetch final scores (team1_score, team2_score).
-            b. Upsert into your final_scores table (or update games table).
-            3. Commit the transaction.
+        Scrape ESPN's scoreboard for self.date/self.sport, and update
+        team1_score/team2_score in the games table for each completed game.
         """
-        pass
+        # 1) Build ESPN API URL
+        try:
+            category, league = self._ESPN_MAP[self.sport]
+        except KeyError:
+            raise ValueError(f"Unsupported sport code: {self.sport!r}")
+
+        url = (
+            f"https://site.api.espn.com/apis/site/v2/"
+            f"sports/{category}/{league}/scoreboard"
+        )
+        date_str = self.date.strftime("%Y%m%d")
+
+        # 2) Fetch scoreboard
+        resp = requests.get(url, params={"dates": date_str})
+        resp.raise_for_status()
+        data = resp.json()
+
+        # 3) Loop through events
+        updated = 0
+        for event in data.get("events", []):
+            comp = event["competitions"][0]
+            status = comp.get("status", {}).get("type", {})
+            # only update if game is completed
+            if not status.get("completed", False):
+                continue
+
+            # map away=team1, home=team2
+            teams = {c["homeAway"]: c for c in comp["competitors"]}
+            away = teams.get("away")
+            home = teams.get("home")
+
+            # parse scores (may come as strings)
+            try:
+                team1_score = int(away.get("score", 0))
+                team2_score = int(home.get("score", 0))
+            except (TypeError, ValueError):
+                logging.error(f"Invalid score for game {event['id']}: "
+                              f"{away.get('score')} vs {home.get('score')}")
+                continue
+
+            # 4) Update DB
+            cur = self.conn.execute(
+                "UPDATE games "
+                "SET team1_score = ?, team2_score = ? "
+                "WHERE game_id = ?",
+                (team1_score, team2_score, event["id"])
+            )
+            if cur.rowcount == 0:
+                logging.warning(f"No local game found for ESPN ID {event['id']}")
+            else:
+                updated += 1
+
+        # 5) Commit once at the end
+        self.conn.commit()
+        logging.info(f"Updated final scores for {updated} games.")
 
     def __enter__(self):
         # Called at the start of a with‐block
