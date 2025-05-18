@@ -94,7 +94,7 @@ class Prediction(Base):
 
 
 def main():
-    engine = create_engine('sqlite:///sports.db', echo=False)
+    engine = create_engine('sqlite:///sports_test.db', echo=False)
     Base.metadata.create_all(engine)
     print("✅ Created/updated sports.db with tables: team_name_map, games, predictions")
 
