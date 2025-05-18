@@ -68,7 +68,7 @@ class Game(Base):
 
     # your combined JSON blob (team/player/weather/misc)
     stats                 = Column(JSON,    nullable=False)
-
+    normalized_stats      = Column(JSON,    nullable=False)
     # pre-game odds
     team1_moneyline       = Column(Float,   nullable=True)
     team2_moneyline       = Column(Float,   nullable=True)
