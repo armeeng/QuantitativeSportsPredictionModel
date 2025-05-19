@@ -598,8 +598,8 @@ class Pregame:
         dt = dt.replace(tzinfo=timezone.utc)
         now_utc = datetime.now(timezone.utc)
 
-        # 3) Choose endpoint
-        if dt < now_utc:
+        # 3) Choose endpoint (subtract 24 hours because archive doesnt update immediately, so just use forecast if the game happened within the last 24 hours)
+        if dt < now_utc - timedelta(hours=24):
             weather_url = "https://archive-api.open-meteo.com/v1/archive"
         else:
             weather_url = "https://api.open-meteo.com/v1/forecast"
@@ -637,6 +637,7 @@ class Pregame:
         # 5) Fetch
         try:
             r = requests.get(weather_url, params=weather_params, timeout=10)
+            print(r.url)
             r.raise_for_status()
             hourly = r.json().get("hourly", {})
         except Exception as e:
