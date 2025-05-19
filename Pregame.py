@@ -53,6 +53,7 @@ class Pregame:
         """
         games = self.get_games_for_date()
         inserted = 0
+        skip = 0
 
         for g in games:
             # -- validate/convert venue_id --
@@ -70,6 +71,7 @@ class Pregame:
             t1 = self.get_team_stats(g["team1_name"])
             t2 = self.get_team_stats(g["team2_name"])
             if t1 is None or t2 is None:
+                skip += 1
                 logging.error(f"Could not fetch stats for {g['team1_name']} or {g['team2_name']}, skipping")
                 continue
 
@@ -193,7 +195,8 @@ class Pregame:
             inserted += 1
 
         self.conn.commit()
-        logging.info(f"populate_pregame_data: inserted/updated {inserted} rows.")
+        logging.info(f"populate_pregame_data: inserted/updated {inserted} rows, skipped {skip} games.")
+        return skip
 
     def _create_team_map_table(self):
         """Create mapping table if it doesn't exist."""
@@ -692,6 +695,7 @@ class Pregame:
 
         # 3) Loop through events
         updated = 0
+        skip = 0
         for event in data.get("events", []):
             comp = event["competitions"][0]
             status = comp.get("status", {}).get("type", {})
@@ -721,13 +725,15 @@ class Pregame:
                 (team1_score, team2_score, event["id"])
             )
             if cur.rowcount == 0:
+                skip += 1
                 logging.warning(f"No local game found for ESPN ID {event['id']}")
             else:
                 updated += 1
 
         # 5) Commit once at the end
         self.conn.commit()
-        logging.info(f"Updated final scores for {updated} games.")
+        logging.info(f"Updated final scores for {updated} games. Skipped {skip} games.")
+        return skip
 
     def __enter__(self):
         # Called at the start of a with‐block

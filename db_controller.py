@@ -29,7 +29,7 @@ def main(
         print(f"Processing {current}")
         for sport in SportEnum:
             # see if we've already done this sport/date
-            rec = session.query(ProcessStatus).get((sport, current))
+            rec = session.get(ProcessStatus, (sport, current))
             if rec is None:
                 rec = ProcessStatus(sport=sport, date=current)
 
@@ -37,19 +37,21 @@ def main(
             if not rec.preprocessed:
                 logging.info(f"Preprocessing {sport.value} on {current}")
                 pg = Pregame(current, sport.value)
-                pg.populate_pregame_data()
-                rec.preprocessed = True
-                session.merge(rec)
-                session.commit()
+                skipped = pg.populate_pregame_data()
+                if skipped == 0:
+                    rec.preprocessed = True
+                    session.merge(rec)
+                    session.commit()
 
             # 2) post-process (final scores)
             if not rec.postprocessed:
                 logging.info(f"Postprocessing {sport.value} on {current}")
                 pg = Pregame(current, sport.value)
-                pg.update_final_scores()
-                rec.postprocessed = True
-                session.merge(rec)
-                session.commit()
+                skipped = pg.update_final_scores()
+                if skipped == 0:
+                    rec.postprocessed = True
+                    session.merge(rec)
+                    session.commit()
 
         current -= timedelta(days=1)
 
