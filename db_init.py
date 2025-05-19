@@ -23,6 +23,7 @@ class SportEnum(enum.Enum):
     NBA = 'NBA'
     CFB = 'CFB'
     CBB = 'CBB'
+    MLB = 'MLB'
 
 
 class TeamNameMap(Base):

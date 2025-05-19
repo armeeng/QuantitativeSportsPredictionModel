@@ -23,6 +23,7 @@ class Pregame:
         'NFL': ('football', 'nfl'),
         'CFB': ('football', 'college-football'),
         'CBB': ('basketball', 'mens-college-basketball'),
+        'MLB': ('baseball', 'mlb'),
     }
 
     _TR_PREFIX = {
@@ -30,6 +31,7 @@ class Pregame:
         'NFL': 'nfl',
         'CFB': 'college-football',
         'CBB': 'ncaa-basketball',
+        'MLB': 'mlb',
     }
 
         
@@ -214,7 +216,7 @@ class Pregame:
     def _load_teamrankings_names(self):
         prefix = self._TR_PREFIX[self.sport]
         url = (
-            f"https://www.teamrankings.com/{prefix}/stat/points-per-game"
+            f"https://www.teamrankings.com/{prefix}/ranking/predictive-by-other/"
             f"?date={self.date.isoformat()}"
         )
         # if TeamRankings blocks non‐browser agents, add headers:
@@ -295,7 +297,7 @@ class Pregame:
             if dt < now_utc - timedelta(hours=16):
                 if self.sport in ("CFB", "NFL"):
                     dt -= timedelta(hours=5, minutes=30)
-                elif self.sport in ("CBB", "NBA"):
+                elif self.sport in ("CBB", "NBA", "MLB"):
                     dt -= timedelta(hours=4, minutes=30)
                 # otherwise no adjustment
 
@@ -413,6 +415,10 @@ class Pregame:
                 "https://www.teamrankings.com/nfl/stat/points-per-game",
                 # …
             ],
+            'MLB': [
+                "https://www.teamrankings.com/mlb/stat/runs-per-game",
+                # …
+            ],
         }
 
         if self.sport not in url_lists:
@@ -420,12 +426,13 @@ class Pregame:
 
         all_stats = {}
         for url in url_lists[self.sport]:
-            resp = requests.get(url, headers={"User-Agent":"Mozilla/5.0"})
+            dated_url = f"{url}?date={self.date.isoformat()}"
+            resp = requests.get(dated_url, headers={"User-Agent":"Mozilla/5.0"})
             resp.raise_for_status()
             soup = BeautifulSoup(resp.text, "html.parser")
             table = soup.find("table")
             if not table:
-                raise RuntimeError(f"No table found at {url}")
+                raise RuntimeError(f"No table found at {dated_url}")
 
             # headers: ["Rank","Team","2024",...]
             headers = [th.get_text(strip=True) for th in table.select("thead th")]
@@ -474,7 +481,7 @@ class Pregame:
                     all_stats[slug] = {"raw": raw_stats, "normalized": norm_stats}
                     break
             else:
-                logging.error(f"Team {team_name!r} not found at {url!r}")
+                logging.error(f"Team {team_name!r} not found at {dated_url!r}")
                 return None
 
         return all_stats
