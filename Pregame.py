@@ -692,6 +692,7 @@ class Pregame:
             status = comp.get("status", {}).get("type", {})
             # only update if game is completed
             if not status.get("completed", False):
+                skip += 1
                 continue
 
             # map away=team1, home=team2
