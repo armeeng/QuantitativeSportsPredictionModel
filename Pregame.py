@@ -543,9 +543,7 @@ class Pregame:
                 "https://www.teamrankings.com/ncaa-basketball/ranking/first-half-by-other",
                 "https://www.teamrankings.com/ncaa-basketball/ranking/second-half-by-other",
                 "https://www.teamrankings.com/ncaa-basketball/rpi-ranking/rpi-rating-by-team",
-                "https://www.teamrankings.com/ncaa-basketball/rpi-ranking/sos-rpi-rating-by-team",
-                "https://www.teamrankings.com/ncaa-basketball/rpi-ranking/rpi-rating-by-conf",
-                "https://www.teamrankings.com/ncaa-basketball/rpi-ranking/sos-rpi-rating-by-conf"
+                "https://www.teamrankings.com/ncaa-basketball/rpi-ranking/sos-rpi-rating-by-team"
                 ],
             'CFB': [
                 "https://www.teamrankings.com/college-football/stat/points-per-game",
