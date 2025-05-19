@@ -6,10 +6,18 @@ from sqlalchemy.orm import sessionmaker
 
 from db_init import Base, SportEnum, ProcessStatus
 from Pregame import Pregame
+import sys
 
-# configure logging
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s')
+for h in logging.root.handlers[:]:
+    logging.root.removeHandler(h)
+
+logging.basicConfig(
+    level=logging.INFO,
+    filename="db_controller.log",        # all messages go here
+    filemode="a",               # append (use "w" to overwrite each run)
+    format="%(asctime)s %(levelname)-8s %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S"
+)
 
 def main(
     db_url: str = 'sqlite:///sports.db',
@@ -26,7 +34,6 @@ def main(
 
     current = start_date
     while current >= stop_date:
-        print(f"Processing {current}")
         for sport in SportEnum:
             # see if we've already done this sport/date
             rec = session.get(ProcessStatus, (sport, current))

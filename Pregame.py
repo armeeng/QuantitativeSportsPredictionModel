@@ -15,6 +15,8 @@ import logging
 import re
 from urllib.parse import urlparse
 import json
+import time
+from requests.exceptions import HTTPError
 
 class Pregame:
 
@@ -1313,8 +1315,19 @@ class Pregame:
             self._stats_cache = {}
             for url in url_lists[self.sport]:
                 dated_url = f"{url}?date={self.date.isoformat()}"
-                resp = requests.get(dated_url, headers={"User-Agent":"Mozilla/5.0"})
-                resp.raise_for_status()
+                while True:
+                    resp = requests.get(dated_url, headers={"User-Agent":"Mozilla/5.0"})
+                    try:
+                        resp.raise_for_status()
+                        break
+                    except HTTPError as e:
+                        # if blocked, wait 4 minutes and retry
+                        if resp.status_code == 403:
+                            logging.warning(f"403 Forbidden at {dated_url}, sleeping 4 minutes before retry")
+                            time.sleep(4 * 60)
+                            continue
+                        # other HTTP errors bubble up
+                        raise
                 soup = BeautifulSoup(resp.text, "html.parser")
                 table = soup.find("table")
                 if not table:
