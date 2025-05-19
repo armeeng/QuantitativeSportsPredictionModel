@@ -637,7 +637,6 @@ class Pregame:
         # 5) Fetch
         try:
             r = requests.get(weather_url, params=weather_params, timeout=10)
-            print(r.url)
             r.raise_for_status()
             hourly = r.json().get("hourly", {})
         except Exception as e:
