@@ -10,7 +10,8 @@ from sqlalchemy import (
     JSON,
     Enum,
     ForeignKey,
-    Boolean
+    Boolean,
+    text
 )
 from sqlalchemy.ext.declarative import declarative_base
 import enum
@@ -110,7 +111,21 @@ class ProcessStatus(Base):
 def main():
     engine = create_engine('sqlite:///sports.db', echo=False)
     Base.metadata.create_all(engine)
-    print("✅ Created/updated sports.db with tables: team_name_map, games, predictions")
+    # make sure our cleanup‐trigger is in place
+    with engine.begin() as conn:
+        conn.execute(text("""
+        CREATE TRIGGER IF NOT EXISTS reset_status_on_game_delete
+        AFTER DELETE ON games
+        BEGIN
+          UPDATE process_status
+          SET preprocessed  = 0,
+              postprocessed = 0
+          WHERE sport = OLD.sport
+            AND date  = OLD.date;
+        END;
+        """))
+
+    print("✅ Created/updated sports.db with tables + delete-trigger")
 
 
 if __name__ == '__main__':

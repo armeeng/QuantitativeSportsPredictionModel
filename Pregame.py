@@ -292,7 +292,7 @@ class Pregame:
             dt = datetime.fromisoformat(event["date"].replace("Z", "+00:00"))
 
             # if the game is in the past, subtract local offset
-            if dt < now_utc:
+            if dt < now_utc - timedelta(hours=16):
                 if self.sport in ("CFB", "NFL"):
                     dt -= timedelta(hours=5, minutes=30)
                 elif self.sport in ("CBB", "NBA"):
