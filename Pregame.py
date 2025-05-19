@@ -39,6 +39,7 @@ class Pregame:
         self.sport = sport
         self.date = date
         self._tr_names = None
+        self._stats_cache = {}
 
         # Open SQLite connection and ensure mapping table exists
         self.conn = sqlite3.connect(db_path)
@@ -382,109 +383,91 @@ class Pregame:
 
     def get_team_stats(self, team_name: str):
         """
-        For each TeamRankings stat page for this.sport, scrape the first table,
-        find the row matching team_name, and return both raw and normalized stats.
+        For this.sport on this.date, scrape each URL only once into a cache,
+        then for each call extract raw & normalized stats for team_name.
 
         Returns:
-            Dict[str, Dict[str, Dict[str, str|float]]]:
-              {
+            Dict[str, Dict[str, Dict[str, float]]]:
+            {
                 "<stat-slug>": {
-                  "raw":        { "Rank": "5",   "2024": "28.9", … },
-                  "normalized": { "Rank": 0.04,  "2024": 0.83,  … }
+                "raw":        { "Rank": 5.0, "2024": 28.9, … },
+                "normalized": { "Rank": 0.04, "2024": 0.83, … }
                 },
                 …
-              }
+            }
         If a table is missing, raises RuntimeError.
-        If team_name is not found in any page, logs and returns None.
+        If team_name is not found on any page, logs and returns None.
         """
+        # define once
         url_lists = {
-            'CBB': [
-                #"https://www.teamrankings.com/ncaa-basketball/stat/points-per-game",
-                "https://www.teamrankings.com/ncaa-basketball/ranking/predictive-by-other/"
-                # …
-            ],
-            'CFB': [
-                "https://www.teamrankings.com/college-football/stat/points-per-game",
-                # …
-            ],
-            'NBA': [
-                "https://www.teamrankings.com/nba/stat/points-per-game",
-                # …
-            ],
-            'NFL': [
-                "https://www.teamrankings.com/nfl/stat/points-per-game",
-                # …
-            ],
-            'MLB': [
-                "https://www.teamrankings.com/mlb/stat/runs-per-game",
-                # …
-            ],
+            'CBB': ["https://www.teamrankings.com/ncaa-basketball/ranking/predictive-by-other/"],
+            'CFB': ["https://www.teamrankings.com/college-football/stat/points-per-game"],
+            'NBA': ["https://www.teamrankings.com/nba/stat/points-per-game"],
+            'NFL': ["https://www.teamrankings.com/nfl/stat/points-per-game"],
+            'MLB': ["https://www.teamrankings.com/mlb/stat/runs-per-game", "https://www.teamrankings.com/mlb/ranking/predictive-by-other/"],
         }
-
         if self.sport not in url_lists:
             raise ValueError(f"No stat pages for {self.sport}")
 
-        all_stats = {}
-        for url in url_lists[self.sport]:
-            dated_url = f"{url}?date={self.date.isoformat()}"
-            resp = requests.get(dated_url, headers={"User-Agent":"Mozilla/5.0"})
-            resp.raise_for_status()
-            soup = BeautifulSoup(resp.text, "html.parser")
-            table = soup.find("table")
-            if not table:
-                raise RuntimeError(f"No table found at {dated_url}")
+        # first time: scrape all tables into cache
+        if not self._stats_cache:
+            self._stats_cache = {}
+            for url in url_lists[self.sport]:
+                dated_url = f"{url}?date={self.date.isoformat()}"
+                resp = requests.get(dated_url, headers={"User-Agent":"Mozilla/5.0"})
+                resp.raise_for_status()
+                soup = BeautifulSoup(resp.text, "html.parser")
+                table = soup.find("table")
+                if not table:
+                    raise RuntimeError(f"No table found at {dated_url}")
 
-            # headers: ["Rank","Team","2024",...]
-            headers = [th.get_text(strip=True) for th in table.select("thead th")]
+                # get column headers
+                headers = [th.get_text(strip=True) for th in table.select("thead th")]
+                # parse rows
+                raw_rows = {}
+                numeric_rows = []
+                for tr in table.select("tbody tr"):
+                    tds = tr.select("td")
+                    row = {}
+                    for i, h in enumerate(headers):
+                        text = tds[i].get_text(strip=True) if h != "Team" else (
+                            tds[i].find("a").get_text(strip=True) if tds[i].find("a") else tds[i].get_text(strip=True)
+                        )
+                        row[h] = text
+                    # numeric parse for normalization
+                    nums = {h: self._parse_stat_value(row[h]) for h in headers if h != "Team"}
+                    numeric_rows.append(nums)
+                    raw_rows[row["Team"]] = row
 
-            raw_rows = []
-            num_rows = []
-            for tr in table.select("tbody tr"):
-                tds = tr.select("td")
-                raw = {}
-                # build raw, but for "Team" pull only the <a> text
-                for i, h in enumerate(headers):
-                    cell = tds[i]
-                    if h == "Team":
-                        a = cell.find("a")
-                        raw[h] = a.get_text(strip=True) if a else cell.get_text(strip=True)
-                    else:
-                        raw[h] = cell.get_text(strip=True)
-                raw_rows.append(raw)
+                # compute min/max per numeric column
+                min_max = {
+                    h: (min(r[h] for r in numeric_rows), max(r[h] for r in numeric_rows))
+                    for h in numeric_rows[0]
+                }
 
-                # numeric parse for non-Team
-                nums = { h: self._parse_stat_value(raw[h])
-                         for h in headers if h != "Team" }
-                num_rows.append(nums)
-
-            # compute min/max per column
-            min_max = {}
-            for h in num_rows[0]:
-                col = [r[h] for r in num_rows]
-                min_max[h] = (min(col), max(col))
-
-            # find our team
-            for i, raw in enumerate(raw_rows):
-                if raw["Team"] == team_name:
-                    raw_stats = {
-                        h: self._parse_stat_value(raw[h])
-                        for h in headers
-                        if h != "Team"
-                    }
+                # build per‐team raw & normalized dicts
+                slug = url.rstrip("/").split("/")[-1]
+                self._stats_cache[slug] = {}
+                for team, raw in raw_rows.items():
+                    raw_stats = {h: self._parse_stat_value(raw[h]) for h in headers if h != "Team"}
                     norm_stats = {}
-                    for h, val in num_rows[i].items():
+                    for h, val in {h: self._parse_stat_value(raw[h]) for h in headers if h != "Team"}.items():
                         lo, hi = min_max[h]
                         norm_stats[h] = (val - lo) / (hi - lo) if hi > lo else 0.0
+                    self._stats_cache[slug][team] = {
+                        "raw": raw_stats,
+                        "normalized": norm_stats
+                    }
 
-                    parsed = urlparse(url)
-                    slug = parsed.path.rstrip("/").split("/")[-1]
-                    all_stats[slug] = {"raw": raw_stats, "normalized": norm_stats}
-                    break
-            else:
-                logging.error(f"Team {team_name!r} not found at {dated_url!r}")
+        # now build result for this team
+        result = {}
+        for slug, teams in self._stats_cache.items():
+            if team_name not in teams:
+                logging.error(f"Team {team_name!r} not found in stats for '{slug}'")
                 return None
+            result[slug] = teams[team_name]
 
-        return all_stats
+        return result
 
     def get_player_stats(self, team_id: int):
         """
