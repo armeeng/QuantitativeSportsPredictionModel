@@ -68,6 +68,7 @@ class Pregame:
                     venue_int = int(vid)
                 except (TypeError, ValueError):
                     logging.error(f"Bad venue_id {vid!r}, skipping game {g['id']}")
+                    skip += 1
                     continue
             else:
                 venue_int = None
@@ -93,9 +94,24 @@ class Pregame:
                 state=g["state"],
                 country=g["country"]
             )
+            if not weather:
+                logging.error(f"Could not fetch weather for game {g['id']} at {g['city']}, skipping")
+                skip += 1
+                continue
 
             # -- fetch odds --
             odds = self.get_betting_odds(g["id"])
+            if (
+                odds.get("team1_moneyline") is None or
+                odds.get("team2_moneyline") is None or
+                odds.get("total_score") is None
+            ):
+                logging.error(
+                    f"Missing odds for game {g['id']}: "
+                    f"{odds}. Skipping."
+                )
+                skip += 1
+                continue
 
             # -- compute date parts & day-of-week & float time --
             dt = datetime.fromisoformat(g["date"].replace("Z", "+00:00"))
