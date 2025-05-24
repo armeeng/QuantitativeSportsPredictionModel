@@ -238,7 +238,6 @@ class Pregame:
             f"https://www.teamrankings.com/{prefix}/ranking/predictive-by-other/"
             f"?date={self.date.isoformat()}"
         )
-        # if TeamRankings blocks non‐browser agents, add headers:
         headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
@@ -246,13 +245,30 @@ class Pregame:
                 "Chrome/114.0.0.0 Safari/537.36"
             )
         }
-        resp = requests.get(url, headers=headers)
-        resp.raise_for_status()
 
-        # pandas will find the first <table> and return it as a DataFrame
+        while True:
+            resp = requests.get(url, headers=headers)
+            try:
+                resp.raise_for_status()
+                break
+            except HTTPError as e:
+                # if blocked, wait 4 minutes and retry
+                if resp.status_code == 403:
+                    logging.warning(f"403 Forbidden at {url}, sleeping 4 minutes before retry")
+                    time.sleep(4 * 60)
+                    continue
+                # other HTTP errors bubble up
+                raise
+
         df = pd.read_html(StringIO(resp.text))[0]
-        # the “Team” column holds exactly what you want:
-        return df["Team"].tolist()
+        teams = df["Team"].tolist()
+
+        # strip only trailing "(W-L)" (e.g. "(14-2)"), leave other parentheses intact
+        cleaned = [
+            re.sub(r"\s*\(\d+-\d+\)\s*$", "", name)
+            for name in teams
+        ]
+        return cleaned
     
     def map_team_name(self, espn_name: str) -> str:
         # THIS WILL NOT WORK FOR NFL OR NBA TEAMS, SO THE NAMES HAVE JUST BEEN MANUALLY MAPPED IN THE DATABASE
@@ -370,6 +386,7 @@ class Pregame:
         Turn a table cell into a single float:
          - "--"           → 0.0
          - "W-L"          → win_pct = W/(W+L)
+         - "MM:SS"        → minutes + seconds/60
          - "42.3"         → 42.3
          - "75%"          → 0.75
          - otherwise log and return 0.0
@@ -383,6 +400,16 @@ class Pregame:
             w, l = map(int, text.split("-"))
             total = w + l
             return (w / total) if total else 0.0
+        
+        # time form "MM:SS" → minutes as float
+        if re.fullmatch(r"\d+:\d{2}", text):
+            m, s = text.split(":")
+            try:
+                m, s = int(m), int(s)
+                return m + s/60
+            except ValueError:
+                logging.error(f"Cannot parse time value: {text!r}")
+                return 0.0
 
         # percent form
         if text.endswith("%"):
@@ -396,7 +423,7 @@ class Pregame:
         try:
             return float(text)
         except ValueError:
-            logging.error(f"Unrecognized stat value: {text!r}")
+            logging.error(f"Unrecognized stat value: {text}")
             return 0.0
 
     def get_team_stats(self, team_name: str):
@@ -1364,6 +1391,10 @@ class Pregame:
                     nums = {h: self._parse_stat_value(row[h]) for h in headers if h != "Team"}
                     numeric_rows.append(nums)
                     raw_rows[row["Team"]] = row
+
+                if not raw_rows:
+                    logging.error(f"No stats available on page {dated_url!r}")
+                    return None
 
                 # compute min/max per numeric column
                 min_max = {
