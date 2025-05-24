@@ -1367,6 +1367,10 @@ class Pregame:
                             logging.warning(f"403 Forbidden at {dated_url}, sleeping 4 minutes before retry")
                             time.sleep(4 * 60)
                             continue
+                        elif resp.status_code == 504:
+                            logging.warning(f"504 Gateway Timeout at {dated_url}, sleeping 4 minutes before retry")
+                            time.sleep(4 * 60)
+                            continue
                         # other HTTP errors bubble up
                         raise
                 soup = BeautifulSoup(resp.text, "html.parser")
