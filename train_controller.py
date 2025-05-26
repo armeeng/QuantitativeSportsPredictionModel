@@ -4,10 +4,10 @@ from MLModel import MLModel
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME   = "nn_norm_NBA_all"
+    MODEL_NAME   = "nn_norm_MLB_all"
     MODEL_TYPE   = "neural_network"   # linear_regression, random_forest, xgboost, neural_network
     COLUMN       = "normalized_stats"    # stats or normalized_stats
-    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'NBA';"
+    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB';"
 
     # ── TRAIN ─────────────────────────────────────
     model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN)

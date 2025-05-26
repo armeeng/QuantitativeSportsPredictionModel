@@ -5,10 +5,10 @@ from MLModel import MLModel
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "nn_norm_NBA_all"
-    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'NBA';"
+    MODEL_NAME    = "nn_norm_MLB_all"
+    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'MLB' AND date = '2025-05-20';"
 
-    # ── PREDICT ────────────────────────────────────
+    # ── PREDICT ────────────────────────────────────xs
     model = MLModel(MODEL_NAME)      # picks up latest trained model
     results = model.predict(PREDICT_QUERY)
 

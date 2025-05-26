@@ -23,21 +23,52 @@ class MLModel(BaseModel):
 
     def train(self, query: str):
         """
-        Train on the rows returned by `query`, using the JSON column named `column`
+        Train on the rows returned by `query`, using the JSON column named `self.column`
         as inputs, and team1_score/team2_score as the two outputs.
-        Saves the trained model to models/{model_name}.joblib (or with timestamp).
+        Saves the trained model to models/{model_name}.joblib.
         """
         # 1) load data
         conn = sqlite3.connect("sports.db")
         df = pd.read_sql_query(query, conn)
         conn.close()
         df = df.dropna(subset=["team1_score", "team2_score"])
+
+        # parse JSON column
         parsed = df[self.column].apply(json.loads)
-        flat   = pd.json_normalize(parsed).fillna(0)
-        X = flat.to_numpy()
+
+        # helper: recursively walk a JSON and collect all numbers in insertion order
+        def flatten_numbers(obj, out):
+            if isinstance(obj, dict):
+                for v in obj.values():
+                    flatten_numbers(v, out)
+            elif isinstance(obj, list):
+                for v in obj:
+                    flatten_numbers(v, out)
+            elif isinstance(obj, bool):
+                out.append(1.0 if obj else 0.0)
+            elif isinstance(obj, (int, float)):
+                out.append(float(obj))
+            else:
+                # ignore strings or other types
+                pass
+
+        # build feature matrix
+        X_list = []
+        for js in parsed:
+            row_feats = []
+            flatten_numbers(js, row_feats)
+            X_list.append(row_feats)
+
+        # ensure all rows have same length
+        lengths = {len(r) for r in X_list}
+        if len(lengths) != 1:
+            raise ValueError(f"Inconsistent feature lengths in JSONs: {lengths}")
+        X = pd.np.array(X_list)  # or np.array
+
+        # 2) targets
         y = df[["team1_score", "team2_score"]].to_numpy()
 
-        # 2) pick model
+        # 3) pick & fit model
         if self.model_type == 'linear_regression':
             model = LinearRegression()
         elif self.model_type == 'random_forest':
@@ -49,10 +80,9 @@ class MLModel(BaseModel):
         else:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}")
 
-        # 3) fit
         model.fit(X, y)
 
-        # 4) save
+        # 4) save without overwriting
         os.makedirs("models", exist_ok=True)
         base = os.path.join("models", self.model_name)
         path = f"{base}.joblib"
@@ -61,11 +91,11 @@ class MLModel(BaseModel):
             path = f"{base}_{ts}.joblib"
 
         joblib.dump({
-            "model":      model,
-            "model_type": self.model_type,
+            "model":       model,
+            "model_type":  self.model_type,
             "input_shape": X.shape[1],
-            "column":     self.column,
-            "query":      query
+            "column":      self.column,
+            "query":       query
         }, path)
 
         print(f"Trained {self.model_name} ({self.model_type}) on {len(df)} examples; saved to {path}")

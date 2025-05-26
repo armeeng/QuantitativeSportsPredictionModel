@@ -42,6 +42,7 @@ class Pregame:
         self.date = date
         self._tr_names = None
         self._stats_cache = {}
+        self._stats_cache_valid = True
 
         # Open SQLite connection and ensure mapping table exists
         self.conn = sqlite3.connect(db_path)
@@ -436,6 +437,10 @@ class Pregame:
         If a table is missing, raises RuntimeError.
         If team_name is not found on any page, logs and returns None.
         """
+
+        if not self._stats_cache_valid:
+            return None
+        
         # define once
         url_lists = {
             'CBB': [
@@ -1390,7 +1395,8 @@ class Pregame:
                     raw_rows[row["Team"]] = row
 
                 if not raw_rows:
-                    logging.error(f"No stats available on page {dated_url!r}")
+                    logging.error(f"No stats available on page {dated_url!r}, thus the day is ruined")
+                    self._stats_cache_valid = False
                     return None
 
                 # compute min/max per numeric column
