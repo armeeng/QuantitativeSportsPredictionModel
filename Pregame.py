@@ -101,17 +101,6 @@ class Pregame:
 
             # -- fetch odds --
             odds = self.get_betting_odds(g["id"])
-            if (
-                odds.get("team1_moneyline") is None or
-                odds.get("team2_moneyline") is None or
-                odds.get("total_score") is None
-            ):
-                logging.error(
-                    f"Missing odds for game {g['id']}: "
-                    f"{odds}. Skipping."
-                )
-                skip += 1
-                continue
 
             # -- compute date parts & day-of-week & float time --
             dt = datetime.fromisoformat(g["date"].replace("Z", "+00:00"))
@@ -316,7 +305,11 @@ class Pregame:
 
         # 2) ESPN expects dates=YYYYMMDD
         date_str = self.date.strftime("%Y%m%d")
-        resp = requests.get(url, params={"dates": date_str})
+        # for CBB (men's college basketball), request all teams, not just Top-25
+        params = {"dates": date_str}
+        if self.sport == "CBB":
+            params.update({"groups": 50, "limit": 500})
+        resp = requests.get(url, params=params)
         resp.raise_for_status()
         data = resp.json()
 
@@ -1544,8 +1537,20 @@ class Pregame:
             r = requests.get(geocode_url, params=params, timeout=10)
             r.raise_for_status()
             results = r.json().get("results") or []
+            if not results and state:
+                logging.warning(f"Geocoding failed for '{city}, {state}, {country}', retrying with state only")
+                # retry using only state
+                params_retry = {"name": state, "language": "en", "limit": 1}
+                if country: params_retry["country"] = country
+                r2 = requests.get(geocode_url, params=params_retry, timeout=10)
+                r2.raise_for_status()
+                results = r2.json().get("results") or []
+                if results:
+                    logging.info(f"Geocoding succeeded on retry for '{state}, {country}'")
+                else:
+                    logging.error(f"Geocoding still failed for '{state}, {country}'")
             if not results:
-                logging.error(f"Geocoding failed for {city}, {state}, {country}")
+                logging.error(f"Geocoding ultimately failed for {city}, {state}, {country}")
                 return {}
             loc = results[0]
             lat, lon = loc["latitude"], loc["longitude"]
