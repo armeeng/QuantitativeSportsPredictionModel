@@ -5646,3 +5646,7 @@
 2025-05-25 23:00:20 INFO     root: Updated final scores for 3 games. Skipped 0 games.
 2025-05-25 23:00:20 INFO     root: Preprocessing NBA on 2025-02-01
 2025-05-25 23:01:00 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-percent-of-points-from-2-pointers?date=2025-02-01, sleeping 4 minutes before retry
+2025-05-25 23:05:51 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-05-25 23:05:51 INFO     root: Postprocessing NBA on 2025-02-01
+2025-05-25 23:05:52 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-05-25 23:05:52 INFO     root: Preprocessing CBB on 2025-02-01
