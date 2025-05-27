@@ -3,6 +3,7 @@ import json
 import sqlite3
 import glob
 from datetime import datetime, timezone
+import numpy as np
 
 import pandas as pd
 import joblib
@@ -38,7 +39,9 @@ class MLModel(BaseModel):
 
         # helper: recursively walk a JSON and collect all numbers in insertion order
         def flatten_numbers(obj, out):
-            if isinstance(obj, dict):
+            if obj is None:
+                out.append(0.0)
+            elif isinstance(obj, dict):
                 for v in obj.values():
                     flatten_numbers(v, out)
             elif isinstance(obj, list):
@@ -51,7 +54,6 @@ class MLModel(BaseModel):
             else:
                 # ignore strings or other types
                 pass
-
         # build feature matrix
         X_list = []
         for js in parsed:
@@ -63,7 +65,7 @@ class MLModel(BaseModel):
         lengths = {len(r) for r in X_list}
         if len(lengths) != 1:
             raise ValueError(f"Inconsistent feature lengths in JSONs: {lengths}")
-        X = pd.np.array(X_list)  # or np.array
+        X = np.array(X_list)  # or np.array
 
         # 2) targets
         y = df[["team1_score", "team2_score"]].to_numpy()
@@ -106,37 +108,77 @@ class MLModel(BaseModel):
         """
         Load the latest saved model for this.model_name, run `query` to fetch rows,
         parse the same JSON `column` it was trained on, and return predictions.
-        Returns:
-            List[Dict]: [
-                {"game_id": <id>, "pred_team1": float, "pred_team2": float},
-                ...
-            ]
         """
+        # 1) find latest model file
         pattern = os.path.join("models", f"{self.model_name}*.joblib")
         candidates = glob.glob(pattern)
         if not candidates:
             raise FileNotFoundError(f"No model files found matching {pattern}")
         model_path = max(candidates, key=os.path.getmtime)
 
-        info  = joblib.load(model_path)
-        model = info["model"]
-        column = info["column"]
+        info        = joblib.load(model_path)
+        model       = info["model"]
+        column      = info["column"]
         input_shape = info["input_shape"]
 
+        # 2) load data
         conn = sqlite3.connect("sports.db")
-        df = pd.read_sql_query(query, conn)
+        df   = pd.read_sql_query(query, conn)
         conn.close()
         if df.empty:
             return []
 
+        # 3) parse JSON column
         parsed = df[column].apply(json.loads)
-        flat   = pd.json_normalize(parsed).fillna(0)
-        X = flat.to_numpy()
-        if X.shape[1] != input_shape:
-            raise ValueError(f"Feature mismatch: model expects {input_shape}, got {X.shape[1]}")
 
+        # 4) same flatten_numbers helper as in train()
+        def flatten_numbers(obj, out):
+            if obj is None:
+                out.append(0.0)
+            elif isinstance(obj, dict):
+                for v in obj.values():
+                    flatten_numbers(v, out)
+            elif isinstance(obj, list):
+                for v in obj:
+                    flatten_numbers(v, out)
+            elif isinstance(obj, bool):
+                out.append(1.0 if obj else 0.0)
+            elif isinstance(obj, (int, float)):
+                out.append(float(obj))
+            else:
+                # ignore strings or other types
+                pass
+
+        # 5) build feature matrix exactly as train()
+        X_list = []
+        for js in parsed:
+            row_feats = []
+            flatten_numbers(js, row_feats)
+            X_list.append(row_feats)
+
+        # 6) sanity‐check shape
+        lengths = {len(r) for r in X_list}
+        if len(lengths) != 1:
+            raise ValueError(f"Feature mismatch: inconsistent lengths {lengths}")
+        if lengths.pop() != input_shape:
+            raise ValueError(f"Feature mismatch: model expects {input_shape}, got {len(X_list[0])}")
+
+        X = np.array(X_list)
+
+        # 7) predict
         preds = model.predict(X)
         return [
-            {"game_id": gid, "pred_team1": float(p1), "pred_team2": float(p2)}
-            for gid, (p1, p2) in zip(df["game_id"], preds)
+            {
+              "game_id":    gid,
+              "team1_id":   t1,
+              "team2_id":   t2,
+              "pred_team1": float(p1),
+              "pred_team2": float(p2)
+            }
+            for gid, t1, t2, (p1, p2) in zip(
+                df["game_id"],
+                df["team1_id"],
+                df["team2_id"],
+                preds
+            )
         ]
