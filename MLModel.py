@@ -11,6 +11,8 @@ import joblib
 from BaseModel import BaseModel
 
 # new imports for additional model types
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
@@ -22,11 +24,12 @@ class MLModel(BaseModel):
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
 
-    def train(self, query: str):
+    def train(self, query: str, test_size: float = 0.2, random_state: int = 42):
         """
         Train on the rows returned by `query`, using the JSON column named `self.column`
         as inputs, and team1_score/team2_score as the two outputs.
-        Saves the trained model to models/{model_name}.joblib.
+        Splits off `test_size` fraction for evaluation, prints metrics (incl. betting),
+        then saves the model.
         """
         # 1) load data
         conn = sqlite3.connect("sports.db")
@@ -34,10 +37,8 @@ class MLModel(BaseModel):
         conn.close()
         df = df.dropna(subset=["team1_score", "team2_score"])
 
-        # parse JSON column
+        # 2) build feature matrix
         parsed = df[self.column].apply(json.loads)
-
-        # helper: recursively walk a JSON and collect all numbers in insertion order
         def flatten_numbers(obj, out):
             if obj is None:
                 out.append(0.0)
@@ -52,39 +53,128 @@ class MLModel(BaseModel):
             elif isinstance(obj, (int, float)):
                 out.append(float(obj))
             else:
-                # ignore strings or other types
+                # ignore strings
                 pass
-        # build feature matrix
+
         X_list = []
         for js in parsed:
             row_feats = []
             flatten_numbers(js, row_feats)
             X_list.append(row_feats)
 
-        # ensure all rows have same length
         lengths = {len(r) for r in X_list}
         if len(lengths) != 1:
-            raise ValueError(f"Inconsistent feature lengths in JSONs: {lengths}")
-        X = np.array(X_list)  # or np.array
+            raise ValueError(f"Inconsistent feature lengths: {lengths}")
+        X = np.array(X_list, dtype=float)
 
-        # 2) targets
-        y = df[["team1_score", "team2_score"]].to_numpy()
+        # 3) extract targets and betting lines
+        y       = df[["team1_score","team2_score"]].to_numpy()
+        spread  = df["team1_spread"].to_numpy()    # assume team2_spread = -team1_spread
+        total   = df["total_score"].to_numpy()
+        ml1     = df["team1_moneyline"].fillna(0).to_numpy()
+        ml2     = df["team2_moneyline"].fillna(0).to_numpy()
 
-        # 3) pick & fit model
+        # 4) train/test split (keep everything aligned)
+        (X_train, X_test,
+         y_train, y_test,
+         spr_train, spr_test,
+         tot_train, tot_test,
+         ml1_train, ml1_test,
+         ml2_train, ml2_test) = train_test_split(
+            X, y, spread, total, ml1, ml2,
+            test_size=test_size, random_state=random_state
+        )
+
+        # 5) pick & fit model
         if self.model_type == 'linear_regression':
             model = LinearRegression()
         elif self.model_type == 'random_forest':
             model = RandomForestRegressor(n_estimators=100, random_state=0)
         elif self.model_type == 'xgboost':
             model = XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=0)
-        elif self.model_type in ('neural_network', 'mlp', 'mlp_regressor'):
+        elif self.model_type in ('neural_network','mlp','mlp_regressor'):
             model = MLPRegressor(hidden_layer_sizes=(100,50), max_iter=500, random_state=0)
         else:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}")
 
-        model.fit(X, y)
+        model.fit(X_train, y_train)
 
-        # 4) save without overwriting
+        # 6) evaluate regression metrics
+        y_pred = model.predict(X_test)
+        r2   = r2_score(y_test, y_pred, multioutput='raw_values')
+        rmse = np.sqrt(mean_squared_error(y_test, y_pred, multioutput='raw_values'))
+        mae  = mean_absolute_error(y_test, y_pred, multioutput='raw_values')
+
+        print(f"\nRegression metrics on {len(y_test)} held‐out games:")
+        print(f"  Team1 → R² {r2[0]:.3f},  RMSE {rmse[0]:.2f},  MAE {mae[0]:.2f}")
+        print(f"  Team2 → R² {r2[1]:.3f},  RMSE {rmse[1]:.2f},  MAE {mae[1]:.2f}")
+
+        # 7) compute betting metrics on test set
+        actual_margin = y_test[:,0] - y_test[:,1]
+        pred_margin   = y_pred[:,0] - y_pred[:,1]
+
+        # Win/Loss accuracy
+        win_acc = np.mean((pred_margin>0) == (actual_margin>0))
+
+        # 7) compute betting metrics on test set
+        actual_margin = y_test[:, 0] - y_test[:, 1]
+        pred_margin   = y_pred[:, 0] - y_pred[:, 1]
+
+        # Win/Loss accuracy (all games)
+        win_acc = np.mean((pred_margin > 0) == (actual_margin > 0))
+
+        # coerce spreads and totals to float, invalid→nan
+        spr = pd.to_numeric(spr_test, errors="coerce").astype(float)
+        tot = pd.to_numeric(tot_test, errors="coerce").astype(float)
+
+        # Spread cover accuracy: only where we have a valid team1_spread
+        valid_spread = np.isfinite(spr)
+        if valid_spread.any():
+            cover_pred   = pred_margin[valid_spread]   > spr[valid_spread]
+            cover_actual = actual_margin[valid_spread] > spr[valid_spread]
+            spread_acc   = np.mean(cover_pred == cover_actual)
+        else:
+            spread_acc = float("nan")
+
+        # Over/Under accuracy: only where we have a valid total line
+        valid_ou = np.isfinite(tot)
+        if valid_ou.any():
+            total_pred  = y_pred[:, 0] + y_pred[:, 1]
+            over_pred   = total_pred[valid_ou] > tot[valid_ou]
+            over_actual = (y_test.sum(axis=1))[valid_ou] > tot[valid_ou]
+            ou_acc      = np.mean(over_pred == over_actual)
+        else:
+            ou_acc = float("nan")
+
+        # Moneyline P/L assuming $1 per game
+        # if predicted winner is team1, use team1 odds (ml1_test), else team2 odds
+        ml_pnl = []
+        for pm, am, m1, m2 in zip(pred_margin, actual_margin, ml1_test, ml2_test):
+            pick1 = (pm > 0)
+            odds  = m1 if pick1 else m2
+
+            # skip missing odds
+            if odds == 0:
+                continue
+
+            won = (am > 0) if pick1 else (am < 0)
+            if won:
+                # positive odds => profit = odds/100; negative => profit = 100/abs(odds)
+                profit = (odds / 100) if odds > 0 else (100 / abs(odds))
+            else:
+                profit = -1.0
+
+            ml_pnl.append(profit)
+
+        total_pnl = sum(ml_pnl)
+
+        print(f"\nBetting metrics on test set:")
+        print(f"  Win/Loss accuracy: {win_acc:.3%}")
+        print(f"  Spread‐cover accuracy: {spread_acc:.3%}")
+        print(f"  Over/Under accuracy: {ou_acc:.3%}")
+        print(f"  Moneyline P/L (per \$1 stakes): {total_pnl:.2f} units")
+
+        # 8) save without overwriting
         os.makedirs("models", exist_ok=True)
         base = os.path.join("models", self.model_name)
         path = f"{base}.joblib"
@@ -97,10 +187,20 @@ class MLModel(BaseModel):
             "model_type":  self.model_type,
             "input_shape": X.shape[1],
             "column":      self.column,
-            "query":       query
+            "query":       query,
+            "metrics": {
+                "r2":           r2.tolist(),
+                "rmse":         rmse.tolist(),
+                "mae":          mae.tolist(),
+                "win_acc":      win_acc,
+                "spread_acc":   spread_acc,
+                "ou_acc":       ou_acc,
+                "ml_pnl":       total_pnl
+            }
         }, path)
 
-        print(f"Trained {self.model_name} ({self.model_type}) on {len(df)} examples; saved to {path}")
+        print(f"\nTrained {self.model_name} ({self.model_type}) on "
+              f"{len(X_train)} train / {len(X_test)} test; saved to {path}\n")
 
 
 
