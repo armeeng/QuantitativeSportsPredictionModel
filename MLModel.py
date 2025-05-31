@@ -127,22 +127,37 @@ class MLModel(BaseModel):
         spr = pd.to_numeric(spr_test, errors="coerce").astype(float)
         tot = pd.to_numeric(tot_test, errors="coerce").astype(float)
 
-        # Spread cover accuracy: only where we have a valid team1_spread
+
+        # Spread‐cover accuracy: only where we have a valid team1_spread AND not a push
         valid_spread = np.isfinite(spr)
         if valid_spread.any():
-            cover_pred   = pred_margin[valid_spread]   > spr[valid_spread]
-            cover_actual = actual_margin[valid_spread] > spr[valid_spread]
-            spread_acc   = np.mean(cover_pred == cover_actual)
+            actual_adjusted = actual_margin + spr
+            # Exclude pushes where actual_adjusted == 0
+            non_push_spread = valid_spread & (actual_adjusted != 0)
+
+            if non_push_spread.any():
+                cover_pred   = (pred_margin[non_push_spread] + spr[non_push_spread]) > 0
+                cover_actual = actual_adjusted[non_push_spread] > 0
+                spread_acc   = np.mean(cover_pred == cover_actual)
+            else:
+                spread_acc = float("nan")
         else:
             spread_acc = float("nan")
 
-        # Over/Under accuracy: only where we have a valid total line
+        # Over/Under accuracy: only where we have a valid total line AND not a push
         valid_ou = np.isfinite(tot)
         if valid_ou.any():
-            total_pred  = y_pred[:, 0] + y_pred[:, 1]
-            over_pred   = total_pred[valid_ou] > tot[valid_ou]
-            over_actual = (y_test.sum(axis=1))[valid_ou] > tot[valid_ou]
-            ou_acc      = np.mean(over_pred == over_actual)
+            actual_total = y_test.sum(axis=1)
+            # Exclude pushes where actual_total == total line
+            non_push_ou = valid_ou & (actual_total != tot)
+
+            if non_push_ou.any():
+                total_pred   = y_pred[:, 0] + y_pred[:, 1]
+                over_pred    = total_pred[non_push_ou] > tot[non_push_ou]
+                over_actual  = actual_total[non_push_ou] > tot[non_push_ou]
+                ou_acc       = np.mean(over_pred == over_actual)
+            else:
+                ou_acc = float("nan")
         else:
             ou_acc = float("nan")
 
