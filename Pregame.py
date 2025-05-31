@@ -1482,13 +1482,10 @@ class Pregame:
         # spread: top-level 'spread' is a single float
         raw = entry.get('spread')
         if isinstance(raw, (int, float)):
-            # if negative => home favoured by |raw|
-            if raw < 0:
-                team2_sp = raw
-                team1_sp = -raw
-            else:
-                team1_sp = raw
-                team2_sp = -raw
+            # raw is “home_team_spread” exactly as ESPN intends,
+            # so assign directly to team2_sp and invert for team1_sp:
+            team2_sp = raw
+            team1_sp = -raw
         else:
             # fallback to the juice if no top-level spread
             team1_sp = away.get('spreadOdds')
