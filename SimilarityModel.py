@@ -18,16 +18,16 @@ class SimilarityModel(BaseModel):
         self.column = column
 
     def train(self,
-              query: str,
-              reference_query: str,
-              top_n: int = 5,
-              custom_indices: list[int] = None,
-              use_random_weights: bool = False,
-              random_weights: list[float] = None,
-              use_internal_weights: bool = False,
-              **kwargs):
+            query: str,
+            reference_query: str,
+            top_n: int = 5,
+            custom_indices: list[int] = None,
+            use_random_weights: bool = False,
+            random_weights: list[float] = None,
+            use_internal_weights: bool = False,
+            **kwargs):
         """
-        “Train” for a similarity model simply means: run predict(...) on the
+        "Train" for a similarity model simply means: run predict(...) on the
         same data, then compute betting metrics (win‐loss, spread cover, O/U, and moneyline P/L).
         Returns a dict of metrics.
         """
@@ -43,7 +43,7 @@ class SimilarityModel(BaseModel):
             **kwargs
         )
 
-        # 2) Load the “target” DataFrame (so we can compare predicted vs actual)
+        # 2) Load the "target" DataFrame (so we can compare predicted vs actual)
         conn = sqlite3.connect("sports.db")
         df_tgt = pd.read_sql_query(query, conn).dropna(
             subset=["team1_score", "team2_score"]
@@ -71,6 +71,11 @@ class SimilarityModel(BaseModel):
         totals = []
         ml1 = []
         ml2 = []
+        # Add spread odds and over/under odds arrays
+        spr_odds1 = []
+        spr_odds2 = []
+        over_odds = []
+        under_odds = []
         game_ids = []
 
         for idx, row in df_tgt.iterrows():
@@ -97,6 +102,18 @@ class SimilarityModel(BaseModel):
             ml1.append(np.nan if m1 is None else float(m1))
             ml2.append(np.nan if m2 is None else float(m2))
 
+            # spread odds (could be NULL)
+            so1 = row.get("team1_spread_odds", None)
+            so2 = row.get("team2_spread_odds", None)
+            spr_odds1.append(np.nan if so1 is None else float(so1))
+            spr_odds2.append(np.nan if so2 is None else float(so2))
+
+            # over/under odds (could be NULL)
+            ov = row.get("over_odds", None)
+            un = row.get("under_odds", None)
+            over_odds.append(np.nan if ov is None else float(ov))
+            under_odds.append(np.nan if un is None else float(un))
+
         # Convert to arrays
         actual_arr = np.array(actual_scores, dtype=float)      # shape (N,2)
         pred_arr   = np.array(predicted_scores, dtype=float)   # shape (N,2)
@@ -104,6 +121,10 @@ class SimilarityModel(BaseModel):
         totals_arr  = np.array(totals, dtype=float)            # shape (N,)
         ml1_arr     = np.array(ml1, dtype=float)               # shape (N,)
         ml2_arr     = np.array(ml2, dtype=float)               # shape (N,)
+        spr_odds1_arr = np.array(spr_odds1, dtype=float)       # shape (N,)
+        spr_odds2_arr = np.array(spr_odds2, dtype=float)       # shape (N,)
+        over_odds_arr = np.array(over_odds, dtype=float)       # shape (N,)
+        under_odds_arr = np.array(under_odds, dtype=float)     # shape (N,)
 
         # 4) Compute the betting metrics:
 
@@ -115,7 +136,7 @@ class SimilarityModel(BaseModel):
         # Spread‐cover accuracy: only consider rows where spread is finite AND not a push
         valid_spr = np.isfinite(spreads_arr)
         if valid_spr.any():
-            # Exclude any actual “pushes” where actual_margin + spread == 0
+            # Exclude any actual "pushes" where actual_margin + spread == 0
             actual_adjusted = actual_margin + spreads_arr
             non_push_mask = valid_spr & (actual_adjusted != 0)
 
@@ -146,8 +167,63 @@ class SimilarityModel(BaseModel):
         else:
             ou_acc = float("nan")
 
+        # Spread P/L: bet $1 on whichever side the model "covers"
+        spread_pnl_list = []
+        for i in range(len(pred_margin)):
+            if not np.isfinite(spreads_arr[i]):
+                continue  # no spread line
+
+            am = actual_margin[i]
+            pm = pred_margin[i]
+            line = spreads_arr[i]
+
+            # predicted cover side: if (pm + line) > 0, model takes Team1 +line, else Team2 –line
+            pick_team1 = (pm + line) > 0
+            # Fetch the correct closing spread odds depending on side:
+            odds_side = spr_odds1_arr[i] if pick_team1 else spr_odds2_arr[i]
+            if not np.isfinite(odds_side) or odds_side == 0:
+                continue  # skip missing odds
+
+            # Determine if bet won: 
+            # If pick_team1, we need (am + line) > 0. If pick team2, we need (am + line) < 0.
+            won = ((am + line) > 0) if pick_team1 else ((am + line) < 0)
+            if won:
+                # positive American odds => profit = odds/100; negative => profit = 100/abs(odds)
+                profit = (odds_side / 100) if odds_side > 0 else (100.0 / abs(odds_side))
+            else:
+                profit = -1.0
+            spread_pnl_list.append(profit)
+        spread_pnl = sum(spread_pnl_list)
+
+        # Over/Under P/L: bet $1 on Over if model's predicted total > line, else Under
+        ou_pnl_list = []
+        for i in range(len(pred_margin)):
+            if not np.isfinite(totals_arr[i]):
+                continue  # no O/U line
+
+            actual_total = actual_arr[i, 0] + actual_arr[i, 1]
+            predicted_total = pred_arr[i, 0] + pred_arr[i, 1]
+            line = totals_arr[i]
+
+            pick_over = predicted_total > line
+            odds_side = over_odds_arr[i] if pick_over else under_odds_arr[i]
+            if not np.isfinite(odds_side) or odds_side == 0:
+                continue  # skip missing odds
+
+            if pick_over:
+                won = (actual_total > line)
+            else:
+                won = (actual_total < line)
+
+            if won:
+                profit = (odds_side / 100) if odds_side > 0 else (100.0 / abs(odds_side))
+            else:
+                profit = -1.0
+            ou_pnl_list.append(profit)
+        ou_pnl = sum(ou_pnl_list)
+
         # Moneyline P/L (per $1 stake on the favorite)
-        # We assume: if predicted margin > 0, we “bet” on team1; else we “bet” on team2.
+        # We assume: if predicted margin > 0, we "bet" on team1; else we "bet" on team2.
         # Payout: if you bet $1 on a team at +X moneyline, you win (X/100) if they win;
         # if you bet $1 on a team at –Y moneyline, you must risk $1 to win 100/Y.
         ml_pl_list = []
@@ -158,7 +234,7 @@ class SimilarityModel(BaseModel):
                 ml_pl_list.append(0.0)
                 continue
 
-            # Determine which side we “bet” on:
+            # Determine which side we "bet" on:
             if pred_margin[i] > 0:
                 # we bet on team1; check the actual outcome
                 if actual_arr[i, 0] > actual_arr[i, 1]:
@@ -201,6 +277,8 @@ class SimilarityModel(BaseModel):
             "spread_accuracy":   float(spread_acc) if not np.isnan(spread_acc) else None,
             "over_under_accuracy": float(ou_acc)   if not np.isnan(ou_acc)   else None,
             "moneyline_pl": total_ml_pl,  # total P/L if you'd bet $1 on each target game
+            "spread_pl": spread_pnl,      # total P/L for spread bets at $1 per game
+            "over_under_pl": ou_pnl,      # total P/L for over/under bets at $1 per game
         }
 
     def predict(self,

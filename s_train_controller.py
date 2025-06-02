@@ -4,8 +4,8 @@ from SimilarityModel import SimilarityModel
 # weighting by similarity (inverse distance)
 sm = SimilarityModel("nba_sim", distance_metric="cosine")
 train = sm.train(
-    query="SELECT * FROM games WHERE sport='CBB';",
-    reference_query="SELECT * FROM games WHERE sport='CBB';",
+    query="SELECT * FROM games WHERE sport='MLB';",
+    reference_query="SELECT * FROM games WHERE sport='MLB';",
     top_n=10,
     use_internal_weights=False
 )

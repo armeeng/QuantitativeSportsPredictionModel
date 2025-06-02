@@ -24,6 +24,7 @@ class MLModel(BaseModel):
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
 
+
     def train(self, query: str, test_size: float = 0.2, random_state: int = 42):
         """
         Train on the rows returned by `query`, using the JSON column named `self.column`
@@ -39,6 +40,7 @@ class MLModel(BaseModel):
 
         # 2) build feature matrix
         parsed = df[self.column].apply(json.loads)
+
         def flatten_numbers(obj, out):
             if obj is None:
                 out.append(0.0)
@@ -53,7 +55,7 @@ class MLModel(BaseModel):
             elif isinstance(obj, (int, float)):
                 out.append(float(obj))
             else:
-                # ignore strings
+                # ignore strings or other types
                 pass
 
         X_list = []
@@ -67,22 +69,41 @@ class MLModel(BaseModel):
             raise ValueError(f"Inconsistent feature lengths: {lengths}")
         X = np.array(X_list, dtype=float)
 
-        # 3) extract targets and betting lines
-        y       = df[["team1_score","team2_score"]].to_numpy()
-        spread  = df["team1_spread"].to_numpy()    # assume team2_spread = -team1_spread
-        total   = df["total_score"].to_numpy()
-        ml1     = df["team1_moneyline"].fillna(0).to_numpy()
-        ml2     = df["team2_moneyline"].fillna(0).to_numpy()
+        # 3) extract targets and betting lines (fillna→0 for missing odds)
+        y        = df[["team1_score", "team2_score"]].to_numpy()
+        spread   = pd.to_numeric(df["team1_spread"], errors="coerce").to_numpy()
+        total    = pd.to_numeric(df["total_score"], errors="coerce").to_numpy()
+
+        # spread odds: assume team2_spread_odds is provided in the DB
+        spr_odds1 = pd.to_numeric(df["team1_spread_odds"].fillna(0), errors="coerce").to_numpy()
+        spr_odds2 = pd.to_numeric(df["team2_spread_odds"].fillna(0), errors="coerce").to_numpy()
+
+        # total (over/under) odds:
+        over_odds = pd.to_numeric(df["over_odds"].fillna(0), errors="coerce").to_numpy()
+        under_odds = pd.to_numeric(df["under_odds"].fillna(0), errors="coerce").to_numpy()
+
+        # moneyline odds
+        ml1 = pd.to_numeric(df["team1_moneyline"].fillna(0), errors="coerce").to_numpy()
+        ml2 = pd.to_numeric(df["team2_moneyline"].fillna(0), errors="coerce").to_numpy()
 
         # 4) train/test split (keep everything aligned)
         (X_train, X_test,
          y_train, y_test,
          spr_train, spr_test,
          tot_train, tot_test,
+         spr_odds1_train, spr_odds1_test,
+         spr_odds2_train, spr_odds2_test,
+         over_odds_train, over_odds_test,
+         under_odds_train, under_odds_test,
          ml1_train, ml1_test,
          ml2_train, ml2_test) = train_test_split(
-            X, y, spread, total, ml1, ml2,
-            test_size=test_size, random_state=random_state
+            X, y,
+            spread, total,
+            spr_odds1, spr_odds2,
+            over_odds, under_odds,
+            ml1, ml2,
+            test_size=test_size,
+            random_state=random_state
         )
 
         # 5) pick & fit model
@@ -92,8 +113,8 @@ class MLModel(BaseModel):
             model = RandomForestRegressor(n_estimators=100, random_state=0)
         elif self.model_type == 'xgboost':
             model = XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=0)
-        elif self.model_type in ('neural_network','mlp','mlp_regressor'):
-            model = MLPRegressor(hidden_layer_sizes=(100,50), max_iter=500, random_state=0)
+        elif self.model_type in ('neural_network', 'mlp', 'mlp_regressor'):
+            model = MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=0)
         else:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}")
 
@@ -110,32 +131,21 @@ class MLModel(BaseModel):
         print(f"  Team2 → R² {r2[1]:.3f},  RMSE {rmse[1]:.2f},  MAE {mae[1]:.2f}")
 
         # 7) compute betting metrics on test set
-        actual_margin = y_test[:,0] - y_test[:,1]
-        pred_margin   = y_pred[:,0] - y_pred[:,1]
-
-        # Win/Loss accuracy
-        win_acc = np.mean((pred_margin>0) == (actual_margin>0))
-
-        # 7) compute betting metrics on test set
         actual_margin = y_test[:, 0] - y_test[:, 1]
         pred_margin   = y_pred[:, 0] - y_pred[:, 1]
 
         # Win/Loss accuracy (all games)
         win_acc = np.mean((pred_margin > 0) == (actual_margin > 0))
 
-        # coerce spreads and totals to float, invalid→nan
-        spr = pd.to_numeric(spr_test, errors="coerce").astype(float)
-        tot = pd.to_numeric(tot_test, errors="coerce").astype(float)
-
-
-        # Spread‐cover accuracy: only where we have a valid team1_spread AND not a push
+        # Spread‐cover accuracy & P/L
+        spr = spr_test.astype(float)
         valid_spread = np.isfinite(spr)
         if valid_spread.any():
             actual_adjusted = actual_margin + spr
             # Exclude pushes where actual_adjusted == 0
             non_push_spread = valid_spread & (actual_adjusted != 0)
-
             if non_push_spread.any():
+                # cover
                 cover_pred   = (pred_margin[non_push_spread] + spr[non_push_spread]) > 0
                 cover_actual = actual_adjusted[non_push_spread] > 0
                 spread_acc   = np.mean(cover_pred == cover_actual)
@@ -144,52 +154,112 @@ class MLModel(BaseModel):
         else:
             spread_acc = float("nan")
 
-        # Over/Under accuracy: only where we have a valid total line AND not a push
-        valid_ou = np.isfinite(tot)
+        # Spread P/L: bet $1 on whichever side the model “covers”
+        spread_pnl_list = []
+        for i in range(len(pred_margin)):
+            if not np.isfinite(spr[i]):
+                continue  # no spread line
+
+            am = actual_margin[i]
+            pm = pred_margin[i]
+            line = spr[i]
+
+            # predicted cover side: if (pm + line) > 0, model takes Team1 +line, else Team2 –line
+            pick_team1 = (pm + line) > 0
+            # Fetch the correct closing spread odds depending on side:
+            odds_side = spr_odds1_test[i] if pick_team1 else spr_odds2_test[i]
+            if odds_side == 0:
+                continue  # skip missing odds
+
+            # Determine if bet won: 
+            # If pick_team1, we need (am + line) > 0. If pick team2, we need (am + line) < 0.
+            won = ((am + line) > 0) if pick_team1 else ((am + line) < 0)
+            if won:
+                # positive American odds => profit = odds/100; negative => profit = 100/abs(odds)
+                profit = (odds_side / 100) if odds_side > 0 else (100.0 / abs(odds_side))
+            else:
+                profit = -1.0
+            spread_pnl_list.append(profit)
+        spread_pnl = sum(spread_pnl_list)
+
+        # Over/Under accuracy & P/L
+        total_line = tot_test.astype(float)
+        valid_ou = np.isfinite(total_line)
         if valid_ou.any():
             actual_total = y_test.sum(axis=1)
-            # Exclude pushes where actual_total == total line
-            non_push_ou = valid_ou & (actual_total != tot)
-
+            non_push_ou = valid_ou & (actual_total != total_line)
             if non_push_ou.any():
-                total_pred   = y_pred[:, 0] + y_pred[:, 1]
-                over_pred    = total_pred[non_push_ou] > tot[non_push_ou]
-                over_actual  = actual_total[non_push_ou] > tot[non_push_ou]
-                ou_acc       = np.mean(over_pred == over_actual)
+                total_pred = y_pred.sum(axis=1)
+                over_pred  = total_pred[non_push_ou] > total_line[non_push_ou]
+                over_actual = actual_total[non_push_ou] > total_line[non_push_ou]
+                ou_acc     = np.mean(over_pred == over_actual)
             else:
                 ou_acc = float("nan")
         else:
             ou_acc = float("nan")
 
-        # Moneyline P/L assuming $1 per game
-        # if predicted winner is team1, use team1 odds (ml1_test), else team2 odds
-        ml_pnl = []
-        for pm, am, m1, m2 in zip(pred_margin, actual_margin, ml1_test, ml2_test):
-            pick1 = (pm > 0)
-            odds  = m1 if pick1 else m2
+        # Over/Under P/L: bet $1 on Over if model’s predicted total > line, else Under
+        ou_pnl_list = []
+        for i in range(len(pred_margin)):
+            if not np.isfinite(total_line[i]):
+                continue  # no O/U line
 
-            # skip missing odds
-            if odds == 0:
-                continue
+            actual_total = y_test[i, 0] + y_test[i, 1]
+            predicted_total = y_pred[i, 0] + y_pred[i, 1]
+            line = total_line[i]
 
-            won = (am > 0) if pick1 else (am < 0)
+            pick_over = predicted_total > line
+            odds_side = over_odds_test[i] if pick_over else under_odds_test[i]
+            if odds_side == 0:
+                continue  # skip missing odds
+
+            if pick_over:
+                won = (actual_total > line)
+            else:
+                won = (actual_total < line)
+
             if won:
-                # positive odds => profit = odds/100; negative => profit = 100/abs(odds)
-                profit = (odds / 100) if odds > 0 else (100 / abs(odds))
+                profit = (odds_side / 100) if odds_side > 0 else (100.0 / abs(odds_side))
             else:
                 profit = -1.0
+            ou_pnl_list.append(profit)
+        ou_pnl = sum(ou_pnl_list)
 
-            ml_pnl.append(profit)
+        # Moneyline P/L assuming $1 per game
+        ml_pnl_list = []
+        for i in range(len(pred_margin)):
+            pm = pred_margin[i]
+            am = actual_margin[i]
+            m1 = ml1_test[i]
+            m2 = ml2_test[i]
 
-        total_pnl = sum(ml_pnl)
+            pick1 = (pm > 0)
+            odds_side = m1 if pick1 else m2
+            if odds_side == 0:
+                continue  # skip missing odds
 
-        print(f"\nBetting metrics on test set:")
-        print(f"  Win/Loss accuracy: {win_acc:.3%}")
-        print(f"  Spread‐cover accuracy: {spread_acc:.3%}")
-        print(f"  Over/Under accuracy: {ou_acc:.3%}")
-        print(f"  Moneyline P/L (per \$1 stakes): {total_pnl:.2f} units")
+            if pick1:
+                won = (am > 0)
+            else:
+                won = (am < 0)
 
-        # 8) save without overwriting
+            if won:
+                profit = (odds_side / 100) if odds_side > 0 else (100.0 / abs(odds_side))
+            else:
+                profit = -1.0
+            ml_pnl_list.append(profit)
+        total_ml_pnl = sum(ml_pnl_list)
+
+        # 8) print all betting metrics
+        print(f"\nBetting metrics on test set ({len(y_test)} games):")
+        print(f"  Win/Loss accuracy:    {win_acc:.3%}")
+        print(f"  Spread‐cover accuracy:{spread_acc:.3%}")
+        print(f"  Over/Under accuracy:   {ou_acc:.3%}")
+        print(f"  Moneyline  P/L:       {total_ml_pnl:.2f} units per $1")
+        print(f"  Spread   P/L:         {spread_pnl:.2f} units per $1")
+        print(f"  Over/Under P/L:       {ou_pnl:.2f} units per $1")
+
+        # 9) save without overwriting
         os.makedirs("models", exist_ok=True)
         base = os.path.join("models", self.model_name)
         path = f"{base}.joblib"
@@ -204,19 +274,20 @@ class MLModel(BaseModel):
             "column":      self.column,
             "query":       query,
             "metrics": {
-                "r2":           r2.tolist(),
-                "rmse":         rmse.tolist(),
-                "mae":          mae.tolist(),
-                "win_acc":      win_acc,
-                "spread_acc":   spread_acc,
-                "ou_acc":       ou_acc,
-                "ml_pnl":       total_pnl
+                "r2":            r2.tolist(),
+                "rmse":          rmse.tolist(),
+                "mae":           mae.tolist(),
+                "win_acc":       win_acc,
+                "spread_acc":    spread_acc,
+                "ou_acc":        ou_acc,
+                "ml_pnl":        total_ml_pnl,
+                "spread_pnl":    spread_pnl,
+                "ou_pnl":        ou_pnl
             }
         }, path)
 
         print(f"\nTrained {self.model_name} ({self.model_type}) on "
               f"{len(X_train)} train / {len(X_test)} test; saved to {path}\n")
-
 
 
     def predict(self, query: str):

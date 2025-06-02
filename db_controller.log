@@ -1,573 +1,99 @@
-2025-05-31 01:29:53 INFO     root: Preprocessing NBA on 2025-05-31
-2025-05-31 01:31:05 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 01:31:05 INFO     root: Postprocessing NBA on 2025-05-31
-2025-05-31 01:31:05 INFO     root: Updated final scores for 0 games. Skipped 1 games.
-2025-05-31 01:31:06 INFO     root: Preprocessing CFB on 2025-05-31
-2025-05-31 01:31:06 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
-2025-05-31 01:31:06 INFO     root: Postprocessing CFB on 2025-05-31
-2025-05-31 01:31:06 INFO     root: Updated final scores for 0 games. Skipped 0 games.
-2025-05-31 01:31:06 INFO     root: Preprocessing CBB on 2025-05-31
-2025-05-31 01:31:06 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
-2025-05-31 01:31:06 INFO     root: Postprocessing CBB on 2025-05-31
-2025-05-31 01:31:06 INFO     root: Updated final scores for 0 games. Skipped 0 games.
-2025-05-31 01:31:06 INFO     root: Preprocessing MLB on 2025-05-31
-2025-05-31 01:32:34 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 01:32:34 INFO     root: Postprocessing MLB on 2025-05-31
-2025-05-31 01:32:34 INFO     root: Updated final scores for 0 games. Skipped 15 games.
-2025-05-31 01:32:34 INFO     root: Preprocessing MLB on 2025-05-30
-2025-05-31 01:32:35 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/hits-per-game?date=2025-05-30, sleeping 4 minutes before retry
-2025-05-31 01:38:00 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 01:38:00 INFO     root: Postprocessing MLB on 2025-05-30
-2025-05-31 01:38:01 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 01:38:01 INFO     root: Preprocessing NBA on 2025-05-29
-2025-05-31 01:39:12 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 01:39:12 INFO     root: Postprocessing NBA on 2025-05-29
-2025-05-31 01:39:12 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 01:39:12 INFO     root: Preprocessing MLB on 2025-05-29
-2025-05-31 01:39:25 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/isolated-power?date=2025-05-29, sleeping 4 minutes before retry
-2025-05-31 01:44:22 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
-2025-05-31 01:44:22 INFO     root: Postprocessing MLB on 2025-05-29
-2025-05-31 01:44:22 INFO     root: Updated final scores for 5 games. Skipped 0 games.
-2025-05-31 01:44:22 INFO     root: Preprocessing NBA on 2025-05-28
-2025-05-31 01:45:31 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 01:45:31 INFO     root: Postprocessing NBA on 2025-05-28
-2025-05-31 01:45:31 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 01:45:31 INFO     root: Preprocessing MLB on 2025-05-28
-2025-05-31 01:45:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-rbis-per-game?date=2025-05-28, sleeping 4 minutes before retry
-2025-05-31 01:50:58 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 01:50:58 INFO     root: Postprocessing MLB on 2025-05-28
-2025-05-31 01:50:59 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 01:50:59 INFO     root: Preprocessing NBA on 2025-05-27
-2025-05-31 01:52:04 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 01:52:04 INFO     root: Postprocessing NBA on 2025-05-27
-2025-05-31 01:52:04 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 01:52:04 INFO     root: Preprocessing MLB on 2025-05-27
-2025-05-31 01:52:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/extra-inning-runs-per-game?date=2025-05-27, sleeping 4 minutes before retry
-2025-05-31 01:57:29 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 01:57:29 INFO     root: Postprocessing MLB on 2025-05-27
-2025-05-31 01:57:30 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 01:57:30 INFO     root: Preprocessing NBA on 2025-05-26
-2025-05-31 01:58:39 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 01:58:39 INFO     root: Postprocessing NBA on 2025-05-26
-2025-05-31 01:58:39 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 01:58:39 INFO     root: Preprocessing MLB on 2025-05-26
-2025-05-31 02:00:04 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
-2025-05-31 02:00:04 INFO     root: Postprocessing MLB on 2025-05-26
-2025-05-31 02:00:04 INFO     root: Updated final scores for 12 games. Skipped 0 games.
-2025-05-31 02:00:04 INFO     root: Preprocessing NBA on 2025-05-25
-2025-05-31 02:00:05 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-25, sleeping 4 minutes before retry
-2025-05-31 02:05:13 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:05:13 INFO     root: Postprocessing NBA on 2025-05-25
-2025-05-31 02:05:13 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:05:13 INFO     root: Preprocessing MLB on 2025-05-25
-2025-05-31 02:06:39 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 02:06:39 INFO     root: Postprocessing MLB on 2025-05-25
-2025-05-31 02:06:39 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 02:06:39 INFO     root: Preprocessing NBA on 2025-05-24
-2025-05-31 02:06:40 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-24, sleeping 4 minutes before retry
-2025-05-31 02:11:49 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:11:49 INFO     root: Postprocessing NBA on 2025-05-24
-2025-05-31 02:11:49 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:11:49 INFO     root: Preprocessing MLB on 2025-05-24
-2025-05-31 02:13:22 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 02:13:22 INFO     root: Postprocessing MLB on 2025-05-24
-2025-05-31 02:13:23 INFO     root: Updated final scores for 16 games. Skipped 0 games.
-2025-05-31 02:13:23 INFO     root: Preprocessing NBA on 2025-05-23
-2025-05-31 02:13:23 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-23, sleeping 4 minutes before retry
-2025-05-31 02:18:39 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:18:39 INFO     root: Postprocessing NBA on 2025-05-23
-2025-05-31 02:18:39 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:18:39 INFO     root: Preprocessing MLB on 2025-05-23
-2025-05-31 02:20:16 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 02:20:16 INFO     root: Postprocessing MLB on 2025-05-23
-2025-05-31 02:20:16 INFO     root: Updated final scores for 15 games. Skipped 1 games.
-2025-05-31 02:20:16 INFO     root: Preprocessing NBA on 2025-05-22
-2025-05-31 02:20:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-22, sleeping 4 minutes before retry
-2025-05-31 02:25:26 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:25:26 INFO     root: Postprocessing NBA on 2025-05-22
-2025-05-31 02:25:26 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:25:26 INFO     root: Preprocessing MLB on 2025-05-22
-2025-05-31 02:26:44 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
-2025-05-31 02:26:44 INFO     root: Postprocessing MLB on 2025-05-22
-2025-05-31 02:26:44 INFO     root: Updated final scores for 8 games. Skipped 1 games.
-2025-05-31 02:26:44 INFO     root: Preprocessing NBA on 2025-05-21
-2025-05-31 02:26:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/offensive-efficiency?date=2025-05-21, sleeping 4 minutes before retry
-2025-05-31 02:32:00 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:32:00 INFO     root: Postprocessing NBA on 2025-05-21
-2025-05-31 02:32:01 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:32:01 INFO     root: Preprocessing MLB on 2025-05-21
-2025-05-31 02:33:35 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 02:33:35 INFO     root: Postprocessing MLB on 2025-05-21
-2025-05-31 02:33:35 INFO     root: Updated final scores for 15 games. Skipped 1 games.
-2025-05-31 02:33:35 INFO     root: Preprocessing NBA on 2025-05-20
-2025-05-31 02:33:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-20, sleeping 4 minutes before retry
-2025-05-31 02:38:50 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:38:50 INFO     root: Postprocessing NBA on 2025-05-20
-2025-05-31 02:38:50 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:38:50 INFO     root: Preprocessing MLB on 2025-05-20
-2025-05-31 02:40:25 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 02:40:25 INFO     root: Postprocessing MLB on 2025-05-20
-2025-05-31 02:40:25 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 02:40:25 INFO     root: Preprocessing MLB on 2025-05-19
-2025-05-31 02:40:25 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-05-19, sleeping 4 minutes before retry
-2025-05-31 02:46:07 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
-2025-05-31 02:46:07 INFO     root: Postprocessing MLB on 2025-05-19
-2025-05-31 02:46:07 INFO     root: Updated final scores for 12 games. Skipped 0 games.
-2025-05-31 02:46:07 INFO     root: Preprocessing NBA on 2025-05-18
-2025-05-31 02:47:20 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:47:20 INFO     root: Postprocessing NBA on 2025-05-18
-2025-05-31 02:47:20 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:47:20 INFO     root: Preprocessing MLB on 2025-05-18
-2025-05-31 02:47:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/walks-plus-hits-per-inning-pitched?date=2025-05-18, sleeping 4 minutes before retry
-2025-05-31 02:52:50 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 02:52:50 INFO     root: Postprocessing MLB on 2025-05-18
-2025-05-31 02:52:51 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 02:52:51 INFO     root: Preprocessing MLB on 2025-05-17
-2025-05-31 02:54:24 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 02:54:24 INFO     root: Postprocessing MLB on 2025-05-17
-2025-05-31 02:54:24 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 02:54:24 INFO     root: Preprocessing NBA on 2025-05-16
-2025-05-31 02:55:06 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-field-goals-attempted-per-game?date=2025-05-16, sleeping 4 minutes before retry
-2025-05-31 02:59:39 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 02:59:39 INFO     root: Postprocessing NBA on 2025-05-16
-2025-05-31 02:59:39 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 02:59:39 INFO     root: Preprocessing MLB on 2025-05-16
-2025-05-31 03:01:09 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:01:09 INFO     root: Postprocessing MLB on 2025-05-16
-2025-05-31 03:01:09 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 03:01:09 INFO     root: Preprocessing NBA on 2025-05-15
-2025-05-31 03:02:05 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/rebounds-plus-assists-per-game?date=2025-05-15, sleeping 4 minutes before retry
-2025-05-31 03:06:22 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 03:06:22 INFO     root: Postprocessing NBA on 2025-05-15
-2025-05-31 03:06:22 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 03:06:22 INFO     root: Preprocessing MLB on 2025-05-15
-2025-05-31 03:07:40 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
-2025-05-31 03:07:40 INFO     root: Postprocessing MLB on 2025-05-15
-2025-05-31 03:07:40 INFO     root: Updated final scores for 6 games. Skipped 0 games.
-2025-05-31 03:07:40 INFO     root: Preprocessing NBA on 2025-05-14
-2025-05-31 03:08:57 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:08:57 INFO     root: Postprocessing NBA on 2025-05-14
-2025-05-31 03:08:57 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:08:57 INFO     root: Preprocessing MLB on 2025-05-14
-2025-05-31 03:08:58 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-05-14, sleeping 4 minutes before retry
-2025-05-31 03:14:33 INFO     root: populate_pregame_data: inserted/updated 17 rows, skipped 0 games.
-2025-05-31 03:14:33 INFO     root: Postprocessing MLB on 2025-05-14
-2025-05-31 03:14:34 INFO     root: Updated final scores for 17 games. Skipped 0 games.
-2025-05-31 03:14:34 INFO     root: Preprocessing NBA on 2025-05-13
-2025-05-31 03:15:45 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:15:45 INFO     root: Postprocessing NBA on 2025-05-13
-2025-05-31 03:15:45 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:15:45 INFO     root: Preprocessing MLB on 2025-05-13
-2025-05-31 03:15:56 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/on-base-plus-slugging-pct?date=2025-05-13, sleeping 4 minutes before retry
-2025-05-31 03:21:16 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:21:16 INFO     root: Postprocessing MLB on 2025-05-13
-2025-05-31 03:21:16 INFO     root: Updated final scores for 13 games. Skipped 2 games.
-2025-05-31 03:21:16 INFO     root: Preprocessing NBA on 2025-05-12
-2025-05-31 03:22:25 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:22:25 INFO     root: Postprocessing NBA on 2025-05-12
-2025-05-31 03:22:26 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:22:26 INFO     root: Preprocessing MLB on 2025-05-12
-2025-05-31 03:22:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-run-differential?date=2025-05-12, sleeping 4 minutes before retry
-2025-05-31 03:27:50 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
-2025-05-31 03:27:50 INFO     root: Postprocessing MLB on 2025-05-12
-2025-05-31 03:27:50 INFO     root: Updated final scores for 11 games. Skipped 0 games.
-2025-05-31 03:27:50 INFO     root: Preprocessing NBA on 2025-05-11
-2025-05-31 03:29:08 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:29:08 INFO     root: Postprocessing NBA on 2025-05-11
-2025-05-31 03:29:08 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:29:08 INFO     root: Preprocessing MLB on 2025-05-11
-2025-05-31 03:30:06 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-last-4-innings-runs-per-game?date=2025-05-11, sleeping 4 minutes before retry
-2025-05-31 03:34:40 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:34:40 INFO     root: Postprocessing MLB on 2025-05-11
-2025-05-31 03:34:40 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 03:34:40 INFO     root: Preprocessing NBA on 2025-05-10
-2025-05-31 03:35:53 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:35:53 INFO     root: Postprocessing NBA on 2025-05-10
-2025-05-31 03:35:54 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:35:54 INFO     root: Preprocessing MLB on 2025-05-10
-2025-05-31 03:37:28 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:37:28 INFO     root: Postprocessing MLB on 2025-05-10
-2025-05-31 03:37:28 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 03:37:28 INFO     root: Preprocessing NBA on 2025-05-09
-2025-05-31 03:37:29 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-09, sleeping 4 minutes before retry
-2025-05-31 03:42:38 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:42:38 INFO     root: Postprocessing NBA on 2025-05-09
-2025-05-31 03:42:38 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:42:38 INFO     root: Preprocessing MLB on 2025-05-09
-2025-05-31 03:44:12 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:44:12 INFO     root: Postprocessing MLB on 2025-05-09
-2025-05-31 03:44:13 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 03:44:13 INFO     root: Preprocessing NBA on 2025-05-08
-2025-05-31 03:44:13 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-08, sleeping 4 minutes before retry
-2025-05-31 03:49:28 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 03:49:28 INFO     root: Postprocessing NBA on 2025-05-08
-2025-05-31 03:49:28 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 03:49:28 INFO     root: Preprocessing MLB on 2025-05-08
-2025-05-31 03:50:52 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
-2025-05-31 03:50:52 INFO     root: Postprocessing MLB on 2025-05-08
-2025-05-31 03:50:52 INFO     root: Updated final scores for 9 games. Skipped 0 games.
-2025-05-31 03:50:52 INFO     root: Preprocessing NBA on 2025-05-07
-2025-05-31 03:51:05 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/three-point-pct?date=2025-05-07, sleeping 4 minutes before retry
-2025-05-31 03:56:11 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 03:56:11 INFO     root: Postprocessing NBA on 2025-05-07
-2025-05-31 03:56:11 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 03:56:11 INFO     root: Preprocessing MLB on 2025-05-07
-2025-05-31 03:58:58 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 03:58:58 INFO     root: Postprocessing MLB on 2025-05-07
-2025-05-31 03:58:58 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 03:58:58 INFO     root: Preprocessing NBA on 2025-05-06
-2025-05-31 03:59:26 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/assists-per-possession?date=2025-05-06, sleeping 4 minutes before retry
-2025-05-31 04:04:15 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 04:04:15 INFO     root: Postprocessing NBA on 2025-05-06
-2025-05-31 04:04:15 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 04:04:15 INFO     root: Preprocessing MLB on 2025-05-06
-2025-05-31 04:05:51 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 04:05:51 INFO     root: Postprocessing MLB on 2025-05-06
-2025-05-31 04:05:51 INFO     root: Updated final scores for 15 games. Skipped 1 games.
-2025-05-31 04:05:51 INFO     root: Preprocessing NBA on 2025-05-05
-2025-05-31 04:06:35 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-free-throws-attempted-per-game?date=2025-05-05, sleeping 4 minutes before retry
-2025-05-31 04:11:04 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 04:11:04 INFO     root: Postprocessing NBA on 2025-05-05
-2025-05-31 04:11:05 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 04:11:05 INFO     root: Preprocessing MLB on 2025-05-05
-2025-05-31 04:12:24 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 04:12:24 INFO     root: Postprocessing MLB on 2025-05-05
-2025-05-31 04:12:25 INFO     root: Updated final scores for 9 games. Skipped 1 games.
-2025-05-31 04:12:25 INFO     root: Preprocessing NBA on 2025-05-04
-2025-05-31 04:13:15 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/games-played?date=2025-05-04, sleeping 4 minutes before retry
-2025-05-31 04:17:38 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 04:17:38 INFO     root: Postprocessing NBA on 2025-05-04
-2025-05-31 04:17:38 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 04:17:38 INFO     root: Preprocessing MLB on 2025-05-04
-2025-05-31 04:19:12 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 04:19:12 INFO     root: Postprocessing MLB on 2025-05-04
-2025-05-31 04:19:13 INFO     root: Updated final scores for 16 games. Skipped 0 games.
-2025-05-31 04:19:13 INFO     root: Preprocessing NBA on 2025-05-03
-2025-05-31 04:20:25 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 04:20:25 INFO     root: Postprocessing NBA on 2025-05-03
-2025-05-31 04:20:25 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 04:20:25 INFO     root: Preprocessing MLB on 2025-05-03
-2025-05-31 04:20:26 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-05-03, sleeping 4 minutes before retry
-2025-05-31 04:26:43 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 04:26:43 INFO     root: Postprocessing MLB on 2025-05-03
-2025-05-31 04:26:43 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 04:26:43 INFO     root: Preprocessing NBA on 2025-05-02
-2025-05-31 04:27:53 WARNING  root: 504 Gateway Timeout at https://www.teamrankings.com/nba/stat/average-margin-thru-3-quarters?date=2025-05-02, sleeping 4 minutes before retry
-2025-05-31 04:32:03 WARNING  root: 504 Gateway Timeout at https://www.teamrankings.com/nba/stat/average-margin-thru-3-quarters?date=2025-05-02, sleeping 4 minutes before retry
-2025-05-31 04:37:10 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 04:37:10 INFO     root: Postprocessing NBA on 2025-05-02
-2025-05-31 04:37:11 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 04:37:11 INFO     root: Preprocessing MLB on 2025-05-02
-2025-05-31 04:38:50 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 04:38:50 INFO     root: Postprocessing MLB on 2025-05-02
-2025-05-31 04:38:50 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 04:38:50 INFO     root: Preprocessing NBA on 2025-05-01
-2025-05-31 04:39:15 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/total-rebounding-percentage?date=2025-05-01, sleeping 4 minutes before retry
-2025-05-31 04:44:09 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 04:44:09 INFO     root: Postprocessing NBA on 2025-05-01
-2025-05-31 04:44:10 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 04:44:10 INFO     root: Preprocessing MLB on 2025-05-01
-2025-05-31 04:45:35 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
-2025-05-31 04:45:35 INFO     root: Postprocessing MLB on 2025-05-01
-2025-05-31 04:45:36 INFO     root: Updated final scores for 11 games. Skipped 0 games.
-2025-05-31 04:45:36 INFO     root: Preprocessing NBA on 2025-04-30
-2025-05-31 04:46:16 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-field-goals-made-per-game?date=2025-04-30, sleeping 4 minutes before retry
-2025-05-31 04:50:51 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 04:50:51 INFO     root: Postprocessing NBA on 2025-04-30
-2025-05-31 04:50:52 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 04:50:52 INFO     root: Preprocessing MLB on 2025-04-30
-2025-05-31 04:52:27 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 04:52:27 INFO     root: Postprocessing MLB on 2025-04-30
-2025-05-31 04:52:28 INFO     root: Updated final scores for 16 games. Skipped 0 games.
-2025-05-31 04:52:28 INFO     root: Preprocessing NBA on 2025-04-29
-2025-05-31 04:53:25 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-plus-rebounds-plus-assists-per-game?date=2025-04-29, sleeping 4 minutes before retry
-2025-05-31 04:57:47 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 04:57:47 INFO     root: Postprocessing NBA on 2025-04-29
-2025-05-31 04:57:48 INFO     root: Updated final scores for 4 games. Skipped 0 games.
-2025-05-31 04:57:48 INFO     root: Preprocessing MLB on 2025-04-29
-2025-05-31 04:59:26 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 04:59:26 INFO     root: Postprocessing MLB on 2025-04-29
-2025-05-31 04:59:26 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 04:59:26 INFO     root: Preprocessing NBA on 2025-04-28
-2025-05-31 05:00:43 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 05:00:43 INFO     root: Postprocessing NBA on 2025-04-28
-2025-05-31 05:00:43 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 05:00:43 INFO     root: Preprocessing MLB on 2025-04-28
-2025-05-31 05:00:46 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/singles-per-game?date=2025-04-28, sleeping 4 minutes before retry
-2025-05-31 05:06:06 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
-2025-05-31 05:06:06 INFO     root: Postprocessing MLB on 2025-04-28
-2025-05-31 05:06:07 INFO     root: Updated final scores for 8 games. Skipped 0 games.
-2025-05-31 05:06:07 INFO     root: Preprocessing NBA on 2025-04-27
-2025-05-31 05:07:27 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 05:07:27 INFO     root: Postprocessing NBA on 2025-04-27
-2025-05-31 05:07:28 INFO     root: Updated final scores for 4 games. Skipped 0 games.
-2025-05-31 05:07:28 INFO     root: Preprocessing MLB on 2025-04-27
-2025-05-31 05:07:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/grounded-into-double-plays-per-game?date=2025-04-27, sleeping 4 minutes before retry
-2025-05-31 05:13:03 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 05:13:03 INFO     root: Postprocessing MLB on 2025-04-27
-2025-05-31 05:13:03 INFO     root: Updated final scores for 16 games. Skipped 0 games.
-2025-05-31 05:13:03 INFO     root: Preprocessing NBA on 2025-04-26
-2025-05-31 05:14:20 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 05:14:20 INFO     root: Postprocessing NBA on 2025-04-26
-2025-05-31 05:14:21 INFO     root: Updated final scores for 4 games. Skipped 0 games.
-2025-05-31 05:14:21 INFO     root: Preprocessing MLB on 2025-04-26
-2025-05-31 05:14:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-singles-per-game?date=2025-04-26, sleeping 4 minutes before retry
-2025-05-31 05:20:00 INFO     root: populate_pregame_data: inserted/updated 17 rows, skipped 0 games.
-2025-05-31 05:20:00 INFO     root: Postprocessing MLB on 2025-04-26
-2025-05-31 05:20:00 INFO     root: Updated final scores for 16 games. Skipped 1 games.
-2025-05-31 05:20:00 INFO     root: Preprocessing NBA on 2025-04-25
-2025-05-31 05:21:18 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
-2025-05-31 05:21:18 INFO     root: Postprocessing NBA on 2025-04-25
-2025-05-31 05:21:19 INFO     root: Updated final scores for 3 games. Skipped 0 games.
-2025-05-31 05:21:19 INFO     root: Preprocessing MLB on 2025-04-25
-2025-05-31 05:21:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-home-run-pct?date=2025-04-25, sleeping 4 minutes before retry
-2025-05-31 05:26:57 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 05:26:57 INFO     root: Postprocessing MLB on 2025-04-25
-2025-05-31 05:26:58 INFO     root: Updated final scores for 13 games. Skipped 2 games.
-2025-05-31 05:26:58 INFO     root: Preprocessing NBA on 2025-04-24
-2025-05-31 05:28:18 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
-2025-05-31 05:28:18 INFO     root: Postprocessing NBA on 2025-04-24
-2025-05-31 05:28:19 INFO     root: Updated final scores for 3 games. Skipped 0 games.
-2025-05-31 05:28:19 INFO     root: Preprocessing MLB on 2025-04-24
-2025-05-31 05:29:15 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-first-4-innings-runs-per-game?date=2025-04-24, sleeping 4 minutes before retry
-2025-05-31 05:33:43 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
-2025-05-31 05:33:43 INFO     root: Postprocessing MLB on 2025-04-24
-2025-05-31 05:33:43 INFO     root: Updated final scores for 9 games. Skipped 0 games.
-2025-05-31 05:33:43 INFO     root: Preprocessing NBA on 2025-04-23
-2025-05-31 05:35:01 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
-2025-05-31 05:35:01 INFO     root: Postprocessing NBA on 2025-04-23
-2025-05-31 05:35:02 INFO     root: Updated final scores for 3 games. Skipped 0 games.
-2025-05-31 05:35:02 INFO     root: Preprocessing MLB on 2025-04-23
-2025-05-31 05:36:36 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 05:36:36 INFO     root: Postprocessing MLB on 2025-04-23
-2025-05-31 05:36:36 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 05:36:36 INFO     root: Preprocessing NBA on 2025-04-22
-2025-05-31 05:36:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-22, sleeping 4 minutes before retry
-2025-05-31 05:41:57 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
-2025-05-31 05:41:57 INFO     root: Postprocessing NBA on 2025-04-22
-2025-05-31 05:41:58 INFO     root: Updated final scores for 3 games. Skipped 0 games.
-2025-05-31 05:41:58 INFO     root: Preprocessing MLB on 2025-04-22
-2025-05-31 05:43:32 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 05:43:32 INFO     root: Postprocessing MLB on 2025-04-22
-2025-05-31 05:43:33 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 05:43:33 INFO     root: Preprocessing NBA on 2025-04-21
-2025-05-31 05:43:33 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-21, sleeping 4 minutes before retry
-2025-05-31 05:48:49 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 05:48:49 INFO     root: Postprocessing NBA on 2025-04-21
-2025-05-31 05:48:50 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 05:48:50 INFO     root: Preprocessing MLB on 2025-04-21
-2025-05-31 05:50:12 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
-2025-05-31 05:50:12 INFO     root: Postprocessing MLB on 2025-04-21
-2025-05-31 05:50:13 INFO     root: Updated final scores for 8 games. Skipped 0 games.
-2025-05-31 05:50:13 INFO     root: Preprocessing NBA on 2025-04-20
-2025-05-31 05:50:16 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/1st-quarter-points-per-game?date=2025-04-20, sleeping 4 minutes before retry
-2025-05-31 05:55:35 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 05:55:35 INFO     root: Postprocessing NBA on 2025-04-20
-2025-05-31 05:55:35 INFO     root: Updated final scores for 4 games. Skipped 0 games.
-2025-05-31 05:55:35 INFO     root: Preprocessing MLB on 2025-04-20
-2025-05-31 05:57:12 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 05:57:12 INFO     root: Postprocessing MLB on 2025-04-20
-2025-05-31 05:57:13 INFO     root: Updated final scores for 16 games. Skipped 0 games.
-2025-05-31 05:57:13 INFO     root: Preprocessing NBA on 2025-04-19
-2025-05-31 05:57:13 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-19, sleeping 4 minutes before retry
-2025-05-31 06:02:33 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 06:02:33 INFO     root: Postprocessing NBA on 2025-04-19
-2025-05-31 06:02:33 INFO     root: Updated final scores for 4 games. Skipped 0 games.
-2025-05-31 06:02:33 INFO     root: Preprocessing MLB on 2025-04-19
-2025-05-31 06:04:05 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:04:05 INFO     root: Postprocessing MLB on 2025-04-19
-2025-05-31 06:04:05 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:04:05 INFO     root: Preprocessing NBA on 2025-04-18
-2025-05-31 06:04:06 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-18, sleeping 4 minutes before retry
-2025-05-31 06:09:20 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 06:09:20 INFO     root: Postprocessing NBA on 2025-04-18
-2025-05-31 06:09:20 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 06:09:20 INFO     root: Preprocessing MLB on 2025-04-18
-2025-05-31 06:10:57 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:10:57 INFO     root: Postprocessing MLB on 2025-04-18
-2025-05-31 06:10:57 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 06:10:57 INFO     root: Preprocessing MLB on 2025-04-17
-2025-05-31 06:10:58 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-04-17, sleeping 4 minutes before retry
-2025-05-31 06:16:24 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 06:16:24 INFO     root: Postprocessing MLB on 2025-04-17
-2025-05-31 06:16:25 INFO     root: Updated final scores for 10 games. Skipped 0 games.
-2025-05-31 06:16:25 INFO     root: Preprocessing NBA on 2025-04-16
-2025-05-31 06:17:44 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 06:17:44 INFO     root: Postprocessing NBA on 2025-04-16
-2025-05-31 06:17:45 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 06:17:45 INFO     root: Preprocessing MLB on 2025-04-16
-2025-05-31 06:17:56 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/on-base-plus-slugging-pct?date=2025-04-16, sleeping 4 minutes before retry
-2025-05-31 06:23:18 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:23:18 INFO     root: Postprocessing MLB on 2025-04-16
-2025-05-31 06:23:19 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:23:19 INFO     root: Preprocessing NBA on 2025-04-15
-2025-05-31 06:24:37 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 06:24:37 INFO     root: Postprocessing NBA on 2025-04-15
-2025-05-31 06:24:37 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 06:24:37 INFO     root: Preprocessing MLB on 2025-04-15
-2025-05-31 06:25:06 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-sacrifice-flys-per-game?date=2025-04-15, sleeping 4 minutes before retry
-2025-05-31 06:30:12 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:30:12 INFO     root: Postprocessing MLB on 2025-04-15
-2025-05-31 06:30:12 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:30:12 INFO     root: Preprocessing MLB on 2025-04-14
-2025-05-31 06:31:40 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 06:31:40 INFO     root: Postprocessing MLB on 2025-04-14
-2025-05-31 06:31:40 INFO     root: Updated final scores for 10 games. Skipped 0 games.
-2025-05-31 06:31:40 INFO     root: Preprocessing NBA on 2025-04-13
-2025-05-31 06:32:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-personal-foul-pct?date=2025-04-13, sleeping 4 minutes before retry
-2025-05-31 06:37:17 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:37:17 INFO     root: Postprocessing NBA on 2025-04-13
-2025-05-31 06:37:18 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:37:18 INFO     root: Preprocessing MLB on 2025-04-13
-2025-05-31 06:38:50 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:38:50 INFO     root: Postprocessing MLB on 2025-04-13
-2025-05-31 06:38:50 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:38:50 INFO     root: Preprocessing MLB on 2025-04-12
-2025-05-31 06:40:24 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:40:24 INFO     root: Postprocessing MLB on 2025-04-12
-2025-05-31 06:40:24 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:40:24 INFO     root: Preprocessing NBA on 2025-04-11
-2025-05-31 06:40:24 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-11, sleeping 4 minutes before retry
-2025-05-31 06:46:02 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:46:02 INFO     root: Postprocessing NBA on 2025-04-11
-2025-05-31 06:46:02 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 06:46:02 INFO     root: Preprocessing MLB on 2025-04-11
-2025-05-31 06:47:36 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 06:47:36 INFO     root: Postprocessing MLB on 2025-04-11
-2025-05-31 06:47:36 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 06:47:36 INFO     root: Preprocessing NBA on 2025-04-10
-2025-05-31 06:47:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-04-10, sleeping 4 minutes before retry
-2025-05-31 06:53:00 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
-2025-05-31 06:53:00 INFO     root: Postprocessing NBA on 2025-04-10
-2025-05-31 06:53:00 INFO     root: Updated final scores for 5 games. Skipped 0 games.
-2025-05-31 06:53:00 INFO     root: Preprocessing MLB on 2025-04-10
-2025-05-31 10:30:46 INFO     root: Preprocessing MLB on 2025-04-10
-2025-05-31 10:32:00 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
-2025-05-31 10:32:00 INFO     root: Postprocessing MLB on 2025-04-10
-2025-05-31 10:32:00 INFO     root: Updated final scores for 6 games. Skipped 0 games.
-2025-05-31 10:32:00 INFO     root: Preprocessing NBA on 2025-04-09
-2025-05-31 10:33:25 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 10:33:25 INFO     root: Postprocessing NBA on 2025-04-09
-2025-05-31 10:33:25 INFO     root: Updated final scores for 10 games. Skipped 0 games.
-2025-05-31 10:33:25 INFO     root: Preprocessing MLB on 2025-04-09
-2025-05-31 10:33:35 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/on-base-plus-slugging-pct?date=2025-04-09, sleeping 4 minutes before retry
-2025-05-31 10:38:54 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 10:38:54 INFO     root: Postprocessing MLB on 2025-04-09
-2025-05-31 10:38:55 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 10:38:55 INFO     root: Preprocessing NBA on 2025-04-08
-2025-05-31 10:40:18 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 10:40:18 INFO     root: Postprocessing NBA on 2025-04-08
-2025-05-31 10:40:19 INFO     root: Updated final scores for 10 games. Skipped 0 games.
-2025-05-31 10:40:19 INFO     root: Preprocessing MLB on 2025-04-08
-2025-05-31 10:40:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-stolen-bases-attempted?date=2025-04-08, sleeping 4 minutes before retry
-2025-05-31 10:45:49 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 10:45:49 INFO     root: Postprocessing MLB on 2025-04-08
-2025-05-31 10:45:49 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 10:45:49 INFO     root: Preprocessing NBA on 2025-04-07
-2025-05-31 10:47:06 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 10:47:06 INFO     root: Postprocessing NBA on 2025-04-07
-2025-05-31 10:47:06 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 10:47:06 INFO     root: Preprocessing CBB on 2025-04-07
-2025-05-31 10:47:56 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/opponent-steals-per-game?date=2025-04-07, sleeping 4 minutes before retry
-2025-05-31 10:52:53 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
-2025-05-31 10:52:53 INFO     root: Postprocessing CBB on 2025-04-07
-2025-05-31 10:52:54 INFO     root: Updated final scores for 1 games. Skipped 0 games.
-2025-05-31 10:52:54 INFO     root: Preprocessing MLB on 2025-04-07
-2025-05-31 10:54:14 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
-2025-05-31 10:54:14 INFO     root: Postprocessing MLB on 2025-04-07
-2025-05-31 10:54:15 INFO     root: Updated final scores for 11 games. Skipped 0 games.
-2025-05-31 10:54:15 INFO     root: Preprocessing NBA on 2025-04-06
-2025-05-31 10:55:37 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
-2025-05-31 10:55:37 INFO     root: Postprocessing NBA on 2025-04-06
-2025-05-31 10:55:38 INFO     root: Updated final scores for 11 games. Skipped 0 games.
-2025-05-31 10:55:38 INFO     root: Preprocessing MLB on 2025-04-06
-2025-05-31 10:55:38 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-04-06, sleeping 4 minutes before retry
-2025-05-31 11:01:14 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
-2025-05-31 11:01:14 INFO     root: Postprocessing MLB on 2025-04-06
-2025-05-31 11:01:15 INFO     root: Updated final scores for 15 games. Skipped 1 games.
-2025-05-31 11:01:15 INFO     root: Preprocessing NBA on 2025-04-05
-2025-05-31 11:02:33 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
-2025-05-31 11:02:33 INFO     root: Postprocessing NBA on 2025-04-05
-2025-05-31 11:02:33 INFO     root: Updated final scores for 5 games. Skipped 0 games.
-2025-05-31 11:02:33 INFO     root: Preprocessing CBB on 2025-04-05
-2025-05-31 11:02:46 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/free-throw-pct?date=2025-04-05, sleeping 4 minutes before retry
-2025-05-31 11:08:07 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
-2025-05-31 11:08:07 INFO     root: Postprocessing CBB on 2025-04-05
-2025-05-31 11:08:07 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 11:08:07 INFO     root: Preprocessing MLB on 2025-04-05
-2025-05-31 11:09:40 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 11:09:40 INFO     root: Postprocessing MLB on 2025-04-05
-2025-05-31 11:09:41 INFO     root: Updated final scores for 14 games. Skipped 1 games.
-2025-05-31 11:09:41 INFO     root: Preprocessing NBA on 2025-04-04
-2025-05-31 11:10:26 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-non-blocked-2-pt-pct?date=2025-04-04, sleeping 4 minutes before retry
-2025-05-31 11:15:10 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
-2025-05-31 11:15:10 INFO     root: Postprocessing NBA on 2025-04-04
-2025-05-31 11:15:11 INFO     root: Updated final scores for 10 games. Skipped 0 games.
-2025-05-31 11:15:11 INFO     root: Preprocessing MLB on 2025-04-04
-2025-05-31 11:16:42 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
-2025-05-31 11:16:42 INFO     root: Postprocessing MLB on 2025-04-04
-2025-05-31 11:16:42 INFO     root: Updated final scores for 14 games. Skipped 0 games.
-2025-05-31 11:16:42 INFO     root: Preprocessing NBA on 2025-04-03
-2025-05-31 11:17:46 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/non-division-by-other?date=2025-04-03, sleeping 4 minutes before retry
-2025-05-31 11:22:00 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
-2025-05-31 11:22:00 INFO     root: Postprocessing NBA on 2025-04-03
-2025-05-31 11:22:00 INFO     root: Updated final scores for 6 games. Skipped 0 games.
-2025-05-31 11:22:00 INFO     root: Preprocessing MLB on 2025-04-03
-2025-05-31 11:23:19 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
-2025-05-31 11:23:19 INFO     root: Postprocessing MLB on 2025-04-03
-2025-05-31 11:23:19 INFO     root: Updated final scores for 5 games. Skipped 0 games.
-2025-05-31 11:23:19 INFO     root: Preprocessing NBA on 2025-04-02
-2025-05-31 11:24:46 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
-2025-05-31 11:24:46 INFO     root: Postprocessing NBA on 2025-04-02
-2025-05-31 11:24:46 INFO     root: Updated final scores for 9 games. Skipped 0 games.
-2025-05-31 11:24:46 INFO     root: Preprocessing MLB on 2025-04-02
-2025-05-31 11:24:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-04-02, sleeping 4 minutes before retry
-2025-05-31 11:30:20 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 11:30:20 INFO     root: Postprocessing MLB on 2025-04-02
-2025-05-31 11:30:20 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 11:30:20 INFO     root: Preprocessing NBA on 2025-04-01
-2025-05-31 11:31:43 INFO     root: populate_pregame_data: inserted/updated 7 rows, skipped 0 games.
-2025-05-31 11:31:43 INFO     root: Postprocessing NBA on 2025-04-01
-2025-05-31 11:31:44 INFO     root: Updated final scores for 7 games. Skipped 0 games.
-2025-05-31 11:31:44 INFO     root: Preprocessing MLB on 2025-04-01
-2025-05-31 11:31:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/batting-average-on-balls-in-play?date=2025-04-01, sleeping 4 minutes before retry
-2025-05-31 11:37:15 INFO     root: populate_pregame_data: inserted/updated 13 rows, skipped 0 games.
-2025-05-31 11:37:15 INFO     root: Postprocessing MLB on 2025-04-01
-2025-05-31 11:37:15 INFO     root: Updated final scores for 13 games. Skipped 0 games.
-2025-05-31 11:37:15 INFO     root: Preprocessing NBA on 2025-03-31
-2025-05-31 11:38:41 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
-2025-05-31 11:38:41 INFO     root: Postprocessing NBA on 2025-03-31
-2025-05-31 11:38:42 INFO     root: Updated final scores for 8 games. Skipped 0 games.
-2025-05-31 11:38:42 INFO     root: Preprocessing MLB on 2025-03-31
-2025-05-31 11:39:15 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-secondary-average?date=2025-03-31, sleeping 4 minutes before retry
-2025-05-31 11:44:12 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
-2025-05-31 11:44:12 INFO     root: Postprocessing MLB on 2025-03-31
-2025-05-31 11:44:13 INFO     root: Updated final scores for 14 games. Skipped 0 games.
-2025-05-31 11:44:13 INFO     root: Preprocessing NBA on 2025-03-30
-2025-05-31 11:45:38 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
-2025-05-31 11:45:38 INFO     root: Postprocessing NBA on 2025-03-30
-2025-05-31 11:45:38 INFO     root: Updated final scores for 8 games. Skipped 0 games.
-2025-05-31 11:45:38 INFO     root: Preprocessing CBB on 2025-03-30
-2025-05-31 11:46:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/opponent-assist--per--turnover-ratio?date=2025-03-30, sleeping 4 minutes before retry
-2025-05-31 11:51:05 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 11:51:05 INFO     root: Postprocessing CBB on 2025-03-30
-2025-05-31 11:51:05 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 11:51:05 INFO     root: Preprocessing MLB on 2025-03-30
-2025-05-31 11:52:34 INFO     root: populate_pregame_data: inserted/updated 13 rows, skipped 0 games.
-2025-05-31 11:52:34 INFO     root: Postprocessing MLB on 2025-03-30
-2025-05-31 11:52:34 INFO     root: Updated final scores for 13 games. Skipped 0 games.
-2025-05-31 11:52:34 INFO     root: Preprocessing NBA on 2025-03-29
-2025-05-31 11:53:56 INFO     root: populate_pregame_data: inserted/updated 7 rows, skipped 0 games.
-2025-05-31 11:53:56 INFO     root: Postprocessing NBA on 2025-03-29
-2025-05-31 11:53:57 INFO     root: Updated final scores for 7 games. Skipped 0 games.
-2025-05-31 11:53:57 INFO     root: Preprocessing CBB on 2025-03-29
-2025-05-31 11:53:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/points-per-game?date=2025-03-29, sleeping 4 minutes before retry
-2025-05-31 11:59:26 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
-2025-05-31 11:59:26 INFO     root: Postprocessing CBB on 2025-03-29
-2025-05-31 11:59:26 INFO     root: Updated final scores for 2 games. Skipped 0 games.
-2025-05-31 11:59:26 INFO     root: Preprocessing MLB on 2025-03-29
-2025-05-31 12:01:02 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
-2025-05-31 12:01:02 INFO     root: Postprocessing MLB on 2025-03-29
-2025-05-31 12:01:03 INFO     root: Updated final scores for 15 games. Skipped 0 games.
-2025-05-31 12:01:03 INFO     root: Preprocessing NBA on 2025-03-28
-2025-05-31 12:01:35 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-fastbreak-points-per-game?date=2025-03-28, sleeping 4 minutes before retry
+2025-06-01 21:57:15 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 21:57:15 INFO     root: Postprocessing MLB on 2025-06-01
+2025-06-01 21:57:16 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-06-01 21:57:16 INFO     root: Preprocessing NBA on 2025-05-31
+2025-06-01 21:58:29 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 21:58:29 INFO     root: Postprocessing NBA on 2025-05-31
+2025-06-01 21:58:29 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 21:58:29 INFO     root: Preprocessing MLB on 2025-05-31
+2025-06-01 21:58:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/earned-run-average?date=2025-05-31, sleeping 4 minutes before retry
+2025-06-01 22:03:57 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 22:03:57 INFO     root: Postprocessing MLB on 2025-05-31
+2025-06-01 22:03:57 INFO     root: Updated final scores for 15 games. Skipped 0 games.
+2025-06-01 22:03:57 INFO     root: Preprocessing MLB on 2025-05-30
+2025-06-01 22:05:25 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 22:05:25 INFO     root: Postprocessing MLB on 2025-05-30
+2025-06-01 22:05:25 INFO     root: Updated final scores for 15 games. Skipped 0 games.
+2025-06-01 22:05:25 INFO     root: Preprocessing NBA on 2025-05-29
+2025-06-01 22:06:05 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-three-point-rate?date=2025-05-29, sleeping 4 minutes before retry
+2025-06-01 22:10:37 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:10:37 INFO     root: Postprocessing NBA on 2025-05-29
+2025-06-01 22:10:37 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:10:37 INFO     root: Preprocessing MLB on 2025-05-29
+2025-06-01 22:11:52 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-01 22:11:52 INFO     root: Postprocessing MLB on 2025-05-29
+2025-06-01 22:11:53 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-01 22:11:53 INFO     root: Preprocessing NBA on 2025-05-28
+2025-06-01 22:12:56 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/predictive-by-other?date=2025-05-28, sleeping 4 minutes before retry
+2025-06-01 22:17:06 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:17:06 INFO     root: Postprocessing NBA on 2025-05-28
+2025-06-01 22:17:07 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:17:07 INFO     root: Preprocessing MLB on 2025-05-28
+2025-06-01 22:18:36 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 22:18:36 INFO     root: Postprocessing MLB on 2025-05-28
+2025-06-01 22:18:37 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-06-01 22:18:37 INFO     root: Preprocessing NBA on 2025-05-27
+2025-06-01 22:19:53 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:19:53 INFO     root: Postprocessing NBA on 2025-05-27
+2025-06-01 22:19:53 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:19:53 INFO     root: Preprocessing MLB on 2025-05-27
+2025-06-01 22:19:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/home-runs-per-game?date=2025-05-27, sleeping 4 minutes before retry
+2025-06-01 22:25:22 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 22:25:22 INFO     root: Postprocessing MLB on 2025-05-27
+2025-06-01 22:25:22 INFO     root: Updated final scores for 15 games. Skipped 0 games.
+2025-06-01 22:25:22 INFO     root: Preprocessing NBA on 2025-05-26
+2025-06-01 22:26:34 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:26:34 INFO     root: Postprocessing NBA on 2025-05-26
+2025-06-01 22:26:34 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:26:34 INFO     root: Preprocessing MLB on 2025-05-26
+2025-06-01 22:26:55 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-hits-per-game?date=2025-05-26, sleeping 4 minutes before retry
+2025-06-01 22:32:02 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-06-01 22:32:02 INFO     root: Postprocessing MLB on 2025-05-26
+2025-06-01 22:32:02 INFO     root: Updated final scores for 12 games. Skipped 0 games.
+2025-06-01 22:32:02 INFO     root: Preprocessing NBA on 2025-05-25
+2025-06-01 22:33:08 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:33:08 INFO     root: Postprocessing NBA on 2025-05-25
+2025-06-01 22:33:08 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:33:08 INFO     root: Preprocessing MLB on 2025-05-25
+2025-06-01 22:33:46 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-outs-pitched-per-game?date=2025-05-25, sleeping 4 minutes before retry
+2025-06-01 22:38:40 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-06-01 22:38:40 INFO     root: Postprocessing MLB on 2025-05-25
+2025-06-01 22:38:41 INFO     root: Updated final scores for 15 games. Skipped 0 games.
+2025-06-01 22:38:41 INFO     root: Preprocessing NBA on 2025-05-24
+2025-06-01 22:39:49 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:39:49 INFO     root: Postprocessing NBA on 2025-05-24
+2025-06-01 22:39:49 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:39:49 INFO     root: Preprocessing MLB on 2025-05-24
+2025-06-01 22:40:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-first-5-innings-runs-per-game?date=2025-05-24, sleeping 4 minutes before retry
+2025-06-01 22:45:20 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
+2025-06-01 22:45:20 INFO     root: Postprocessing MLB on 2025-05-24
+2025-06-01 22:45:20 INFO     root: Updated final scores for 16 games. Skipped 0 games.
+2025-06-01 22:45:20 INFO     root: Preprocessing NBA on 2025-05-23
+2025-06-01 22:46:28 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:46:28 INFO     root: Postprocessing NBA on 2025-05-23
+2025-06-01 22:46:29 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:46:29 INFO     root: Preprocessing MLB on 2025-05-23
+2025-06-01 22:47:58 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
+2025-06-01 22:47:58 INFO     root: Postprocessing MLB on 2025-05-23
+2025-06-01 22:47:58 INFO     root: Updated final scores for 15 games. Skipped 1 games.
+2025-06-01 22:47:58 INFO     root: Preprocessing NBA on 2025-05-22
+2025-06-01 22:47:59 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-22, sleeping 4 minutes before retry
+2025-06-01 22:53:17 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 22:53:17 INFO     root: Postprocessing NBA on 2025-05-22
+2025-06-01 22:53:18 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 22:53:18 INFO     root: Preprocessing MLB on 2025-05-22
+2025-06-01 22:54:43 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-06-01 22:54:43 INFO     root: Postprocessing MLB on 2025-05-22
+2025-06-01 22:54:44 INFO     root: Updated final scores for 8 games. Skipped 1 games.
+2025-06-01 22:54:44 INFO     root: Preprocessing NBA on 2025-05-21
+2025-06-01 22:54:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/floor-percentage?date=2025-05-21, sleeping 4 minutes before retry
+2025-06-01 23:00:01 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-01 23:00:01 INFO     root: Postprocessing NBA on 2025-05-21
+2025-06-01 23:00:01 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-01 23:00:01 INFO     root: Preprocessing MLB on 2025-05-21
+2025-06-01 23:01:36 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
+2025-06-01 23:01:36 INFO     root: Postprocessing MLB on 2025-05-21
+2025-06-01 23:01:36 INFO     root: Updated final scores for 15 games. Skipped 1 games.
+2025-06-01 23:01:36 INFO     root: Preprocessing NBA on 2025-05-20
+2025-06-01 23:01:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/points-per-game?date=2025-05-20, sleeping 4 minutes before retry
+2025-06-01 23:20:15 INFO     root: Preprocessing NBA on 2025-05-20
