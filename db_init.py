@@ -80,8 +80,12 @@ class Game(Base):
     team1_moneyline       = Column(Float,   nullable=True)
     team2_moneyline       = Column(Float,   nullable=True)
     team1_spread          = Column(Float,   nullable=True)
+    team1_spread_odds     = Column(Float,   nullable=True)
     team2_spread          = Column(Float,   nullable=True)
+    team2_spread_odds     = Column(Float,   nullable=True)
     total_score           = Column(Float,   nullable=True)
+    over_odds             = Column(Float,   nullable=True)
+    under_odds            = Column(Float,   nullable=True)
 
     # final scores (null until updated)
     team1_score           = Column(Integer, nullable=True)

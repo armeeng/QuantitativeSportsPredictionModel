@@ -156,12 +156,15 @@ class Pregame:
                     stats, normalized_stats,
                     team1_moneyline, team2_moneyline,
                     team1_spread,  team2_spread,
-                    total_score
+                    team1_spread_odds, team2_spread_odds,
+                    total_score, over_odds, under_odds
                 ) VALUES (
                     ?, ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
                     ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?, ?, ?, ?,
+                    ?, ?, ?,
+                    ?, ?, ?,
                     ?, ?, ?,
                     ?, ?, ?
                 )
@@ -196,11 +199,18 @@ class Pregame:
                 json.dumps(stats_blob),
                 json.dumps(normalized_blob),
 
+                # existing odds:
                 odds.get("team1_moneyline"),
                 odds.get("team2_moneyline"),
                 odds.get("team1_spread"),
                 odds.get("team2_spread"),
+                # new spread‐odds fields:
+                odds.get("team1_spread_odds"),
+                odds.get("team2_spread_odds"),
+                # existing total and new over/under odds:
                 odds.get("total_score"),
+                odds.get("over_odds"),
+                odds.get("under_odds"),
             )
             )
             inserted += 1
@@ -1439,14 +1449,18 @@ class Pregame:
 
     def get_betting_odds(self, game_id: str) -> dict:
         """
-        Fetches moneyline, spread, and total (over/under) for the given ESPN event ID.
-        Returns a dict:
+        Fetches closing odds for moneyline, spread, and total (over/under)
+        for the given ESPN event ID. Returns a dict:
             {
-              'team1_moneyline': int or None,
-              'team2_moneyline': int or None,
-              'team1_spread': float or None,
-              'team2_spread': float or None,
-              'total_score': float or None
+              'team1_moneyline':     int or None,
+              'team2_moneyline':     int or None,
+              'team1_spread':        float or None,
+              'team2_spread':        float or None,
+              'team1_spread_odds':   int or None,
+              'team2_spread_odds':   int or None,
+              'total_score':         float or None,
+              'over_odds':           int or None,
+              'under_odds':          int or None
             }
         """
         category, league = self._ESPN_MAP[self.sport]
@@ -1462,44 +1476,89 @@ class Pregame:
         items = payload.get('items', [])
         if not items:
             return {
-                'team1_moneyline': None,
-                'team2_moneyline': None,
-                'team1_spread':    None,
-                'team2_spread':    None,
-                'total_score':     None
+                'team1_moneyline':    None,
+                'team2_moneyline':    None,
+                'team1_spread':       None,
+                'team2_spread':       None,
+                'team1_spread_odds':  None,
+                'team2_spread_odds':  None,
+                'total_score':        None,
+                'over_odds':          None,
+                'under_odds':         None
             }
 
         # pick the provider with the highest priority
         entry = max(items, key=lambda e: e.get('provider', {}).get('priority', -999))
 
-        away = entry.get('awayTeamOdds', {})
-        home = entry.get('homeTeamOdds', {})
+        away = entry.get('awayTeamOdds', {})  # team1 = away
+        home = entry.get('homeTeamOdds', {})  # team2 = home
 
-        # moneylines
+        # 1) Moneylines (straight moneyline odds)
         team1_ml = away.get('moneyLine')
         team2_ml = home.get('moneyLine')
 
-        # spread: top-level 'spread' is a single float
-        raw = entry.get('spread')
-        if isinstance(raw, (int, float)):
-            # raw is “home_team_spread” exactly as ESPN intends,
-            # so assign directly to team2_sp and invert for team1_sp:
-            team2_sp = raw
-            team1_sp = -raw
+        # 2) Spread (point spread)
+        raw_spread = entry.get('spread')
+        if isinstance(raw_spread, (int, float)):
+            # raw_spread is the home-team spread (positive means home favored by that many)
+            team2_sp = raw_spread
+            team1_sp = -raw_spread
         else:
-            # fallback to the juice if no top-level spread
+            # fallback to spreadOdds if no top-level spread
             team1_sp = away.get('spreadOdds')
             team2_sp = home.get('spreadOdds')
 
-        # total (over/under)
+        # 3) Closing spread odds (american)
+        def _extract_close_spread_odds(team_odds: dict) -> int | None:
+            """
+            Look under team_odds['close']['spread']['american'] if available,
+            else return None.
+            """
+            try:
+                close_info = team_odds.get('close', {})
+                spread_info = close_info.get('spread', {})
+                american = spread_info.get('american')
+                if american is None:
+                    return None
+                # american might be a string like "+160" or "-105"
+                return int(str(american).replace("+", "").replace("−", "-"))
+            except Exception:
+                return None
+
+        team1_sp_odds = _extract_close_spread_odds(away)
+        team2_sp_odds = _extract_close_spread_odds(home)
+
+        # 4) Total (over/under)
         total = entry.get('overUnder')
 
+        # 5) Closing over/under odds (american)
+        def _extract_close_total_odds(side: str) -> int | None:
+            """
+            side should be 'over' or 'under'. We look under entry['close'][side]['american'].
+            """
+            try:
+                close_block = entry.get('close', {})
+                side_info = close_block.get(side, {})
+                american = side_info.get('american')
+                if american is None:
+                    return None
+                return int(str(american).replace("+", "").replace("−", "-"))
+            except Exception:
+                return None
+
+        over_odds = _extract_close_total_odds('over')
+        under_odds = _extract_close_total_odds('under')
+
         return {
-            'team1_moneyline': team1_ml,
-            'team2_moneyline': team2_ml,
-            'team1_spread':    team1_sp,
-            'team2_spread':    team2_sp,
-            'total_score':     total
+            'team1_moneyline':    team1_ml,
+            'team2_moneyline':    team2_ml,
+            'team1_spread':       team1_sp,
+            'team2_spread':       team2_sp,
+            'team1_spread_odds':  team1_sp_odds,
+            'team2_spread_odds':  team2_sp_odds,
+            'total_score':        total,
+            'over_odds':          over_odds,
+            'under_odds':         under_odds
         }
 
     def get_weather_info(self, time_iso: str, city: str, state: str = None, country: str = None) -> dict:
