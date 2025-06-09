@@ -25,7 +25,7 @@ class MLModel(BaseModel):
         self.model_type = model_type.lower()
 
 
-    def train(self, query: str, test_size: float = 0.2, random_state: int = 42):
+    def train(self, query: str, test_size: float = 0.5, random_state: int = 42):
         """
         Train on the rows returned by `query`, using the JSON column named `self.column`
         as inputs, and team1_score/team2_score as the two outputs.
