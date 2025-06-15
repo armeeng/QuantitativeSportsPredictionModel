@@ -40,6 +40,9 @@ class MLModel(BaseModel):
 
         # 2) build feature matrix
         parsed = df[self.column].apply(json.loads)
+        for js in parsed:
+            for k in ("team1_id", "team2_id", "venue_id", "season_type", "day", "month", "year", "days_since_epoch", "game_time", "day_of_week"):
+                js.pop(k, None)
 
         def flatten_numbers(obj, out):
             if obj is None:
@@ -316,6 +319,9 @@ class MLModel(BaseModel):
 
         # 3) parse JSON column
         parsed = df[column].apply(json.loads)
+        for js in parsed:
+            for k in ("team1_id", "team2_id", "venue_id", "season_type", "day", "month", "year", "days_since_epoch", "game_time", "day_of_week"):
+                js.pop(k, None)
 
         # 4) same flatten_numbers helper as in train()
         def flatten_numbers(obj, out):

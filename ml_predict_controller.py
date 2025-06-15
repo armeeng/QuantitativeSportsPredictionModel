@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import sqlite3
 import pandas as pd
-from MLModel import MLModel
+from Model import MLModel
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "lr_norm_NBA_all"
-    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'NBA' AND date = '2025-06-08';"
+    MODEL_NAME    = "lo_norm_CBB_all"
+    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'CBB' AND date = '2025-02-08';"
 
     # ── PREDICT ────────────────────────────────────
     model = MLModel(MODEL_NAME)      # picks up latest trained model
