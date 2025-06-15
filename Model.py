@@ -36,7 +36,7 @@ class MLModel(BaseModel):
         'random_forest': lambda: RandomForestRegressor(n_estimators=100, random_state=42),
         'xgboost': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42),
         'mlp': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
-        'logistic_regression': lambda: LogisticRegression(solver='liblinear', random_state=42),
+        'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
         'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5), # Added KNN Regressor
         'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5)   # Added KNN Classifier
     }
@@ -353,6 +353,8 @@ class MLModel(BaseModel):
             spread_acc = accuracy_score((actual_vs_line_spread[valid_spread] > 0), pick_t1_cover[valid_spread]) if valid_spread.any() else np.nan
             spread_odds = np.where(pick_t1_cover, betting_data['spr_odds1'], betting_data['spr_odds2'])
             spread_pnl = MLModel._calculate_pnl(pick_t1_cover, actual_vs_line_spread, spread_odds)
+            # Added: Count valid spread bets
+            spread_games_counted = np.sum((spread_odds != 0) & np.isfinite(spread_odds) & np.isfinite(actual_vs_line_spread))
 
             line_total = pd.to_numeric(betting_data['total'], errors='coerce').fillna(0)
             actual_vs_line_total = actual_total - line_total
@@ -360,13 +362,20 @@ class MLModel(BaseModel):
             ou_acc = accuracy_score((actual_vs_line_total[valid_ou] > 0), pick_over[valid_ou]) if valid_ou.any() else np.nan
             ou_odds = np.where(pick_over, betting_data['over_odds'], betting_data['under_odds'])
             ou_pnl = MLModel._calculate_pnl(pick_over, actual_vs_line_total, ou_odds)
+            # Added: Count valid over/under bets
+            ou_games_counted = np.sum((ou_odds != 0) & np.isfinite(ou_odds) & np.isfinite(actual_vs_line_total))
             
             ml_odds = np.where(pick_t1_win, betting_data['ml1'], betting_data['ml2'])
             ml_pnl = MLModel._calculate_pnl(pick_t1_win, actual_margin, ml_odds)
+            # Added: Count valid moneyline bets
+            ml_games_counted = np.sum((ml_odds != 0) & np.isfinite(ml_odds) & np.isfinite(actual_margin))
 
             return {
                 "win_acc": win_acc, "spread_acc": spread_acc, "ou_acc": ou_acc,
-                "ml_pnl": ml_pnl, "spread_pnl": spread_pnl, "ou_pnl": ou_pnl
+                "ml_pnl": ml_pnl, "spread_pnl": spread_pnl, "ou_pnl": ou_pnl,
+                "ml_games_counted": ml_games_counted,          # Added
+                "spread_games_counted": spread_games_counted,  # Added
+                "ou_games_counted": ou_games_counted           # Added
             }
 
         # Case 2: Regressor model (y_test is a numpy array here, so direct slicing is fine)
@@ -383,30 +392,39 @@ class MLModel(BaseModel):
 
         win_acc = np.mean((pred_margin > 0) == (actual_margin > 0))
         
-        line = pd.to_numeric(betting_data['spread'], errors='coerce').fillna(0)
-        actual_vs_line = actual_margin + line
-        valid_spread = (actual_vs_line != 0) & np.isfinite(line)
-        pick_t1_cover = (pred_margin + line) > 0
-        spread_acc = np.mean(pick_t1_cover[valid_spread] == (actual_vs_line[valid_spread] > 0)) if valid_spread.any() else np.nan
+        line_spread = pd.to_numeric(betting_data['spread'], errors='coerce').fillna(0)
+        actual_vs_line_spread = actual_margin + line_spread
+        valid_spread = (actual_vs_line_spread != 0) & np.isfinite(line_spread)
+        pick_t1_cover = (pred_margin + line_spread) > 0
+        spread_acc = np.mean(pick_t1_cover[valid_spread] == (actual_vs_line_spread[valid_spread] > 0)) if valid_spread.any() else np.nan
         spread_odds = np.where(pick_t1_cover, betting_data['spr_odds1'], betting_data['spr_odds2'])
-        spread_pnl = MLModel._calculate_pnl(pick_t1_cover, actual_vs_line, spread_odds)
+        spread_pnl = MLModel._calculate_pnl(pick_t1_cover, actual_vs_line_spread, spread_odds)
+        # Added: Count valid spread bets
+        spread_games_counted = np.sum((spread_odds != 0) & np.isfinite(spread_odds) & np.isfinite(actual_vs_line_spread))
 
-        line = pd.to_numeric(betting_data['total'], errors='coerce').fillna(0)
-        actual_vs_line = actual_total - line
-        valid_ou = (actual_vs_line != 0) & np.isfinite(line)
-        pick_over = pred_total > line
-        ou_acc = np.mean(pick_over[valid_ou] == (actual_vs_line[valid_ou] > 0)) if valid_ou.any() else np.nan
+        line_total = pd.to_numeric(betting_data['total'], errors='coerce').fillna(0)
+        actual_vs_line_total = actual_total - line_total
+        valid_ou = (actual_vs_line_total != 0) & np.isfinite(line_total)
+        pick_over = pred_total > line_total
+        ou_acc = np.mean(pick_over[valid_ou] == (actual_vs_line_total[valid_ou] > 0)) if valid_ou.any() else np.nan
         ou_odds = np.where(pick_over, betting_data['over_odds'], betting_data['under_odds'])
-        ou_pnl = MLModel._calculate_pnl(pick_over, actual_vs_line, ou_odds)
+        ou_pnl = MLModel._calculate_pnl(pick_over, actual_vs_line_total, ou_odds)
+        # Added: Count valid over/under bets
+        ou_games_counted = np.sum((ou_odds != 0) & np.isfinite(ou_odds) & np.isfinite(actual_vs_line_total))
         
         pick_t1_win = pred_margin > 0
         ml_odds = np.where(pick_t1_win, betting_data['ml1'], betting_data['ml2'])
         ml_pnl = MLModel._calculate_pnl(pick_t1_win, actual_margin, ml_odds)
+        # Added: Count valid moneyline bets
+        ml_games_counted = np.sum((ml_odds != 0) & np.isfinite(ml_odds) & np.isfinite(actual_margin))
 
         return {
             "r2": r2.tolist(), "rmse": rmse.tolist(), "mae": mae.tolist(),
             "win_acc": win_acc, "spread_acc": spread_acc, "ou_acc": ou_acc,
-            "ml_pnl": ml_pnl, "spread_pnl": spread_pnl, "ou_pnl": ou_pnl
+            "ml_pnl": ml_pnl, "spread_pnl": spread_pnl, "ou_pnl": ou_pnl,
+            "ml_games_counted": ml_games_counted,           # Added
+            "spread_games_counted": spread_games_counted,   # Added
+            "ou_games_counted": ou_games_counted            # Added
         }
 
     @staticmethod
@@ -421,9 +439,14 @@ class MLModel(BaseModel):
         spread_acc_str = f"{metrics['spread_acc']:.3%}" if pd.notna(metrics['spread_acc']) else "N/A"
         ou_acc_str = f"{metrics['ou_acc']:.3%}" if pd.notna(metrics['ou_acc']) else "N/A"
 
+        # Changed: Updated print statements to include game counts for P/L
+        ml_games_str = f"(on {metrics.get('ml_games_counted', 'N/A')} games)"
+        spread_games_str = f"(on {metrics.get('spread_games_counted', 'N/A')} games)"
+        ou_games_str = f"(on {metrics.get('ou_games_counted', 'N/A')} games)"
+
         print(f"  Win/Loss accuracy:    {metrics['win_acc']:.3%}")
         print(f"  Spread-cover accuracy:{spread_acc_str}")
         print(f"  Over/Under accuracy:  {ou_acc_str}")
-        print(f"  Moneyline P/L:        {metrics['ml_pnl']:.2f} units per $1")
-        print(f"  Spread P/L:           {metrics['spread_pnl']:.2f} units per $1")
-        print(f"  Over/Under P/L:       {metrics['ou_pnl']:.2f} units per $1")
+        print(f"  Moneyline P/L:        {metrics['ml_pnl']:.2f} units per $1 {ml_games_str}")
+        print(f"  Spread P/L:           {metrics['spread_pnl']:.2f} units per $1 {spread_games_str}")
+        print(f"  Over/Under P/L:       {metrics['ou_pnl']:.2f} units per $1 {ou_games_str}")

@@ -5,8 +5,8 @@ from Model import MLModel
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "lo_norm_CBB_all"
-    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'CBB' AND date = '2025-02-08';"
+    MODEL_NAME    = "lo_norm_MLB_all"
+    PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'MLB' AND date = '2025-05-25';"
 
     # ── PREDICT ────────────────────────────────────
     model = MLModel(MODEL_NAME)      # picks up latest trained model
