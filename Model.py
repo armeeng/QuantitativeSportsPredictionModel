@@ -13,6 +13,8 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
 from xgboost import XGBRegressor
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier # Added for KNN
+from sklearn.svm import SVR, SVC # <--- 1. IMPORT SVR
+from sklearn.multioutput import MultiOutputRegressor
 
 # Assuming BaseModel is defined elsewhere, as in the original code.
 # If not, it can be a simple pass-through: class BaseModel: def __init__(*args, **kwargs): pass
@@ -38,15 +40,18 @@ class MLModel(BaseModel):
         'mlp': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
         'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
         'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5), # Added KNN Regressor
-        'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5)   # Added KNN Classifier
+        'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),   # Added KNN Classifier
+        'svr': lambda: MultiOutputRegressor(SVR(kernel='rbf')),
+        'svm': lambda: SVC(probability=True, random_state=42) 
     }
     # Add aliases for MLP
     _MODELS['neural_network'] = _MODELS['mlp']
     _MODELS['mlp_regressor'] = _MODELS['mlp']
+    _MODELS['svc'] = _MODELS['svm']
     
     # A set to identify classifier models which require special handling
     # (e.g., training three separate models for win, spread, over/under)
-    _CLASSIFIER_TYPES = {'logistic_regression', 'knn_classifier'} # Added for extensibility
+    _CLASSIFIER_TYPES = {'logistic_regression', 'knn_classifier', 'svm', 'svc'} 
 
     _FEATURE_KEYS_TO_DROP = {
         "team1_id", "team2_id", "venue_id", "season_type", "day", "month",
