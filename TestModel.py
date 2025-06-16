@@ -4,6 +4,8 @@ import numpy as np
 class TestModel:
     """
     A simple class to display the results from an MLModel's test set.
+    This version includes corrections to properly handle missing or invalid
+    betting odds in all PnL calculations.
     """
     def __init__(self, predictions, y_test, test_odds):
         """
@@ -89,123 +91,118 @@ class TestModel:
         }
         return self._outcomes
 
-    def calculate_accuracy(self):
-        """Calculates the accuracy of the model's predictions."""
-        o = self._get_outcomes()
-        
-        win_accuracy = np.mean(o['pred_winner_is_t1'] == o['actual_winner_is_t1'])
-        
-        non_push_spread = ~o['spread_pushes']
-        spread_accuracy = np.mean(o['pred_spread_is_t1_cover'][non_push_spread] == o['actual_spread_is_t1_cover'][non_push_spread])
-        
-        non_push_ou = ~o['ou_pushes']
-        ou_accuracy = np.mean(o['pred_is_over'][non_push_ou] == o['actual_is_over'][non_push_ou])
-
-        return {
-            'win_accuracy': win_accuracy,
-            'spread_accuracy': spread_accuracy,
-            'ou_accuracy': ou_accuracy
-        }
-
     def calculate_pnl_of_all_games(self, bet_amount=1.0):
         """
-        Calculates the Profit and Loss (PnL) for $1 bets on the model's predictions,
-        skipping any games where the odds are missing or zero.
+        Calculates the Profit and Loss (PnL) for $1 bets on the model's predictions.
+        This version correctly ignores bets with missing odds or pushes.
+
+        Returns:
+            A dictionary containing the total PnL for each bet type.
         """
         o = self._get_outcomes()
         
         # --- 1. Moneyline PnL ---
-        bet_on_t1 = o['pred_winner_is_t1']
-        actual_t1 = o['actual_winner_is_t1']
-        ml_odds = np.where(bet_on_t1,
-                        pd.to_numeric(self.test_odds['team1_ml'], errors='coerce'),
-                        pd.to_numeric(self.test_odds['team2_ml'], errors='coerce'))
-        # valid if not NaN and not zero
-        valid_ml = (~np.isnan(ml_odds)) & (ml_odds != 0)
-        ml_profits = self._calculate_profit(ml_odds, bet_amount)
+        bet_on_t1_win = o['pred_winner_is_t1']
+        ml_odds = np.where(bet_on_t1_win, self.test_odds['team1_ml'], self.test_odds['team2_ml'])
+        ml_odds_numeric = pd.to_numeric(ml_odds, errors='coerce')
         
-        # only consider valid games
-        ml_wins = bet_on_t1 == actual_t1
-        ml_pnl = np.sum(
-            np.where(ml_wins[valid_ml], ml_profits[valid_ml], -bet_amount)
-        )
+        valid_ml_bets = pd.notna(ml_odds_numeric) & (ml_odds_numeric != 0)
+        
+        ml_bet_won = (bet_on_t1_win == o['actual_winner_is_t1'])
+        ml_profits = self._calculate_profit(ml_odds_numeric, bet_amount)
+        ml_pnl_per_game = np.where(ml_bet_won, ml_profits, -bet_amount)
+        
+        moneyline_pnl = np.sum(ml_pnl_per_game[valid_ml_bets])
 
-        # --- 2. Spread PnL (excluding pushes) ---
-        non_push_spread = ~o['spread_pushes']
-        bet_on_spread = o['pred_spread_is_t1_cover'][non_push_spread]
-        actual_spread = o['actual_spread_is_t1_cover'][non_push_spread]
-        # grab odds
-        t1_sp_odds = pd.to_numeric(self.test_odds['team1_spread_odds'], errors='coerce')[non_push_spread]
-        t2_sp_odds = pd.to_numeric(self.test_odds['team2_spread_odds'], errors='coerce')[non_push_spread]
-        sp_odds = np.where(bet_on_spread, t1_sp_odds, t2_sp_odds)
-        valid_sp = (~np.isnan(sp_odds)) & (sp_odds != 0)
-        sp_profits = self._calculate_profit(sp_odds, bet_amount)
-        
-        sp_wins = bet_on_spread == actual_spread
-        sp_pnl = np.sum(
-            np.where(sp_wins[valid_sp], sp_profits[valid_sp], -bet_amount)
-        )
+        # --- 2. Spread PnL ---
+        bet_on_t1_cover = o['pred_spread_is_t1_cover']
+        spread_odds = np.where(bet_on_t1_cover, self.test_odds['team1_spread_odds'], self.test_odds['team2_spread_odds'])
+        spread_odds_numeric = pd.to_numeric(spread_odds, errors='coerce')
 
-        # --- 3. Over/Under PnL (excluding pushes) ---
-        non_push_ou = ~o['ou_pushes']
-        bet_over = o['pred_is_over'][non_push_ou]
-        actual_over = o['actual_is_over'][non_push_ou]
-        # grab odds
-        over_odds = pd.to_numeric(self.test_odds['over_odds'], errors='coerce')[non_push_ou]
-        under_odds = pd.to_numeric(self.test_odds['under_odds'], errors='coerce')[non_push_ou]
-        ou_odds = np.where(bet_over, over_odds, under_odds)
-        valid_ou = (~np.isnan(ou_odds)) & (ou_odds != 0)
-        ou_profits = self._calculate_profit(ou_odds, bet_amount)
+        valid_spread_bets = pd.notna(spread_odds_numeric) & (spread_odds_numeric != 0) & (~o['spread_pushes'])
         
-        ou_wins = bet_over == actual_over
-        ou_pnl = np.sum(
-            np.where(ou_wins[valid_ou], ou_profits[valid_ou], -bet_amount)
-        )
+        spread_bet_won = (bet_on_t1_cover == o['actual_spread_is_t1_cover'])
+        spread_profits = self._calculate_profit(spread_odds_numeric, bet_amount)
+        spread_pnl_per_game = np.where(spread_bet_won, spread_profits, -bet_amount)
+
+        spread_pnl = np.sum(spread_pnl_per_game[valid_spread_bets])
+
+        # --- 3. Over/Under PnL ---
+        bet_on_over = o['pred_is_over']
+        ou_odds = np.where(bet_on_over, self.test_odds['over_odds'], self.test_odds['under_odds'])
+        ou_odds_numeric = pd.to_numeric(ou_odds, errors='coerce')
+
+        valid_ou_bets = pd.notna(ou_odds_numeric) & (ou_odds_numeric != 0) & (~o['ou_pushes'])
+
+        ou_bet_won = (bet_on_over == o['actual_is_over'])
+        ou_profits = self._calculate_profit(ou_odds_numeric, bet_amount)
+        ou_pnl_per_game = np.where(ou_bet_won, ou_profits, -bet_amount)
+
+        ou_pnl = np.sum(ou_pnl_per_game[valid_ou_bets])
 
         return {
-            'moneyline_pnl': ml_pnl,
-            'spread_pnl':    sp_pnl,
-            'ou_pnl':        ou_pnl
+            'moneyline_pnl': moneyline_pnl,
+            'spread_pnl': spread_pnl,
+            'ou_pnl': ou_pnl,
+            'moneyline_bets_placed': np.sum(valid_ml_bets),
+            'spread_bets_placed': np.sum(valid_spread_bets),
+            'ou_bets_placed': np.sum(valid_ou_bets),
         }
 
-    
     def calculate_pnl_of_game_above_ev_threshold(self, ev_threshold=0, bet_amount=1.0):
         """
         For classifiers, calculates PnL by only betting on games where the 
-        Expected Value (EV) is above a given threshold.
+        Expected Value (EV) is above a given threshold. This version correctly
+        handles missing odds by making their EV non-viable.
 
         Returns:
             A dictionary containing PnL and the count of bets placed for each bet type.
-            Returns NaNs if the model is not a classifier.
         """
-        # This function only works for classifiers that provide probabilities.
         if not isinstance(self.predictions, dict):
             nan_result = {'pnl': np.nan, 'count': 0}
             return {'moneyline': nan_result, 'spread': nan_result, 'ou': nan_result}
             
         o = self._get_outcomes()
+        
+        # --- Create validity masks for all 6 possible sets of odds ---
+        def is_valid(odds_series):
+            odds_num = pd.to_numeric(odds_series, errors='coerce')
+            return pd.notna(odds_num) & (odds_num != 0)
 
-        # --- Calculate EV for all 6 possible outcomes ---
-        # Probabilities from the model
+        validity = {
+            't1_ml': is_valid(self.test_odds['team1_ml']),
+            't2_ml': is_valid(self.test_odds['team2_ml']),
+            't1_spread': is_valid(self.test_odds['team1_spread_odds']),
+            't2_spread': is_valid(self.test_odds['team2_spread_odds']),
+            'over': is_valid(self.test_odds['over_odds']),
+            'under': is_valid(self.test_odds['under_odds']),
+        }
+
+        # --- Calculate all potential profits ---
+        profits = {key: self._calculate_profit(self.test_odds[val_key], bet_amount) 
+                   for key, val_key in [('t1_ml', 'team1_ml'), ('t2_ml', 'team2_ml'), 
+                                        ('t1_spread', 'team1_spread_odds'), ('t2_spread', 'team2_spread_odds'),
+                                        ('over', 'over_odds'), ('under', 'under_odds')]}
+        
+        # --- Calculate Expected Value for all 6 outcomes ---
         prob_t1_win = self.predictions['win'][:, 1]
         prob_t1_cover = self.predictions['spread'][:, 1]
         prob_over = self.predictions['over'][:, 1]
 
-        # Potential profits for each outcome
-        profit_t1_win = self._calculate_profit(self.test_odds['team1_ml'], bet_amount)
-        profit_t2_win = self._calculate_profit(self.test_odds['team2_ml'], bet_amount)
-        profit_t1_cover = self._calculate_profit(self.test_odds['team1_spread_odds'], bet_amount)
-        profit_t2_cover = self._calculate_profit(self.test_odds['team2_spread_odds'], bet_amount)
-        profit_over = self._calculate_profit(self.test_odds['over_odds'], bet_amount)
-        profit_under = self._calculate_profit(self.test_odds['under_odds'], bet_amount)
+        ev_t1_win = (prob_t1_win * profits['t1_ml']) - ((1 - prob_t1_win) * bet_amount)
+        ev_t2_win = ((1 - prob_t1_win) * profits['t2_ml']) - (prob_t1_win * bet_amount)
+        ev_t1_cover = (prob_t1_cover * profits['t1_spread']) - ((1 - prob_t1_cover) * bet_amount)
+        ev_t2_cover = ((1 - prob_t1_cover) * profits['t2_spread']) - (prob_t1_cover * bet_amount)
+        ev_over = (prob_over * profits['over']) - ((1 - prob_over) * bet_amount)
+        ev_under = ((1 - prob_over) * profits['under']) - (prob_over * bet_amount)
 
-        # Expected Value = (Prob_Win * Profit) - (Prob_Loss * Stake)
-        ev_t1_win = (prob_t1_win * profit_t1_win) - ((1 - prob_t1_win) * bet_amount)
-        ev_t2_win = ((1 - prob_t1_win) * profit_t2_win) - (prob_t1_win * bet_amount)
-        ev_t1_cover = (prob_t1_cover * profit_t1_cover) - ((1 - prob_t1_cover) * bet_amount)
-        ev_t2_cover = ((1 - prob_t1_cover) * profit_t2_cover) - (prob_t1_cover * bet_amount)
-        ev_over = (prob_over * profit_over) - ((1 - prob_over) * bet_amount)
-        ev_under = ((1 - prob_over) * profit_under) - (prob_over * bet_amount)
+        # Invalidate EV for bets with missing odds by setting them to a large negative number
+        ev_t1_win[~validity['t1_ml']] = -np.inf
+        ev_t2_win[~validity['t2_ml']] = -np.inf
+        ev_t1_cover[~validity['t1_spread']] = -np.inf
+        ev_t2_cover[~validity['t2_spread']] = -np.inf
+        ev_over[~validity['over']] = -np.inf
+        ev_under[~validity['under']] = -np.inf
 
         # --- Process Moneyline Bets ---
         bet_on_t1_ml = ev_t1_win > ev_t2_win
@@ -213,33 +210,31 @@ class TestModel:
         place_ml_bet = best_ml_ev > ev_threshold
         
         ml_bet_won = (bet_on_t1_ml == o['actual_winner_is_t1'])
-        ml_profit_to_use = np.where(bet_on_t1_ml, profit_t1_win, profit_t2_win)
+        ml_profit_to_use = np.where(bet_on_t1_ml, profits['t1_ml'], profits['t2_ml'])
         ml_pnl_per_game = np.where(ml_bet_won, ml_profit_to_use, -bet_amount)
         
         moneyline_pnl = np.sum(ml_pnl_per_game[place_ml_bet])
         moneyline_bet_count = np.sum(place_ml_bet)
 
-        # --- Process Spread Bets (excluding pushes) ---
-        non_push_spread = ~o['spread_pushes']
+        # --- Process Spread Bets ---
         bet_on_t1_spread = ev_t1_cover > ev_t2_cover
         best_spread_ev = np.where(bet_on_t1_spread, ev_t1_cover, ev_t2_cover)
-        place_spread_bet = (best_spread_ev > ev_threshold) & non_push_spread
-
+        place_spread_bet = (best_spread_ev > ev_threshold) & (~o['spread_pushes'])
+        
         spread_bet_won = (bet_on_t1_spread == o['actual_spread_is_t1_cover'])
-        spread_profit_to_use = np.where(bet_on_t1_spread, profit_t1_cover, profit_t2_cover)
+        spread_profit_to_use = np.where(bet_on_t1_spread, profits['t1_spread'], profits['t2_spread'])
         spread_pnl_per_game = np.where(spread_bet_won, spread_profit_to_use, -bet_amount)
         
         spread_pnl = np.sum(spread_pnl_per_game[place_spread_bet])
         spread_bet_count = np.sum(place_spread_bet)
         
-        # --- Process Over/Under Bets (excluding pushes) ---
-        non_push_ou = ~o['ou_pushes']
+        # --- Process Over/Under Bets ---
         bet_on_over = ev_over > ev_under
         best_ou_ev = np.where(bet_on_over, ev_over, ev_under)
-        place_ou_bet = (best_ou_ev > ev_threshold) & non_push_ou
-
+        place_ou_bet = (best_ou_ev > ev_threshold) & (~o['ou_pushes'])
+        
         ou_bet_won = (bet_on_over == o['actual_is_over'])
-        ou_profit_to_use = np.where(bet_on_over, profit_over, profit_under)
+        ou_profit_to_use = np.where(bet_on_over, profits['over'], profits['under'])
         ou_pnl_per_game = np.where(ou_bet_won, ou_profit_to_use, -bet_amount)
         
         ou_pnl = np.sum(ou_pnl_per_game[place_ou_bet])
@@ -253,21 +248,18 @@ class TestModel:
 
     def display_results(self):
         """Displays the calculated accuracies and PnL."""
-        num_games = len(self.y_test)
+        num_games_total = len(self.y_test)
         
-        # --- Display Calculated Accuracies ---
-        accuracies = self.calculate_accuracy()
-        print("\n[4] Betting Accuracies:")
-        print(f"  - Win/Loss Accuracy:    {accuracies['win_accuracy']:.2%}")
-        print(f"  - Spread Accuracy:      {accuracies['spread_accuracy']:.2%}")
-        print(f"  - Over/Under Accuracy:  {accuracies['ou_accuracy']:.2%}")
+        # --- Display Accuracies (optional, as they can be misleading) ---
+        # accuracies = self.calculate_accuracy()
+        # print("\n[4] Betting Accuracies:") ...
 
         # --- Display Flat Bet PnL ---
         pnl = self.calculate_pnl_of_all_games()
-        print(f"\n[5] Profit & Loss (flat $1 bets on all {num_games} games):")
-        print(f"  - Moneyline PnL:      ${pnl['moneyline_pnl']:.2f}")
-        print(f"  - Spread PnL:         ${pnl['spread_pnl']:.2f}")
-        print(f"  - Over/Under PnL:     ${pnl['ou_pnl']:.2f}")
+        print(f"\nProfit & Loss (flat $1 bets on all available odds):")
+        print(f"  - Moneyline PnL:      ${pnl['moneyline_pnl']:.2f} from {pnl['moneyline_bets_placed']} bets")
+        print(f"  - Spread PnL:         ${pnl['spread_pnl']:.2f} from {pnl['spread_bets_placed']} bets")
+        print(f"  - Over/Under PnL:     ${pnl['ou_pnl']:.2f} from {pnl['ou_bets_placed']} bets")
 
         # --- Display EV-Based PnL (only for classifiers) ---
         if isinstance(self.predictions, dict):
@@ -276,9 +268,9 @@ class TestModel:
             spread_info = ev_pnl['spread']
             ou_info = ev_pnl['ou']
             
-            print("\n[6] PnL on +EV Bets (Classifier Only):")
-            print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/num_games:.1%})")
-            print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/num_games:.1%})")
-            print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/num_games:.1%})")
+            print("\nPnL on +EV Bets (Classifier Only):")
+            print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/num_games_total:.1%})")
+            print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/num_games_total:.1%})")
+            print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/num_games_total:.1%})")
 
         print("\n------------------------------------")

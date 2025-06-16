@@ -41,7 +41,7 @@ def main():
     # ── CONFIG ─────────────────────────────────────
     MODEL_TYPE   = "logistic_regression"   # linear_regression, random_forest, xgboost, neural_network
     COLUMN       = "normalized_stats"    # stats or normalized_stats
-    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB' AND Date > '2024-05-29';"
+    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB';"
 
     # build a name like "lr_norm_NBA_all" or e.g. "rf_nonorm_MLB_date_<_2025_05_26"
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
