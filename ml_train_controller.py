@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
 from Model import MLModel
+from TestModel import TestModel
 
 def build_model_name(model_type: str, column: str, query: str) -> str:
     # 1) model abbreviation
@@ -46,7 +47,7 @@ def main():
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=True)
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=False)
     model.train(TRAIN_QUERY)
 
 if __name__ == "__main__":
