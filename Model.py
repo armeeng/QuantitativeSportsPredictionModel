@@ -284,7 +284,7 @@ class MLModel(BaseModel):
             n_features = X.shape[1]
             n_selected_features = max(1, int(n_features * self.subset_fraction))
 
-            rng = np.random.default_rng(random_state)
+            rng = np.random.default_rng()
             indices = rng.choice(n_features, size=n_selected_features, replace=False)
             indices.sort()
             

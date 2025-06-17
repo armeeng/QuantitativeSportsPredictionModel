@@ -7747,3 +7747,844 @@
 2025-06-08 15:55:36 INFO     root: Updated final scores for 0 games. Skipped 0 games.
 2025-06-08 15:55:36 INFO     root: Preprocessing MLB on 2025-06-07
 2025-06-08 15:55:36 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-06-07, sleeping 4 minutes before retry
+2025-06-16 02:09:08 INFO     root: Preprocessing CBB on 2024-01-24
+2025-06-16 02:11:09 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 02:11:09 ERROR    root: Could not fetch stats for ETSU or VMI, skipping
+2025-06-16 02:12:00 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 02:12:00 ERROR    root: Could not fetch stats for NW State or MTSU, skipping
+2025-06-16 02:12:15 INFO     root: populate_pregame_data: inserted/updated 45 rows, skipped 2 games.
+2025-06-16 02:12:15 INFO     root: Preprocessing CBB on 2024-01-22
+2025-06-16 02:13:56 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 02:13:56 ERROR    root: Could not fetch stats for Queens or MD Eastern, skipping
+2025-06-16 02:14:19 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 1 games.
+2025-06-16 02:14:19 INFO     root: Preprocessing CBB on 2024-01-21
+2025-06-16 02:16:20 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 02:16:20 ERROR    root: Could not fetch stats for Chattanooga or ETSU, skipping
+2025-06-16 02:16:25 INFO     root: populate_pregame_data: inserted/updated 17 rows, skipped 1 games.
+2025-06-16 02:16:25 INFO     root: Preprocessing CBB on 2024-01-20
+2025-06-16 02:17:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/opponent-true-shooting-percentage?date=2024-01-20, sleeping 4 minutes before retry
+2025-06-16 02:23:56 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 02:23:56 ERROR    root: Could not fetch stats for MD Eastern or Delaware St, skipping
+2025-06-16 02:25:52 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 02:25:52 ERROR    root: Could not fetch stats for MTSU or New Mexico St, skipping
+2025-06-16 02:25:52 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 02:25:52 ERROR    root: Could not fetch stats for Western KY or UTEP, skipping
+2025-06-16 02:26:05 INFO     root: populate_pregame_data: inserted/updated 142 rows, skipped 3 games.
+2025-06-16 02:26:05 INFO     root: Postprocessing CBB on 2024-01-20
+2025-06-16 02:26:05 INFO     root: Updated final scores for 18 games. Skipped 0 games.
+2025-06-16 02:26:05 INFO     root: Preprocessing MLB on 2024-01-20
+2025-06-16 02:26:05 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:26:05 INFO     root: Postprocessing MLB on 2024-01-20
+2025-06-16 02:26:06 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:26:06 INFO     root: Preprocessing NFL on 2024-01-19
+2025-06-16 02:26:06 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:26:06 INFO     root: Postprocessing NFL on 2024-01-19
+2025-06-16 02:26:06 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:26:06 INFO     root: Preprocessing NBA on 2024-01-19
+2025-06-16 02:27:47 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
+2025-06-16 02:27:47 INFO     root: Postprocessing NBA on 2024-01-19
+2025-06-16 02:27:47 INFO     root: Updated final scores for 7 games. Skipped 1 games.
+2025-06-16 02:27:47 INFO     root: Preprocessing CFB on 2024-01-19
+2025-06-16 02:27:47 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:27:47 INFO     root: Postprocessing CFB on 2024-01-19
+2025-06-16 02:27:48 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:27:48 INFO     root: Preprocessing CBB on 2024-01-19
+2025-06-16 02:29:51 ERROR    root: Team 'East-West' not found in stats for 'points-per-game'
+2025-06-16 02:29:51 ERROR    root: Could not fetch stats for East-West or Chicago St, skipping
+2025-06-16 02:29:52 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 1 games.
+2025-06-16 02:29:52 INFO     root: Postprocessing CBB on 2024-01-19
+2025-06-16 02:29:53 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 02:29:53 INFO     root: Preprocessing MLB on 2024-01-19
+2025-06-16 02:29:53 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:29:53 INFO     root: Postprocessing MLB on 2024-01-19
+2025-06-16 02:29:53 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:29:53 INFO     root: Preprocessing NFL on 2024-01-18
+2025-06-16 02:29:54 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:29:54 INFO     root: Postprocessing NFL on 2024-01-18
+2025-06-16 02:29:54 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:29:54 INFO     root: Preprocessing NBA on 2024-01-18
+2025-06-16 02:30:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-points-per-game?date=2024-01-18, sleeping 4 minutes before retry
+2025-06-16 02:35:30 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 02:35:30 INFO     root: Postprocessing NBA on 2024-01-18
+2025-06-16 02:35:31 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 02:35:31 INFO     root: Preprocessing CFB on 2024-01-18
+2025-06-16 02:35:31 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:35:31 INFO     root: Postprocessing CFB on 2024-01-18
+2025-06-16 02:35:31 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:35:31 INFO     root: Preprocessing CBB on 2024-01-18
+2025-06-16 02:38:26 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 02:38:26 ERROR    root: Could not fetch stats for MTSU or UTEP, skipping
+2025-06-16 02:38:26 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 02:38:26 ERROR    root: Could not fetch stats for Western KY or New Mexico St, skipping
+2025-06-16 02:38:49 INFO     root: populate_pregame_data: inserted/updated 57 rows, skipped 2 games.
+2025-06-16 02:38:49 INFO     root: Postprocessing CBB on 2024-01-18
+2025-06-16 02:38:50 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 02:38:50 INFO     root: Preprocessing MLB on 2024-01-18
+2025-06-16 02:38:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:38:51 INFO     root: Postprocessing MLB on 2024-01-18
+2025-06-16 02:38:51 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:38:51 INFO     root: Preprocessing NFL on 2024-01-17
+2025-06-16 02:38:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:38:51 INFO     root: Postprocessing NFL on 2024-01-17
+2025-06-16 02:38:51 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:38:51 INFO     root: Preprocessing NBA on 2024-01-17
+2025-06-16 02:40:08 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/non-division-by-other?date=2024-01-17, sleeping 4 minutes before retry
+2025-06-16 02:44:31 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-06-16 02:44:31 INFO     root: Postprocessing NBA on 2024-01-17
+2025-06-16 02:44:31 INFO     root: Updated final scores for 9 games. Skipped 1 games.
+2025-06-16 02:44:31 INFO     root: Preprocessing CFB on 2024-01-17
+2025-06-16 02:44:32 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:44:32 INFO     root: Postprocessing CFB on 2024-01-17
+2025-06-16 02:44:32 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:44:32 INFO     root: Preprocessing CBB on 2024-01-17
+2025-06-16 02:46:48 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 02:46:48 ERROR    root: Could not fetch stats for ETSU or Wofford, skipping
+2025-06-16 02:47:21 INFO     root: populate_pregame_data: inserted/updated 43 rows, skipped 1 games.
+2025-06-16 02:47:21 INFO     root: Postprocessing CBB on 2024-01-17
+2025-06-16 02:47:22 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 02:47:22 INFO     root: Preprocessing MLB on 2024-01-17
+2025-06-16 02:47:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:47:22 INFO     root: Postprocessing MLB on 2024-01-17
+2025-06-16 02:47:22 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:47:22 INFO     root: Preprocessing NFL on 2024-01-16
+2025-06-16 02:47:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:47:22 INFO     root: Postprocessing NFL on 2024-01-16
+2025-06-16 02:47:22 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:47:22 INFO     root: Preprocessing NBA on 2024-01-16
+2025-06-16 02:48:54 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-06-16 02:48:54 INFO     root: Postprocessing NBA on 2024-01-16
+2025-06-16 02:48:54 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 02:48:54 INFO     root: Preprocessing CFB on 2024-01-16
+2025-06-16 02:48:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:48:55 INFO     root: Postprocessing CFB on 2024-01-16
+2025-06-16 02:48:55 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:48:55 INFO     root: Preprocessing CBB on 2024-01-16
+2025-06-16 02:49:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/fta-per-fga?date=2024-01-16, sleeping 4 minutes before retry
+2025-06-16 02:55:31 INFO     root: populate_pregame_data: inserted/updated 31 rows, skipped 0 games.
+2025-06-16 02:55:31 INFO     root: Postprocessing CBB on 2024-01-16
+2025-06-16 02:55:32 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-06-16 02:55:32 INFO     root: Preprocessing MLB on 2024-01-16
+2025-06-16 02:55:33 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 02:55:33 INFO     root: Postprocessing MLB on 2024-01-16
+2025-06-16 02:55:33 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 02:55:33 INFO     root: Preprocessing NFL on 2024-01-15
+2025-06-16 02:57:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/ranking/vs-23-32-by-other?date=2024-01-15, sleeping 4 minutes before retry
+2025-06-16 03:01:43 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 03:01:43 INFO     root: Postprocessing NFL on 2024-01-15
+2025-06-16 03:01:44 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 03:01:44 INFO     root: Preprocessing NBA on 2024-01-15
+2025-06-16 03:03:29 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
+2025-06-16 03:03:29 INFO     root: Postprocessing NBA on 2024-01-15
+2025-06-16 03:03:30 INFO     root: Updated final scores for 11 games. Skipped 0 games.
+2025-06-16 03:03:30 INFO     root: Preprocessing CFB on 2024-01-15
+2025-06-16 03:03:30 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:03:30 INFO     root: Postprocessing CFB on 2024-01-15
+2025-06-16 03:03:30 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:03:30 INFO     root: Preprocessing CBB on 2024-01-15
+2025-06-16 03:05:42 ERROR    root: Team 'VA-Lynchburg' not found in stats for 'points-per-game'
+2025-06-16 03:05:42 ERROR    root: Could not fetch stats for VA-Lynchburg or Norfolk St, skipping
+2025-06-16 03:06:02 INFO     root: populate_pregame_data: inserted/updated 29 rows, skipped 1 games.
+2025-06-16 03:06:02 INFO     root: Postprocessing CBB on 2024-01-15
+2025-06-16 03:06:02 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 03:06:02 INFO     root: Preprocessing MLB on 2024-01-15
+2025-06-16 03:06:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:06:02 INFO     root: Postprocessing MLB on 2024-01-15
+2025-06-16 03:06:03 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:06:03 INFO     root: Preprocessing NFL on 2024-01-14
+2025-06-16 03:06:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/first-downs-per-play?date=2024-01-14, sleeping 4 minutes before retry
+2025-06-16 03:12:17 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 03:12:17 INFO     root: Postprocessing NFL on 2024-01-14
+2025-06-16 03:12:18 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 03:12:18 INFO     root: Preprocessing NBA on 2024-01-14
+2025-06-16 03:13:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/luck-by-other?date=2024-01-14, sleeping 4 minutes before retry
+2025-06-16 03:17:50 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 03:17:50 INFO     root: Postprocessing NBA on 2024-01-14
+2025-06-16 03:17:50 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 03:17:50 INFO     root: Preprocessing CFB on 2024-01-14
+2025-06-16 03:17:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:17:51 INFO     root: Postprocessing CFB on 2024-01-14
+2025-06-16 03:17:51 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:17:51 INFO     root: Preprocessing CBB on 2024-01-14
+2025-06-16 03:19:59 INFO     root: populate_pregame_data: inserted/updated 16 rows, skipped 0 games.
+2025-06-16 03:19:59 INFO     root: Postprocessing CBB on 2024-01-14
+2025-06-16 03:19:59 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 03:19:59 INFO     root: Preprocessing MLB on 2024-01-14
+2025-06-16 03:20:00 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:20:00 INFO     root: Postprocessing MLB on 2024-01-14
+2025-06-16 03:20:00 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:20:00 INFO     root: Preprocessing NFL on 2024-01-13
+2025-06-16 03:21:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/fumble-recovery-pct?date=2024-01-13, sleeping 4 minutes before retry
+2025-06-16 03:26:14 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 03:26:14 INFO     root: Postprocessing NFL on 2024-01-13
+2025-06-16 03:26:14 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 03:26:14 INFO     root: Preprocessing NBA on 2024-01-13
+2025-06-16 03:28:00 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
+2025-06-16 03:28:00 INFO     root: Postprocessing NBA on 2024-01-13
+2025-06-16 03:28:01 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 03:28:01 INFO     root: Preprocessing CFB on 2024-01-13
+2025-06-16 03:28:01 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:28:01 INFO     root: Postprocessing CFB on 2024-01-13
+2025-06-16 03:28:02 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:28:02 INFO     root: Preprocessing CBB on 2024-01-13
+2025-06-16 03:31:01 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 03:31:01 ERROR    root: Could not fetch stats for ETSU or Furman, skipping
+2025-06-16 03:31:24 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 03:31:24 ERROR    root: Could not fetch stats for MD Eastern or Howard, skipping
+2025-06-16 03:32:16 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 03:32:16 ERROR    root: Could not fetch stats for NW State or Western KY, skipping
+2025-06-16 03:32:27 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 03:32:27 ERROR    root: Could not fetch stats for Sam Houston or MTSU, skipping
+2025-06-16 03:33:25 INFO     root: populate_pregame_data: inserted/updated 129 rows, skipped 4 games.
+2025-06-16 03:33:25 INFO     root: Postprocessing CBB on 2024-01-13
+2025-06-16 03:33:25 INFO     root: Updated final scores for 17 games. Skipped 0 games.
+2025-06-16 03:33:25 INFO     root: Preprocessing MLB on 2024-01-13
+2025-06-16 03:33:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:33:26 INFO     root: Postprocessing MLB on 2024-01-13
+2025-06-16 03:33:26 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:33:26 INFO     root: Preprocessing NFL on 2024-01-12
+2025-06-16 03:33:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:33:26 INFO     root: Postprocessing NFL on 2024-01-12
+2025-06-16 03:33:26 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:33:26 INFO     root: Preprocessing NBA on 2024-01-12
+2025-06-16 03:35:07 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-06-16 03:35:07 INFO     root: Postprocessing NBA on 2024-01-12
+2025-06-16 03:35:07 INFO     root: Updated final scores for 10 games. Skipped 0 games.
+2025-06-16 03:35:07 INFO     root: Preprocessing CFB on 2024-01-12
+2025-06-16 03:35:07 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:35:07 INFO     root: Postprocessing CFB on 2024-01-12
+2025-06-16 03:35:07 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:35:07 INFO     root: Preprocessing CBB on 2024-01-12
+2025-06-16 03:37:20 INFO     root: populate_pregame_data: inserted/updated 17 rows, skipped 0 games.
+2025-06-16 03:37:20 INFO     root: Postprocessing CBB on 2024-01-12
+2025-06-16 03:37:21 INFO     root: Updated final scores for 17 games. Skipped 0 games.
+2025-06-16 03:37:21 INFO     root: Preprocessing MLB on 2024-01-12
+2025-06-16 03:37:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:37:21 INFO     root: Postprocessing MLB on 2024-01-12
+2025-06-16 03:37:22 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:37:22 INFO     root: Preprocessing NFL on 2024-01-11
+2025-06-16 03:37:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:37:22 INFO     root: Postprocessing NFL on 2024-01-11
+2025-06-16 03:37:22 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:37:22 INFO     root: Preprocessing NBA on 2024-01-11
+2025-06-16 03:37:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/offensive-rebounds-per-game?date=2024-01-11, sleeping 4 minutes before retry
+2025-06-16 03:42:58 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 03:42:58 INFO     root: Postprocessing NBA on 2024-01-11
+2025-06-16 03:42:58 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 03:42:58 INFO     root: Preprocessing CFB on 2024-01-11
+2025-06-16 03:42:58 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:42:58 INFO     root: Postprocessing CFB on 2024-01-11
+2025-06-16 03:42:58 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:42:58 INFO     root: Preprocessing CBB on 2024-01-11
+2025-06-16 03:45:58 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 03:45:58 ERROR    root: Could not fetch stats for Louisiana Tech or MTSU, skipping
+2025-06-16 03:46:25 INFO     root: populate_pregame_data: inserted/updated 56 rows, skipped 1 games.
+2025-06-16 03:46:25 INFO     root: Postprocessing CBB on 2024-01-11
+2025-06-16 03:46:25 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 03:46:25 INFO     root: Preprocessing MLB on 2024-01-11
+2025-06-16 03:46:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:46:25 INFO     root: Postprocessing MLB on 2024-01-11
+2025-06-16 03:46:25 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:46:25 INFO     root: Preprocessing NFL on 2024-01-10
+2025-06-16 03:46:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:46:26 INFO     root: Postprocessing NFL on 2024-01-10
+2025-06-16 03:46:26 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:46:26 INFO     root: Preprocessing NBA on 2024-01-10
+2025-06-16 03:48:08 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-06-16 03:48:08 INFO     root: Postprocessing NBA on 2024-01-10
+2025-06-16 03:48:09 INFO     root: Updated final scores for 10 games. Skipped 0 games.
+2025-06-16 03:48:09 INFO     root: Preprocessing CFB on 2024-01-10
+2025-06-16 03:48:09 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:48:09 INFO     root: Postprocessing CFB on 2024-01-10
+2025-06-16 03:48:09 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:48:09 INFO     root: Preprocessing CBB on 2024-01-10
+2025-06-16 03:50:45 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 03:50:45 ERROR    root: Could not fetch stats for W Carolina or ETSU, skipping
+2025-06-16 03:51:01 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 03:51:01 ERROR    root: Could not fetch stats for Western KY or Sam Houston, skipping
+2025-06-16 03:51:21 INFO     root: populate_pregame_data: inserted/updated 47 rows, skipped 2 games.
+2025-06-16 03:51:21 INFO     root: Postprocessing CBB on 2024-01-10
+2025-06-16 03:51:22 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-06-16 03:51:23 INFO     root: Preprocessing MLB on 2024-01-10
+2025-06-16 03:51:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:51:23 INFO     root: Postprocessing MLB on 2024-01-10
+2025-06-16 03:51:23 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:51:23 INFO     root: Preprocessing NFL on 2024-01-09
+2025-06-16 03:51:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:51:24 INFO     root: Postprocessing NFL on 2024-01-09
+2025-06-16 03:51:24 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:51:24 INFO     root: Preprocessing NBA on 2024-01-09
+2025-06-16 03:52:07 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-points-from-3-pointers?date=2024-01-09, sleeping 4 minutes before retry
+2025-06-16 03:57:00 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 03:57:00 INFO     root: Postprocessing NBA on 2024-01-09
+2025-06-16 03:57:00 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 03:57:00 INFO     root: Preprocessing CFB on 2024-01-09
+2025-06-16 03:57:00 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:57:00 INFO     root: Postprocessing CFB on 2024-01-09
+2025-06-16 03:57:01 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:57:01 INFO     root: Preprocessing CBB on 2024-01-09
+2025-06-16 03:59:34 INFO     root: populate_pregame_data: inserted/updated 33 rows, skipped 0 games.
+2025-06-16 03:59:34 INFO     root: Postprocessing CBB on 2024-01-09
+2025-06-16 03:59:35 INFO     root: Updated final scores for 11 games. Skipped 0 games.
+2025-06-16 03:59:35 INFO     root: Preprocessing MLB on 2024-01-09
+2025-06-16 03:59:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:59:35 INFO     root: Postprocessing MLB on 2024-01-09
+2025-06-16 03:59:35 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:59:35 INFO     root: Preprocessing NFL on 2024-01-08
+2025-06-16 03:59:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 03:59:35 INFO     root: Postprocessing NFL on 2024-01-08
+2025-06-16 03:59:35 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 03:59:35 INFO     root: Preprocessing NBA on 2024-01-08
+2025-06-16 04:00:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/extra-chances-per-game?date=2024-01-08, sleeping 4 minutes before retry
+2025-06-16 04:05:20 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 04:05:20 INFO     root: Postprocessing NBA on 2024-01-08
+2025-06-16 04:05:21 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 04:05:21 INFO     root: Preprocessing CFB on 2024-01-08
+2025-06-16 04:07:01 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 04:07:01 INFO     root: Postprocessing CFB on 2024-01-08
+2025-06-16 04:07:02 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 04:07:02 INFO     root: Preprocessing CBB on 2024-01-08
+2025-06-16 04:08:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/ranking/vs-201-and-up-by-other?date=2024-01-08, sleeping 4 minutes before retry
+2025-06-16 04:12:50 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 04:12:50 ERROR    root: Could not fetch stats for MD Eastern or Coppin St, skipping
+2025-06-16 04:13:01 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 1 games.
+2025-06-16 04:13:01 INFO     root: Postprocessing CBB on 2024-01-08
+2025-06-16 04:13:02 WARNING  root: No local game found for ESPN ID 401589740
+2025-06-16 04:13:02 INFO     root: Updated final scores for 12 games. Skipped 1 games.
+2025-06-16 04:13:02 INFO     root: Preprocessing MLB on 2024-01-08
+2025-06-16 04:13:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:13:02 INFO     root: Postprocessing MLB on 2024-01-08
+2025-06-16 04:13:02 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:13:02 INFO     root: Preprocessing NFL on 2024-01-07
+2025-06-16 04:15:11 ERROR    root: Team 'Titans' not found in stats for 'points-per-game'
+2025-06-16 04:15:11 ERROR    root: Could not fetch stats for Jacksonville or Titans, skipping
+2025-06-16 04:15:18 ERROR    root: Team 'Broncos' not found in stats for 'points-per-game'
+2025-06-16 04:15:18 ERROR    root: Could not fetch stats for Broncos or Las Vegas, skipping
+2025-06-16 04:15:28 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 2 games.
+2025-06-16 04:15:28 INFO     root: Postprocessing NFL on 2024-01-07
+2025-06-16 04:15:28 WARNING  root: No local game found for ESPN ID 401547652
+2025-06-16 04:15:28 WARNING  root: No local game found for ESPN ID 401547646
+2025-06-16 04:15:28 INFO     root: Updated final scores for 12 games. Skipped 2 games.
+2025-06-16 04:15:28 INFO     root: Preprocessing NBA on 2024-01-07
+2025-06-16 04:16:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-assists-per-fgm?date=2024-01-07, sleeping 4 minutes before retry
+2025-06-16 04:21:09 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-06-16 04:21:09 INFO     root: Postprocessing NBA on 2024-01-07
+2025-06-16 04:21:09 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-06-16 04:21:09 INFO     root: Preprocessing CFB on 2024-01-07
+2025-06-16 04:21:10 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:21:10 INFO     root: Postprocessing CFB on 2024-01-07
+2025-06-16 04:21:10 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:21:10 INFO     root: Preprocessing CBB on 2024-01-07
+2025-06-16 04:23:18 INFO     root: populate_pregame_data: inserted/updated 18 rows, skipped 0 games.
+2025-06-16 04:23:18 INFO     root: Postprocessing CBB on 2024-01-07
+2025-06-16 04:23:19 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 04:23:19 INFO     root: Preprocessing MLB on 2024-01-07
+2025-06-16 04:23:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:23:19 INFO     root: Postprocessing MLB on 2024-01-07
+2025-06-16 04:23:19 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:23:19 INFO     root: Preprocessing NFL on 2024-01-06
+2025-06-16 04:24:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/opponent-other-touchdowns-per-game?date=2024-01-06, sleeping 4 minutes before retry
+2025-06-16 04:29:34 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 04:29:34 INFO     root: Postprocessing NFL on 2024-01-06
+2025-06-16 04:29:34 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 04:29:34 INFO     root: Preprocessing NBA on 2024-01-06
+2025-06-16 04:31:15 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2025-06-16 04:31:15 INFO     root: Postprocessing NBA on 2024-01-06
+2025-06-16 04:31:15 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 04:31:15 INFO     root: Preprocessing CFB on 2024-01-06
+2025-06-16 04:31:16 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:31:16 INFO     root: Postprocessing CFB on 2024-01-06
+2025-06-16 04:31:16 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:31:16 INFO     root: Preprocessing CBB on 2024-01-06
+2025-06-16 04:32:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/opponent-personal-fouls-per-possession?date=2024-01-06, sleeping 4 minutes before retry
+2025-06-16 04:39:19 ERROR    root: Team 'Bethel (TN)' not found in stats for 'points-per-game'
+2025-06-16 04:39:19 ERROR    root: Could not fetch stats for Bethel (TN) or SE Missouri St, skipping
+2025-06-16 04:39:34 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 04:39:34 ERROR    root: Could not fetch stats for ETSU or NC Greensboro, skipping
+2025-06-16 04:39:46 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 04:39:46 ERROR    root: Could not fetch stats for Morgan St or MD Eastern, skipping
+2025-06-16 04:40:19 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 04:40:19 ERROR    root: Could not fetch stats for Liberty or Western KY, skipping
+2025-06-16 04:41:20 INFO     root: populate_pregame_data: inserted/updated 142 rows, skipped 4 games.
+2025-06-16 04:41:20 INFO     root: Postprocessing CBB on 2024-01-06
+2025-06-16 04:41:20 INFO     root: Updated final scores for 19 games. Skipped 0 games.
+2025-06-16 04:41:20 INFO     root: Preprocessing MLB on 2024-01-06
+2025-06-16 04:41:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:41:20 INFO     root: Postprocessing MLB on 2024-01-06
+2025-06-16 04:41:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:41:20 INFO     root: Preprocessing NFL on 2024-01-05
+2025-06-16 04:41:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:41:21 INFO     root: Postprocessing NFL on 2024-01-05
+2025-06-16 04:41:21 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:41:21 INFO     root: Preprocessing NBA on 2024-01-05
+2025-06-16 04:43:21 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
+2025-06-16 04:43:21 INFO     root: Postprocessing NBA on 2024-01-05
+2025-06-16 04:43:22 INFO     root: Updated final scores for 14 games. Skipped 0 games.
+2025-06-16 04:43:22 INFO     root: Preprocessing CFB on 2024-01-05
+2025-06-16 04:43:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:43:22 INFO     root: Postprocessing CFB on 2024-01-05
+2025-06-16 04:43:22 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:43:22 INFO     root: Preprocessing CBB on 2024-01-05
+2025-06-16 04:45:29 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-06-16 04:45:29 INFO     root: Postprocessing CBB on 2024-01-05
+2025-06-16 04:45:30 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 04:45:30 INFO     root: Preprocessing MLB on 2024-01-05
+2025-06-16 04:45:30 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:45:30 INFO     root: Postprocessing MLB on 2024-01-05
+2025-06-16 04:45:30 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:45:30 INFO     root: Preprocessing NFL on 2024-01-04
+2025-06-16 04:45:31 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:45:31 INFO     root: Postprocessing NFL on 2024-01-04
+2025-06-16 04:45:31 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:45:31 INFO     root: Preprocessing NBA on 2024-01-04
+2025-06-16 04:45:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/team-rebounds-per-game?date=2024-01-04, sleeping 4 minutes before retry
+2025-06-16 04:51:04 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 04:51:04 INFO     root: Postprocessing NBA on 2024-01-04
+2025-06-16 04:51:05 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 04:51:05 INFO     root: Preprocessing CFB on 2024-01-04
+2025-06-16 04:51:05 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:51:05 INFO     root: Postprocessing CFB on 2024-01-04
+2025-06-16 04:51:05 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:51:05 INFO     root: Preprocessing CBB on 2024-01-04
+2025-06-16 04:53:11 ERROR    root: Team 'Mtvincent' not found in stats for 'points-per-game'
+2025-06-16 04:53:11 ERROR    root: Could not fetch stats for Mtvincent or Columbia, skipping
+2025-06-16 04:54:18 INFO     root: populate_pregame_data: inserted/updated 55 rows, skipped 1 games.
+2025-06-16 04:54:18 INFO     root: Postprocessing CBB on 2024-01-04
+2025-06-16 04:54:18 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 04:54:18 INFO     root: Preprocessing MLB on 2024-01-04
+2025-06-16 04:54:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:54:19 INFO     root: Postprocessing MLB on 2024-01-04
+2025-06-16 04:54:19 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:54:19 INFO     root: Preprocessing NFL on 2024-01-03
+2025-06-16 04:54:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 04:54:19 INFO     root: Postprocessing NFL on 2024-01-03
+2025-06-16 04:54:19 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 04:54:19 INFO     root: Preprocessing NBA on 2024-01-03
+2025-06-16 04:55:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-steals-plus-blocks-per-game?date=2024-01-03, sleeping 4 minutes before retry
+2025-06-16 05:00:12 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-06-16 05:00:12 INFO     root: Postprocessing NBA on 2024-01-03
+2025-06-16 05:00:13 INFO     root: Updated final scores for 12 games. Skipped 0 games.
+2025-06-16 05:00:13 INFO     root: Preprocessing CFB on 2024-01-03
+2025-06-16 05:00:13 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:00:13 INFO     root: Postprocessing CFB on 2024-01-03
+2025-06-16 05:00:13 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:00:13 INFO     root: Preprocessing CBB on 2024-01-03
+2025-06-16 05:02:38 ERROR    root: Team 'Truett-McConnl' not found in stats for 'points-per-game'
+2025-06-16 05:02:38 ERROR    root: Could not fetch stats for Truett-McConnl or NC Central, skipping
+2025-06-16 05:02:43 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 05:02:43 ERROR    root: Could not fetch stats for Mercer or ETSU, skipping
+2025-06-16 05:02:45 ERROR    root: Team 'Reinhardt' not found in stats for 'points-per-game'
+2025-06-16 05:02:45 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 05:02:45 ERROR    root: Could not fetch stats for Reinhardt or MTSU, skipping
+2025-06-16 05:03:19 INFO     root: populate_pregame_data: inserted/updated 49 rows, skipped 3 games.
+2025-06-16 05:03:19 INFO     root: Postprocessing CBB on 2024-01-03
+2025-06-16 05:03:19 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 05:03:19 INFO     root: Preprocessing MLB on 2024-01-03
+2025-06-16 05:03:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:03:19 INFO     root: Postprocessing MLB on 2024-01-03
+2025-06-16 05:03:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:03:20 INFO     root: Preprocessing NFL on 2024-01-02
+2025-06-16 05:03:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:03:20 INFO     root: Postprocessing NFL on 2024-01-02
+2025-06-16 05:03:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:03:20 INFO     root: Preprocessing NBA on 2024-01-02
+2025-06-16 05:04:58 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 05:04:58 INFO     root: Postprocessing NBA on 2024-01-02
+2025-06-16 05:04:59 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 05:04:59 INFO     root: Preprocessing CFB on 2024-01-02
+2025-06-16 05:04:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:04:59 INFO     root: Postprocessing CFB on 2024-01-02
+2025-06-16 05:04:59 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:04:59 INFO     root: Preprocessing CBB on 2024-01-02
+2025-06-16 05:05:00 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/ranking/predictive-by-other/?date=2024-01-02, sleeping 4 minutes before retry
+2025-06-16 05:11:13 ERROR    root: Team 'Dallas' not found in stats for 'points-per-game'
+2025-06-16 05:11:13 ERROR    root: Could not fetch stats for Dallas or Sam Houston, skipping
+2025-06-16 05:11:14 ERROR    root: Team 'Clarks Summit' not found in stats for 'points-per-game'
+2025-06-16 05:11:14 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 05:11:14 ERROR    root: Could not fetch stats for Clarks Summit or MD Eastern, skipping
+2025-06-16 05:11:16 ERROR    root: Team 'JohnsonFL' not found in stats for 'points-per-game'
+2025-06-16 05:11:16 ERROR    root: Could not fetch stats for JohnsonFL or Alabama St, skipping
+2025-06-16 05:11:30 ERROR    root: Team 'OLLU' not found in stats for 'points-per-game'
+2025-06-16 05:11:30 ERROR    root: Could not fetch stats for OLLU or Incarnate Word, skipping
+2025-06-16 05:11:47 INFO     root: populate_pregame_data: inserted/updated 32 rows, skipped 4 games.
+2025-06-16 05:11:47 INFO     root: Postprocessing CBB on 2024-01-02
+2025-06-16 05:11:48 INFO     root: Updated final scores for 11 games. Skipped 0 games.
+2025-06-16 05:11:48 INFO     root: Preprocessing MLB on 2024-01-02
+2025-06-16 05:11:48 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:11:48 INFO     root: Postprocessing MLB on 2024-01-02
+2025-06-16 05:11:48 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:11:48 INFO     root: Preprocessing NFL on 2024-01-01
+2025-06-16 05:11:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:11:49 INFO     root: Postprocessing NFL on 2024-01-01
+2025-06-16 05:11:49 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:11:49 INFO     root: Preprocessing NBA on 2024-01-01
+2025-06-16 05:13:38 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
+2025-06-16 05:13:38 INFO     root: Postprocessing NBA on 2024-01-01
+2025-06-16 05:13:39 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 05:13:39 INFO     root: Preprocessing CFB on 2024-01-01
+2025-06-16 05:13:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/2nd-quarter-points-per-game?date=2024-01-01, sleeping 4 minutes before retry
+2025-06-16 05:19:31 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 05:19:31 INFO     root: Postprocessing CFB on 2024-01-01
+2025-06-16 05:19:31 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 05:19:31 INFO     root: Preprocessing CBB on 2024-01-01
+2025-06-16 05:21:13 ERROR    root: Team 'Boyce' not found in stats for 'points-per-game'
+2025-06-16 05:21:13 ERROR    root: Could not fetch stats for Boyce or Liberty, skipping
+2025-06-16 05:21:18 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 1 games.
+2025-06-16 05:21:18 INFO     root: Postprocessing CBB on 2024-01-01
+2025-06-16 05:21:19 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 05:21:19 INFO     root: Preprocessing MLB on 2024-01-01
+2025-06-16 05:21:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:21:20 INFO     root: Postprocessing MLB on 2024-01-01
+2025-06-16 05:21:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:21:20 INFO     root: Preprocessing NFL on 2023-12-31
+2025-06-16 05:21:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/punts-per-offensive-score?date=2023-12-31, sleeping 4 minutes before retry
+2025-06-16 05:27:54 ERROR    root: Team 'Titans' not found in stats for 'points-per-game'
+2025-06-16 05:27:54 ERROR    root: Could not fetch stats for Titans or Houston, skipping
+2025-06-16 05:27:55 ERROR    root: Team 'Broncos' not found in stats for 'points-per-game'
+2025-06-16 05:27:55 ERROR    root: Could not fetch stats for LA Chargers or Broncos, skipping
+2025-06-16 05:27:59 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 2 games.
+2025-06-16 05:27:59 INFO     root: Postprocessing NFL on 2023-12-31
+2025-06-16 05:27:59 WARNING  root: No local game found for ESPN ID 401547631
+2025-06-16 05:27:59 WARNING  root: No local game found for ESPN ID 401547630
+2025-06-16 05:27:59 INFO     root: Updated final scores for 12 games. Skipped 2 games.
+2025-06-16 05:27:59 INFO     root: Preprocessing NBA on 2023-12-31
+2025-06-16 05:29:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/last-10-games-by-other?date=2023-12-31, sleeping 4 minutes before retry
+2025-06-16 05:33:45 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 05:33:45 INFO     root: Postprocessing NBA on 2023-12-31
+2025-06-16 05:33:45 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 05:33:45 INFO     root: Preprocessing CFB on 2023-12-31
+2025-06-16 05:33:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:33:46 INFO     root: Postprocessing CFB on 2023-12-31
+2025-06-16 05:33:46 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:33:46 INFO     root: Preprocessing CBB on 2023-12-31
+2025-06-16 05:35:41 ERROR    root: Team 'EMERSON' not found in stats for 'points-per-game'
+2025-06-16 05:35:41 ERROR    root: Could not fetch stats for EMERSON or UMass Lowell, skipping
+2025-06-16 05:35:52 ERROR    root: Team 'Ecclesia' not found in stats for 'points-per-game'
+2025-06-16 05:35:52 ERROR    root: Could not fetch stats for Ecclesia or Southern, skipping
+2025-06-16 05:35:53 ERROR    root: Team 'Carroll MT' not found in stats for 'points-per-game'
+2025-06-16 05:35:53 ERROR    root: Could not fetch stats for Carroll MT or UNLV, skipping
+2025-06-16 05:36:04 ERROR    root: Team 'Westcliff' not found in stats for 'points-per-game'
+2025-06-16 05:36:04 ERROR    root: Could not fetch stats for Westcliff or San Diego, skipping
+2025-06-16 05:36:09 ERROR    root: Team 'Trevecca' not found in stats for 'points-per-game'
+2025-06-16 05:36:09 ERROR    root: Could not fetch stats for Trevecca or NW State, skipping
+2025-06-16 05:36:14 INFO     root: populate_pregame_data: inserted/updated 22 rows, skipped 5 games.
+2025-06-16 05:36:14 INFO     root: Postprocessing CBB on 2023-12-31
+2025-06-16 05:36:15 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 05:36:15 INFO     root: Preprocessing MLB on 2023-12-31
+2025-06-16 05:36:15 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:36:15 INFO     root: Postprocessing MLB on 2023-12-31
+2025-06-16 05:36:15 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:36:15 INFO     root: Preprocessing NFL on 2023-12-30
+2025-06-16 05:38:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/penalties-per-game?date=2023-12-30, sleeping 4 minutes before retry
+2025-06-16 05:42:38 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 05:42:38 INFO     root: Postprocessing NFL on 2023-12-30
+2025-06-16 05:42:38 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 05:42:38 INFO     root: Preprocessing NBA on 2023-12-30
+2025-06-16 05:44:24 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 05:44:24 INFO     root: Postprocessing NBA on 2023-12-30
+2025-06-16 05:44:24 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 05:44:24 INFO     root: Preprocessing CFB on 2023-12-30
+2025-06-16 05:45:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/ranking/predictive-by-other?date=2023-12-30, sleeping 4 minutes before retry
+2025-06-16 05:50:15 ERROR    root: Team 'Ole Miss' not found in stats for 'points-per-game'
+2025-06-16 05:50:15 ERROR    root: Could not fetch stats for Ole Miss or Penn St, skipping
+2025-06-16 05:50:18 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 1 games.
+2025-06-16 05:50:18 INFO     root: Postprocessing CFB on 2023-12-30
+2025-06-16 05:50:19 WARNING  root: No local game found for ESPN ID 401551769
+2025-06-16 05:50:19 INFO     root: Updated final scores for 3 games. Skipped 1 games.
+2025-06-16 05:50:19 INFO     root: Preprocessing CBB on 2023-12-30
+2025-06-16 05:52:35 ERROR    root: Team 'Toccoa Falls' not found in stats for 'points-per-game'
+2025-06-16 05:52:35 ERROR    root: Could not fetch stats for Toccoa Falls or The Citadel, skipping
+2025-06-16 05:52:35 ERROR    root: Team 'St. Elizabeth' not found in stats for 'points-per-game'
+2025-06-16 05:52:35 ERROR    root: Could not fetch stats for St. Elizabeth or C Connecticut, skipping
+2025-06-16 05:52:40 ERROR    root: Team 'Northwood' not found in stats for 'points-per-game'
+2025-06-16 05:52:40 ERROR    root: Could not fetch stats for Northwood or E Michigan, skipping
+2025-06-16 05:52:46 ERROR    root: Team 'LSU Shreveport' not found in stats for 'points-per-game'
+2025-06-16 05:52:46 ERROR    root: Could not fetch stats for LSU Shreveport or N Texas, skipping
+2025-06-16 05:52:47 ERROR    root: Team 'Anderson SC' not found in stats for 'points-per-game'
+2025-06-16 05:52:47 ERROR    root: Could not fetch stats for Anderson SC or Furman, skipping
+2025-06-16 05:52:50 ERROR    root: Team 'Cleary U' not found in stats for 'points-per-game'
+2025-06-16 05:52:50 ERROR    root: Could not fetch stats for Cleary U or Duquesne, skipping
+2025-06-16 05:52:59 ERROR    root: Team 'Arcadia' not found in stats for 'points-per-game'
+2025-06-16 05:52:59 ERROR    root: Could not fetch stats for Arcadia or Towson, skipping
+2025-06-16 05:52:59 ERROR    root: Team 'Mobile' not found in stats for 'points-per-game'
+2025-06-16 05:52:59 ERROR    root: Could not fetch stats for Mobile or Nicholls, skipping
+2025-06-16 05:53:23 ERROR    root: Team 'Erskine' not found in stats for 'points-per-game'
+2025-06-16 05:53:23 ERROR    root: Could not fetch stats for Erskine or Jacksonville, skipping
+2025-06-16 05:53:23 ERROR    root: Team 'Western KY' not found in stats for 'points-per-game'
+2025-06-16 05:53:23 ERROR    root: Could not fetch stats for Abl Christian or Western KY, skipping
+2025-06-16 05:53:30 ERROR    root: Team 'Coker' not found in stats for 'points-per-game'
+2025-06-16 05:53:30 ERROR    root: Could not fetch stats for Coker or SC Upstate, skipping
+2025-06-16 05:53:39 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 05:53:39 ERROR    root: Could not fetch stats for MTSU or Murray St, skipping
+2025-06-16 05:53:39 ERROR    root: Team 'King Coll' not found in stats for 'points-per-game'
+2025-06-16 05:53:39 ERROR    root: Could not fetch stats for King Coll or W Carolina, skipping
+2025-06-16 05:53:40 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 05:53:40 ERROR    root: Could not fetch stats for MD Eastern or G Washington, skipping
+2025-06-16 05:53:49 ERROR    root: Team 'Schreiner' not found in stats for 'points-per-game'
+2025-06-16 05:53:49 ERROR    root: Could not fetch stats for Schreiner or Texas A&M-CC, skipping
+2025-06-16 05:54:05 ERROR    root: Team 'Paul Quinn' not found in stats for 'points-per-game'
+2025-06-16 05:54:05 ERROR    root: Could not fetch stats for Paul Quinn or Lamar, skipping
+2025-06-16 05:54:23 ERROR    root: Team 'ANTELOPE' not found in stats for 'points-per-game'
+2025-06-16 05:54:23 ERROR    root: Could not fetch stats for ANTELOPE or Southern, skipping
+2025-06-16 05:54:35 INFO     root: populate_pregame_data: inserted/updated 84 rows, skipped 17 games.
+2025-06-16 05:54:35 INFO     root: Postprocessing CBB on 2023-12-30
+2025-06-16 05:54:36 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 05:54:36 INFO     root: Preprocessing MLB on 2023-12-30
+2025-06-16 05:54:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:54:36 INFO     root: Postprocessing MLB on 2023-12-30
+2025-06-16 05:54:36 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:54:36 INFO     root: Preprocessing NFL on 2023-12-29
+2025-06-16 05:54:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 05:54:37 INFO     root: Postprocessing NFL on 2023-12-29
+2025-06-16 05:54:37 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 05:54:37 INFO     root: Preprocessing NBA on 2023-12-29
+2025-06-16 05:56:26 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-06-16 05:56:26 INFO     root: Postprocessing NBA on 2023-12-29
+2025-06-16 05:56:26 INFO     root: Updated final scores for 10 games. Skipped 0 games.
+2025-06-16 05:56:26 INFO     root: Preprocessing CFB on 2023-12-29
+2025-06-16 05:58:23 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2025-06-16 05:58:23 INFO     root: Postprocessing CFB on 2023-12-29
+2025-06-16 05:58:23 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 05:58:23 INFO     root: Preprocessing CBB on 2023-12-29
+2025-06-16 05:58:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/floor-percentage?date=2023-12-29, sleeping 4 minutes before retry
+2025-06-16 06:04:37 ERROR    root: Team 'Dillard' not found in stats for 'points-per-game'
+2025-06-16 06:04:37 ERROR    root: Could not fetch stats for Dillard or Tulane, skipping
+2025-06-16 06:04:37 ERROR    root: Team 'Talladega' not found in stats for 'points-per-game'
+2025-06-16 06:04:37 ERROR    root: Could not fetch stats for Talladega or Mercer, skipping
+2025-06-16 06:04:37 ERROR    root: Team 'S Wesleyan' not found in stats for 'points-per-game'
+2025-06-16 06:04:37 ERROR    root: Could not fetch stats for S Wesleyan or Wofford, skipping
+2025-06-16 06:04:40 ERROR    root: Team 'Toccoa Falls' not found in stats for 'points-per-game'
+2025-06-16 06:04:40 ERROR    root: Could not fetch stats for Toccoa Falls or Winthrop, skipping
+2025-06-16 06:04:40 ERROR    root: Team 'Aquinas' not found in stats for 'points-per-game'
+2025-06-16 06:04:40 ERROR    root: Could not fetch stats for Aquinas or W Michigan, skipping
+2025-06-16 06:04:57 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 06:04:57 ERROR    root: Could not fetch stats for ETSU or E Carolina, skipping
+2025-06-16 06:05:41 ERROR    root: Team 'Westcliff' not found in stats for 'points-per-game'
+2025-06-16 06:05:41 ERROR    root: Could not fetch stats for Westcliff or Pepperdine, skipping
+2025-06-16 06:05:47 INFO     root: populate_pregame_data: inserted/updated 51 rows, skipped 7 games.
+2025-06-16 06:05:47 INFO     root: Postprocessing CBB on 2023-12-29
+2025-06-16 06:05:48 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-06-16 06:05:48 INFO     root: Preprocessing MLB on 2023-12-29
+2025-06-16 06:05:48 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:05:48 INFO     root: Postprocessing MLB on 2023-12-29
+2025-06-16 06:05:48 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:05:48 INFO     root: Preprocessing NFL on 2023-12-28
+2025-06-16 06:08:07 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/ranking/vs-11-16-by-other?date=2023-12-28, sleeping 4 minutes before retry
+2025-06-16 06:12:12 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 06:12:12 INFO     root: Postprocessing NFL on 2023-12-28
+2025-06-16 06:12:12 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 06:12:12 INFO     root: Preprocessing NBA on 2023-12-28
+2025-06-16 06:14:00 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
+2025-06-16 06:14:00 INFO     root: Postprocessing NBA on 2023-12-28
+2025-06-16 06:14:00 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 06:14:00 INFO     root: Preprocessing CFB on 2023-12-28
+2025-06-16 06:15:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/ranking/vs-76-120-by-other?date=2023-12-28, sleeping 4 minutes before retry
+2025-06-16 06:19:56 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2025-06-16 06:19:56 INFO     root: Postprocessing CFB on 2023-12-28
+2025-06-16 06:19:57 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 06:19:57 INFO     root: Preprocessing CBB on 2023-12-28
+2025-06-16 06:22:27 INFO     root: populate_pregame_data: inserted/updated 22 rows, skipped 0 games.
+2025-06-16 06:22:27 INFO     root: Postprocessing CBB on 2023-12-28
+2025-06-16 06:22:27 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 06:22:27 INFO     root: Preprocessing MLB on 2023-12-28
+2025-06-16 06:22:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:22:28 INFO     root: Postprocessing MLB on 2023-12-28
+2025-06-16 06:22:28 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:22:28 INFO     root: Preprocessing NFL on 2023-12-27
+2025-06-16 06:22:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:22:28 INFO     root: Postprocessing NFL on 2023-12-27
+2025-06-16 06:22:28 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:22:28 INFO     root: Preprocessing NBA on 2023-12-27
+2025-06-16 06:24:12 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 06:24:12 INFO     root: Postprocessing NBA on 2023-12-27
+2025-06-16 06:24:12 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 06:24:12 INFO     root: Preprocessing CFB on 2023-12-27
+2025-06-16 06:24:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/2nd-half-time-of-possession-share-pct?date=2023-12-27, sleeping 4 minutes before retry
+2025-06-16 06:30:06 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2025-06-16 06:30:06 INFO     root: Postprocessing CFB on 2023-12-27
+2025-06-16 06:30:07 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 06:30:07 INFO     root: Preprocessing CBB on 2023-12-27
+2025-06-16 06:32:01 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-06-16 06:32:01 INFO     root: Postprocessing CBB on 2023-12-27
+2025-06-16 06:32:01 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 06:32:01 INFO     root: Preprocessing MLB on 2023-12-27
+2025-06-16 06:32:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:32:02 INFO     root: Postprocessing MLB on 2023-12-27
+2025-06-16 06:32:02 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:32:02 INFO     root: Preprocessing NFL on 2023-12-26
+2025-06-16 06:32:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:32:02 INFO     root: Postprocessing NFL on 2023-12-26
+2025-06-16 06:32:02 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:32:02 INFO     root: Preprocessing NBA on 2023-12-26
+2025-06-16 06:32:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/assists-per-possession?date=2023-12-26, sleeping 4 minutes before retry
+2025-06-16 06:37:52 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-06-16 06:37:52 INFO     root: Postprocessing NBA on 2023-12-26
+2025-06-16 06:37:52 INFO     root: Updated final scores for 9 games. Skipped 0 games.
+2025-06-16 06:37:52 INFO     root: Preprocessing CFB on 2023-12-26
+2025-06-16 06:39:43 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-06-16 06:39:43 INFO     root: Postprocessing CFB on 2023-12-26
+2025-06-16 06:39:44 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 06:39:44 INFO     root: Preprocessing CBB on 2023-12-26
+2025-06-16 06:39:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:39:44 INFO     root: Postprocessing CBB on 2023-12-26
+2025-06-16 06:39:44 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:39:44 INFO     root: Preprocessing MLB on 2023-12-26
+2025-06-16 06:39:45 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:39:45 INFO     root: Postprocessing MLB on 2023-12-26
+2025-06-16 06:39:45 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:39:45 INFO     root: Preprocessing NFL on 2023-12-25
+2025-06-16 06:40:37 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/punt-blocked-pct?date=2023-12-25, sleeping 4 minutes before retry
+2025-06-16 06:46:06 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-06-16 06:46:06 INFO     root: Postprocessing NFL on 2023-12-25
+2025-06-16 06:46:07 INFO     root: Updated final scores for 3 games. Skipped 0 games.
+2025-06-16 06:46:07 INFO     root: Preprocessing NBA on 2023-12-25
+2025-06-16 06:47:48 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-06-16 06:47:48 INFO     root: Postprocessing NBA on 2023-12-25
+2025-06-16 06:47:49 INFO     root: Updated final scores for 5 games. Skipped 0 games.
+2025-06-16 06:47:49 INFO     root: Preprocessing CFB on 2023-12-25
+2025-06-16 06:47:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:47:49 INFO     root: Postprocessing CFB on 2023-12-25
+2025-06-16 06:47:49 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:47:49 INFO     root: Preprocessing CBB on 2023-12-25
+2025-06-16 06:47:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:47:50 INFO     root: Postprocessing CBB on 2023-12-25
+2025-06-16 06:47:50 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:47:50 INFO     root: Preprocessing MLB on 2023-12-25
+2025-06-16 06:47:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:47:50 INFO     root: Postprocessing MLB on 2023-12-25
+2025-06-16 06:47:51 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:47:51 INFO     root: Preprocessing NFL on 2023-12-24
+2025-06-16 06:48:07 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/1st-half-points-per-game?date=2023-12-24, sleeping 4 minutes before retry
+2025-06-16 06:54:14 ERROR    root: Team 'Titans' not found in stats for 'points-per-game'
+2025-06-16 06:54:14 ERROR    root: Could not fetch stats for Seattle or Titans, skipping
+2025-06-16 06:54:27 ERROR    root: Team 'Broncos' not found in stats for 'points-per-game'
+2025-06-16 06:54:27 ERROR    root: Could not fetch stats for New England or Broncos, skipping
+2025-06-16 06:54:27 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 2 games.
+2025-06-16 06:54:27 INFO     root: Postprocessing NFL on 2023-12-24
+2025-06-16 06:54:27 WARNING  root: No local game found for ESPN ID 401547614
+2025-06-16 06:54:27 WARNING  root: No local game found for ESPN ID 401547621
+2025-06-16 06:54:27 INFO     root: Updated final scores for 8 games. Skipped 2 games.
+2025-06-16 06:54:27 INFO     root: Preprocessing NBA on 2023-12-24
+2025-06-16 06:54:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:54:28 INFO     root: Postprocessing NBA on 2023-12-24
+2025-06-16 06:54:28 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:54:28 INFO     root: Preprocessing CFB on 2023-12-24
+2025-06-16 06:54:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 06:54:28 INFO     root: Postprocessing CFB on 2023-12-24
+2025-06-16 06:54:28 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 06:54:28 INFO     root: Preprocessing CBB on 2023-12-24
+2025-06-16 06:55:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/ranking/away-by-other?date=2023-12-24, sleeping 4 minutes before retry
+2025-06-16 07:00:24 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2025-06-16 07:00:24 INFO     root: Postprocessing CBB on 2023-12-24
+2025-06-16 07:00:24 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 07:00:24 INFO     root: Preprocessing MLB on 2023-12-24
+2025-06-16 07:00:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:00:24 INFO     root: Postprocessing MLB on 2023-12-24
+2025-06-16 07:00:25 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:00:25 INFO     root: Preprocessing NFL on 2023-12-23
+2025-06-16 07:02:50 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-06-16 07:02:50 INFO     root: Postprocessing NFL on 2023-12-23
+2025-06-16 07:02:50 INFO     root: Updated final scores for 2 games. Skipped 0 games.
+2025-06-16 07:02:50 INFO     root: Preprocessing NBA on 2023-12-23
+2025-06-16 07:03:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-free-throws-attempted-per-game?date=2023-12-23, sleeping 4 minutes before retry
+2025-06-16 07:08:49 INFO     root: populate_pregame_data: inserted/updated 13 rows, skipped 0 games.
+2025-06-16 07:08:49 INFO     root: Postprocessing NBA on 2023-12-23
+2025-06-16 07:08:50 INFO     root: Updated final scores for 13 games. Skipped 0 games.
+2025-06-16 07:08:50 INFO     root: Preprocessing CFB on 2023-12-23
+2025-06-16 07:10:50 INFO     root: populate_pregame_data: inserted/updated 7 rows, skipped 0 games.
+2025-06-16 07:10:50 INFO     root: Postprocessing CFB on 2023-12-23
+2025-06-16 07:10:51 INFO     root: Updated final scores for 7 games. Skipped 0 games.
+2025-06-16 07:10:51 INFO     root: Preprocessing CBB on 2023-12-23
+2025-06-16 07:12:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/win-pct-close-games?date=2023-12-23, sleeping 4 minutes before retry
+2025-06-16 07:17:10 INFO     root: populate_pregame_data: inserted/updated 17 rows, skipped 0 games.
+2025-06-16 07:17:10 INFO     root: Postprocessing CBB on 2023-12-23
+2025-06-16 07:17:11 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 07:17:11 INFO     root: Preprocessing MLB on 2023-12-23
+2025-06-16 07:17:11 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:17:11 INFO     root: Postprocessing MLB on 2023-12-23
+2025-06-16 07:17:11 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:17:11 INFO     root: Preprocessing NFL on 2023-12-22
+2025-06-16 07:17:11 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:17:11 INFO     root: Postprocessing NFL on 2023-12-22
+2025-06-16 07:17:11 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:17:11 INFO     root: Preprocessing NBA on 2023-12-22
+2025-06-16 07:18:59 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-06-16 07:18:59 INFO     root: Postprocessing NBA on 2023-12-22
+2025-06-16 07:18:59 INFO     root: Updated final scores for 6 games. Skipped 0 games.
+2025-06-16 07:18:59 INFO     root: Preprocessing CFB on 2023-12-22
+2025-06-16 07:20:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/ranking/consistency-by-other?date=2023-12-22, sleeping 4 minutes before retry
+2025-06-16 07:24:55 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 07:24:55 INFO     root: Postprocessing CFB on 2023-12-22
+2025-06-16 07:24:55 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 07:24:55 INFO     root: Preprocessing CBB on 2023-12-22
+2025-06-16 07:27:19 ERROR    root: Team 'Brewton-Parker' not found in stats for 'points-per-game'
+2025-06-16 07:27:19 ERROR    root: Could not fetch stats for Brewton-Parker or NC State, skipping
+2025-06-16 07:27:19 ERROR    root: Team 'Medgar Evers' not found in stats for 'points-per-game'
+2025-06-16 07:27:19 ERROR    root: Could not fetch stats for Medgar Evers or NJIT, skipping
+2025-06-16 07:27:23 ERROR    root: Team 'Muskingum' not found in stats for 'points-per-game'
+2025-06-16 07:27:23 ERROR    root: Could not fetch stats for Muskingum or Wright St, skipping
+2025-06-16 07:27:27 ERROR    root: Team 'Paul Quinn' not found in stats for 'points-per-game'
+2025-06-16 07:27:27 ERROR    root: Could not fetch stats for Paul Quinn or SF Austin, skipping
+2025-06-16 07:27:30 ERROR    root: Team 'Gwynedd-Mercy' not found in stats for 'points-per-game'
+2025-06-16 07:27:30 ERROR    root: Could not fetch stats for Gwynedd-Mercy or Wagner, skipping
+2025-06-16 07:27:32 ERROR    root: Team 'Siena Heights' not found in stats for 'points-per-game'
+2025-06-16 07:27:32 ERROR    root: Could not fetch stats for Siena Heights or Bowling Green, skipping
+2025-06-16 07:27:56 ERROR    root: Team 'FL Memorial' not found in stats for 'points-per-game'
+2025-06-16 07:27:56 ERROR    root: Could not fetch stats for FL Memorial or FGCU, skipping
+2025-06-16 07:28:00 ERROR    root: Team 'MD Eastern' not found in stats for 'points-per-game'
+2025-06-16 07:28:00 ERROR    root: Could not fetch stats for MD Eastern or VCU, skipping
+2025-06-16 07:28:16 ERROR    root: Team 'MTSU' not found in stats for 'points-per-game'
+2025-06-16 07:28:16 ERROR    root: Could not fetch stats for MTSU or Southern, skipping
+2025-06-16 07:28:16 ERROR    root: Team 'ETSU' not found in stats for 'points-per-game'
+2025-06-16 07:28:16 ERROR    root: Could not fetch stats for ETSU or Utah St, skipping
+2025-06-16 07:28:22 INFO     root: populate_pregame_data: inserted/updated 49 rows, skipped 10 games.
+2025-06-16 07:28:22 INFO     root: Postprocessing CBB on 2023-12-22
+2025-06-16 07:28:22 INFO     root: Updated final scores for 10 games. Skipped 0 games.
+2025-06-16 07:28:22 INFO     root: Preprocessing MLB on 2023-12-22
+2025-06-16 07:28:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:28:22 INFO     root: Postprocessing MLB on 2023-12-22
+2025-06-16 07:28:23 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:28:23 INFO     root: Preprocessing NFL on 2023-12-21
+2025-06-16 07:30:49 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 07:30:49 INFO     root: Postprocessing NFL on 2023-12-21
+2025-06-16 07:30:49 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 07:30:49 INFO     root: Preprocessing NBA on 2023-12-21
+2025-06-16 07:31:07 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/two-point-pct?date=2023-12-21, sleeping 4 minutes before retry
+2025-06-16 07:36:47 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 0 games.
+2025-06-16 07:36:47 INFO     root: Postprocessing NBA on 2023-12-21
+2025-06-16 07:36:47 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-06-16 07:36:47 INFO     root: Preprocessing CFB on 2023-12-21
+2025-06-16 07:38:39 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-06-16 07:38:39 INFO     root: Postprocessing CFB on 2023-12-21
+2025-06-16 07:38:39 INFO     root: Updated final scores for 1 games. Skipped 0 games.
+2025-06-16 07:38:39 INFO     root: Preprocessing CBB on 2023-12-21
+2025-06-16 07:39:18 WARNING  root: 403 Forbidden at https://www.teamrankings.com/ncaa-basketball/stat/assists-per-fgm?date=2023-12-21, sleeping 4 minutes before retry
+2025-06-16 07:44:38 ERROR    root: Team 'Brescia' not found in stats for 'points-per-game'
+2025-06-16 07:44:38 ERROR    root: Could not fetch stats for Brescia or W Carolina, skipping
+2025-06-16 07:44:40 ERROR    root: Team 'Alice Lloyd' not found in stats for 'points-per-game'
+2025-06-16 07:44:40 ERROR    root: Could not fetch stats for Alice Lloyd or Morehead St, skipping
+2025-06-16 07:44:44 ERROR    root: Team 'THMAS' not found in stats for 'points-per-game'
+2025-06-16 07:44:44 ERROR    root: Could not fetch stats for THMAS or Mercer, skipping
+2025-06-16 07:45:02 ERROR    root: Team 'VA-Lynchburg' not found in stats for 'points-per-game'
+2025-06-16 07:45:02 ERROR    root: Could not fetch stats for VA-Lynchburg or NC Greensboro, skipping
+2025-06-16 07:45:05 ERROR    root: Team 'Park U Gilbert' not found in stats for 'points-per-game'
+2025-06-16 07:45:05 ERROR    root: Could not fetch stats for Park U Gilbert or Weber St, skipping
+2025-06-16 07:45:31 ERROR    root: Team 'Defiance' not found in stats for 'points-per-game'
+2025-06-16 07:45:31 ERROR    root: Could not fetch stats for Defiance or IU Indy, skipping
+2025-06-16 07:45:31 ERROR    root: Team 'MSOE' not found in stats for 'points-per-game'
+2025-06-16 07:45:31 ERROR    root: Could not fetch stats for MSOE or Green Bay, skipping
+2025-06-16 07:45:59 ERROR    root: Team 'Uw-Riv Fls' not found in stats for 'points-per-game'
+2025-06-16 07:45:59 ERROR    root: Could not fetch stats for Uw-Riv Fls or St Thomas, skipping
+2025-06-16 07:46:20 ERROR    root: Team 'Ucmerced' not found in stats for 'points-per-game'
+2025-06-16 07:46:20 ERROR    root: Could not fetch stats for Ucmerced or UC Davis, skipping
+2025-06-16 07:46:38 INFO     root: populate_pregame_data: inserted/updated 72 rows, skipped 9 games.
+2025-06-16 07:46:38 INFO     root: Postprocessing CBB on 2023-12-21
+2025-06-16 07:46:38 INFO     root: Updated final scores for 4 games. Skipped 0 games.
+2025-06-16 07:46:38 INFO     root: Preprocessing MLB on 2023-12-21
+2025-06-16 07:46:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:46:39 INFO     root: Postprocessing MLB on 2023-12-21
+2025-06-16 07:46:39 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:46:39 INFO     root: Preprocessing NFL on 2023-12-20
+2025-06-16 07:46:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-06-16 07:46:39 INFO     root: Postprocessing NFL on 2023-12-20
+2025-06-16 07:46:39 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-06-16 07:46:39 INFO     root: Preprocessing NBA on 2023-12-20

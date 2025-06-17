@@ -39,15 +39,15 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_TYPE   = "logistic_regression"   # linear_regression, random_forest, xgboost, neural_network
-    COLUMN       = "normalized_stats"    # stats or normalized_stats
-    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB';"
+    MODEL_TYPE   = "random_forest"   # linear_regression, random_forest, xgboost, neural_network
+    COLUMN       = "stats"    # stats or normalized_stats
+    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'NBA';"
 
     # build a name like "lr_norm_NBA_all" or e.g. "rf_nonorm_MLB_date_<_2025_05_26"
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=False)
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=True, subset_fraction=0.025)
     model.train(TRAIN_QUERY)
 
 if __name__ == "__main__":
