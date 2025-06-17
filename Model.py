@@ -8,7 +8,7 @@ import pandas as pd
 import random
 import joblib
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import StandardScaler  # Import StandardScaler
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
@@ -16,6 +16,7 @@ from xgboost import XGBRegressor
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
+from sklearn.inspection import permutation_importance # Import permutation_importance
 from TestModel import TestModel
 
 # A simple base class for defining common attributes.
@@ -92,6 +93,11 @@ class MLModel(BaseModel):
         self.feature_indices_ = None
         # Stores the fitted scaler
         self.scaler = None
+        
+        # New attributes for feature importance
+        self.feature_names_ = None
+        self.model_ = None
+
 
     # =================================================================================
     # Public API: Main Methods
@@ -130,7 +136,7 @@ class MLModel(BaseModel):
             return []
         
         self.column = column
-        X_raw = self._prepare_features(df)
+        X_raw, _ = self._prepare_features(df) # We don't need feature names here
 
         if X_raw.shape[1] != original_shape:
             raise ValueError(f"Feature shape mismatch: model trained on {original_shape} features, new data has {X_raw.shape[1]}.")
@@ -162,6 +168,53 @@ class MLModel(BaseModel):
                 {"game_id": gid, "team1_id": t1, "team2_id": t2, "pred_team1": p1, "pred_team2": p2}
                 for gid, t1, t2, (p1, p2) in zip(df["game_id"], df["team1_id"], df["team2_id"], predictions)
             ]
+            
+    # New method for feature importance
+    def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
+        """
+        Calculates and returns feature importances for the trained model.
+
+        Args:
+            model: The trained model. If None, uses self.model_.
+            X_test: The test features. If None, this will be skipped for permutation importance.
+            y_test: The test labels. If None, this will be skipped for permutation importance.
+            n_top_features (int): The number of top features to display.
+
+        Returns:
+            A pandas DataFrame with feature names and their importance scores.
+        """
+        if model is None:
+            model = self.model_
+
+        if self.feature_names_ is None:
+            print("Feature names are not available. Please train the model first.")
+            return None
+
+        importances = None
+        if hasattr(model, 'feature_importances_'):
+            importances = model.feature_importances_
+        elif hasattr(model, 'coef_'):
+            # For linear models, we use the absolute value of the coefficients
+            if model.coef_.ndim > 1:
+                importances = np.mean(np.abs(model.coef_), axis=0)
+            else:
+                importances = np.abs(model.coef_)
+        elif X_test is not None and y_test is not None:
+            # Use permutation importance for models without direct importance attributes
+            result = permutation_importance(
+                model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1
+            )
+            importances = result.importances_mean
+        else:
+            print(f"Cannot get feature importance for model type {type(model).__name__} without test data for permutation.")
+            return None
+
+        feature_importance_df = pd.DataFrame({
+            'feature': self.feature_names_,
+            'importance': importances
+        }).sort_values(by='importance', ascending=False)
+
+        return feature_importance_df.head(n_top_features)
 
     # =================================================================================
     # Internal Training Methods
@@ -175,7 +228,7 @@ class MLModel(BaseModel):
             print("Query returned no data to train on. Aborting.")
             return
 
-        X_raw = self._prepare_features(df)
+        X_raw, self.feature_names_ = self._prepare_features(df)
         original_feature_count = X_raw.shape[1]
         X = self._select_features(X_raw, random_state)
         y = df[["team1_score", "team2_score"]].to_numpy()
@@ -200,11 +253,11 @@ class MLModel(BaseModel):
         # Store test odds for external evaluation
         self.test_odds = dict(zip(betting_cols.keys(), splits[5::2]))
 
-        model = self._get_model()
-        model.fit(X_train_scaled, y_train)
+        self.model_ = self._get_model()
+        self.model_.fit(X_train_scaled, y_train)
 
         # Generate and store predictions on the scaled test set
-        self.predictions = model.predict(X_test_scaled)
+        self.predictions = self.model_.predict(X_test_scaled)
 
         test_evaluator = TestModel(
             predictions=self.predictions,
@@ -212,8 +265,13 @@ class MLModel(BaseModel):
             test_odds=self.test_odds
         )
         test_evaluator.display_results()
+        
+        # Display feature importance
+        print("\nFeature Importance:")
+        feature_importance = self.get_feature_importance(model=self.model_, X_test=X_test_scaled, y_test=self.y_test)
+        print(feature_importance)
 
-        self._save_model(model, self.scaler, query, X.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
         print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
@@ -226,7 +284,7 @@ class MLModel(BaseModel):
             print("Query returned no data to train on. Aborting.")
             return
 
-        X_raw = self._prepare_features(df)
+        X_raw, self.feature_names_ = self._prepare_features(df)
         original_feature_count = X_raw.shape[1]
         X = self._select_features(X_raw, random_state)
 
@@ -248,9 +306,9 @@ class MLModel(BaseModel):
         
         splits = train_test_split(*data_to_split, test_size=test_size, random_state=random_state, stratify=y_win)
         X_train, X_test = splits[0], splits[1]
-        y_train_win, _ = splits[2], splits[3] # y_test_win is not needed directly
-        y_train_spread_outcome, _ = splits[4], splits[5]
-        y_train_total_outcome, _ = splits[6], splits[7]
+        y_train_win, y_test_win = splits[2], splits[3]
+        y_train_spread_outcome, y_test_spread_outcome = splits[4], splits[5]
+        y_train_total_outcome, y_test_total_outcome = splits[6], splits[7]
         
         # Scale features
         self.scaler = StandardScaler()
@@ -272,13 +330,13 @@ class MLModel(BaseModel):
         train_total_non_push = y_train_total_outcome != 0
         model_over = self._get_model().fit(X_train_scaled[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
 
-        models = {'win': model_win, 'spread': model_spread, 'over': model_over}
+        self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
         
         # Generate and store predictions (probabilities) on the scaled test set
         self.predictions = {
-            'win': models['win'].predict_proba(X_test_scaled),
-            'spread': models['spread'].predict_proba(X_test_scaled),
-            'over': models['over'].predict_proba(X_test_scaled)
+            'win': self.model_['win'].predict_proba(X_test_scaled),
+            'spread': self.model_['spread'].predict_proba(X_test_scaled),
+            'over': self.model_['over'].predict_proba(X_test_scaled)
         }
 
         test_evaluator = TestModel(
@@ -287,8 +345,20 @@ class MLModel(BaseModel):
             test_odds=self.test_odds
         )
         test_evaluator.display_results()
+        
+        # Display feature importance for each classifier
+        print("\n--- Win Model Feature Importance ---")
+        print(self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win))
+        
+        test_spread_non_push = y_test_spread_outcome != 0
+        print("\n--- Spread Model Feature Importance ---")
+        print(self.get_feature_importance(model=model_spread, X_test=X_test_scaled[test_spread_non_push], y_test=(y_test_spread_outcome[test_spread_non_push] > 0).astype(int)))
+        
+        test_total_non_push = y_test_total_outcome != 0
+        print("\n--- Over/Under Model Feature Importance ---")
+        print(self.get_feature_importance(model=model_over, X_test=X_test_scaled[test_total_non_push], y_test=(y_test_total_outcome[test_total_non_push] > 0).astype(int)))
 
-        self._save_model(models, self.scaler, query, X.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
         print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
@@ -309,6 +379,8 @@ class MLModel(BaseModel):
             indices.sort()
             
             self.feature_indices_ = indices
+            # Update feature_names_ to match the selected features
+            self.feature_names_ = [self.feature_names_[i] for i in indices]
             print(f"INFO: Using a random subset of {len(self.feature_indices_)} out of {n_features} features.")
             return X[:, self.feature_indices_]
         else:
@@ -323,30 +395,40 @@ class MLModel(BaseModel):
         with sqlite3.connect(db_path) as conn:
             return pd.read_sql_query(query, conn)
 
-    def _prepare_features(self, df: pd.DataFrame) -> np.ndarray:
+    def _prepare_features(self, df: pd.DataFrame) -> tuple[np.ndarray, list]:
         """
-        Parses and flattens a JSON column into a feature matrix.
-        Raises an error if the resulting feature vectors have inconsistent lengths.
+        Parses and flattens a JSON column into a feature matrix and a list of feature names.
         """
         if self.column not in df.columns:
             raise ValueError(f"Column '{self.column}' not found in the DataFrame.")
 
         parsed_json = df[self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
         feature_list = []
+        feature_names = None
+
         for idx, js_obj in enumerate(parsed_json):
             if js_obj is None:
                 print(f"Warning: JSON object is None for DataFrame index {df.index[idx]}. Skipping.")
                 continue
+            
             temp_obj = js_obj.copy()
             for key in self._FEATURE_KEYS_TO_DROP:
                 temp_obj.pop(key, None)
 
             row_features = []
-            self._flatten_json_to_list(temp_obj, row_features)
+            row_feature_names = []
+            
+            # Generate feature names only for the first valid JSON object
+            if feature_names is None:
+                self._flatten_json_to_list(temp_obj, row_features, row_feature_names, generate_names=True)
+                feature_names = row_feature_names
+            else:
+                self._flatten_json_to_list(temp_obj, row_features)
+
             feature_list.append(row_features)
 
         if not feature_list:
-            return np.array([])
+            return np.array([]), []
 
         it = iter(feature_list)
         first_row_len = len(next(it, []))
@@ -358,7 +440,7 @@ class MLModel(BaseModel):
                 f"Please fix the upstream data generation process."
             )
         
-        return np.array(feature_list, dtype=float)
+        return np.array(feature_list, dtype=float), feature_names
 
     def _get_model(self):
         """Initializes a model instance from the model factory."""
@@ -378,13 +460,16 @@ class MLModel(BaseModel):
 
         model_info = {
             "model": model,
-            "scaler": scaler,  # Save the scaler
+            "scaler": scaler,
             "model_type": self.model_type,
             "trained_input_shape": trained_input_shape,
             "original_input_shape": original_input_shape,
             "feature_indices": self.feature_indices_,
             "column": self.column,
             "query": query,
+            # We don't save feature names in the model file to keep it lean.
+            # They are regenerated during the predict phase if needed,
+            # but are primarily for interactive analysis after training.
         }
         joblib.dump(model_info, output_path)
         print(f"Model and scaler saved to {output_path}\n")
@@ -405,17 +490,28 @@ class MLModel(BaseModel):
         return joblib.load(path)
 
     @staticmethod
-    def _flatten_json_to_list(obj, out_list: list):
-        """Recursively flattens a JSON object (dict/list) into a single list."""
+    def _flatten_json_to_list(obj, out_list: list, name_list: list = None, prefix: str = '', generate_names: bool = False):
+        """
+        Recursively flattens a JSON object (dict/list) into a single list of values
+        and optionally generates a corresponding list of feature names.
+        """
         if isinstance(obj, dict):
             for key in sorted(obj.keys()):
-                MLModel._flatten_json_to_list(obj[key], out_list)
+                new_prefix = f"{prefix}.{key}" if prefix else key
+                MLModel._flatten_json_to_list(obj[key], out_list, name_list, new_prefix, generate_names)
         elif isinstance(obj, list):
-            for v in obj:
-                MLModel._flatten_json_to_list(v, out_list)
+            for i, v in enumerate(obj):
+                new_prefix = f"{prefix}.{i}"
+                MLModel._flatten_json_to_list(v, out_list, name_list, new_prefix, generate_names)
         elif isinstance(obj, bool):
             out_list.append(1.0 if obj else 0.0)
+            if generate_names:
+                name_list.append(prefix)
         elif isinstance(obj, (int, float)):
             out_list.append(float(obj))
+            if generate_names:
+                name_list.append(prefix)
         elif obj is None:
             out_list.append(0.0)
+            if generate_names:
+                name_list.append(prefix)
