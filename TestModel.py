@@ -5,7 +5,7 @@ class TestModel:
     """
     A simple class to display the results from an MLModel's test set.
     This version includes corrections to properly handle missing or invalid
-    betting odds in all PnL calculations.
+    betting odds and adds accuracy calculations.
     """
     def __init__(self, predictions, y_test, test_odds):
         """
@@ -90,6 +90,45 @@ class TestModel:
             'pred_is_over': pred_is_over
         }
         return self._outcomes
+
+    def calculate_accuracies(self):
+        """
+        Calculates the accuracy of the model's predictions for win, spread, and total.
+        This function correctly ignores pushes for spread and over/under calculations.
+
+        Returns:
+            A dictionary with accuracy metrics.
+        """
+        o = self._get_outcomes()
+
+        # --- 1. Win Accuracy ---
+        correct_winner_preds = np.sum(o['pred_winner_is_t1'] == o['actual_winner_is_t1'])
+        total_games = len(o['actual_winner_is_t1'])
+        win_accuracy = (correct_winner_preds / total_games) if total_games > 0 else 0
+
+        # --- 2. Spread Accuracy ---
+        non_push_spread = ~o['spread_pushes']
+        correct_spread_preds = np.sum((o['pred_spread_is_t1_cover'] == o['actual_spread_is_t1_cover'])[non_push_spread])
+        num_spread_outcomes = np.sum(non_push_spread)
+        spread_accuracy = (correct_spread_preds / num_spread_outcomes) if num_spread_outcomes > 0 else 0
+
+        # --- 3. Total Score (Over/Under) Accuracy ---
+        non_push_ou = ~o['ou_pushes']
+        correct_ou_preds = np.sum((o['pred_is_over'] == o['actual_is_over'])[non_push_ou])
+        num_ou_outcomes = np.sum(non_push_ou)
+        total_accuracy = (correct_ou_preds / num_ou_outcomes) if num_ou_outcomes > 0 else 0
+
+        return {
+            'win_accuracy': win_accuracy,
+            'spread_accuracy': spread_accuracy,
+            'total_accuracy': total_accuracy,
+            'correct_winner_preds': correct_winner_preds,
+            'total_games': total_games,
+            'correct_spread_preds': correct_spread_preds,
+            'num_spread_outcomes': num_spread_outcomes,
+            'correct_ou_preds': correct_ou_preds,
+            'num_ou_outcomes': num_ou_outcomes,
+        }
 
     def calculate_pnl_of_all_games(self, bet_amount=1.0):
         """
@@ -248,11 +287,13 @@ class TestModel:
 
     def display_results(self):
         """Displays the calculated accuracies and PnL."""
-        num_games_total = len(self.y_test)
         
-        # --- Display Accuracies (optional, as they can be misleading) ---
-        # accuracies = self.calculate_accuracy()
-        # print("\n[4] Betting Accuracies:") ...
+        # --- Display Accuracies ---
+        acc = self.calculate_accuracies()
+        print("\nModel Prediction Accuracy:")
+        print(f"  - Winner Accuracy:     {acc['win_accuracy']:.2%} ({acc['correct_winner_preds']}/{acc['total_games']})")
+        print(f"  - Spread Accuracy:     {acc['spread_accuracy']:.2%} ({acc['correct_spread_preds']}/{acc['num_spread_outcomes']})")
+        print(f"  - Over/Under Accuracy: {acc['total_accuracy']:.2%} ({acc['correct_ou_preds']}/{acc['num_ou_outcomes']})")
 
         # --- Display Flat Bet PnL ---
         pnl = self.calculate_pnl_of_all_games()
@@ -269,8 +310,8 @@ class TestModel:
             ou_info = ev_pnl['ou']
             
             print("\nPnL on +EV Bets (Classifier Only):")
-            print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/num_games_total:.1%})")
-            print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/num_games_total:.1%})")
-            print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/num_games_total:.1%})")
+            print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/acc['total_games']:.1%})")
+            print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/acc['total_games']:.1%})")
+            print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/acc['total_games']:.1%})")
 
         print("\n------------------------------------")
