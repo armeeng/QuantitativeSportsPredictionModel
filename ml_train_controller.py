@@ -135,7 +135,7 @@ def main():
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=False, subset_fraction=0.025, feature_allowlist=features)
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=True, subset_fraction=0.025 )#feature_allowlist=features)
     model.train(TRAIN_QUERY)
 
 if __name__ == "__main__":

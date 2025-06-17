@@ -1,63 +1,56 @@
 feature,importance
-team2_stats.batting-average.2025,0.9048182392524786
-team2_stats.batting-average.Away,0.5085113172225838
-team1_stats.batting-average.Home,0.4633068911577302
-team2_stats.strikeouts-per-9.Away,0.4558778153005637
-team2_stats.batting-average.Home,0.4265332917495171
-team2_stats.on-base-plus-slugging-pct.Home,0.3978653459440619
-team2_stats.at-bats-per-game.Away,0.3633255308865033
-team1_stats.at-bats-per-game.2025,0.35610243410628417
-team1_stats.slugging-pct.Away,0.32919570209434734
-team1_stats.on-base-plus-slugging-pct.Away,0.3037398169620518
-team2_stats.slugging-pct.Away,0.3002202458869942
-team2_stats.on-base-plus-slugging-pct.Away,0.2780980690657779
-team1_stats.walks-plus-hits-per-inning-pitched.Home,0.2706070504152075
-team2_stats.at-bats-per-game.2025,0.2634750841295947
-team2_stats.opponent-runs-per-game.Home,0.2349161378251053
-team2_stats.walks-plus-hits-per-inning-pitched.Home,0.23218756414612116
-team2_stats.walks-plus-hits-per-inning-pitched.Away,0.23118620405785925
-team1_stats.total-bases-per-game.Away,0.22728901178175695
-team1_stats.hits-per-game.Home,0.2173995074853529
-team2_stats.hits-per-game.Away,0.21678306484005813
-team2_stats.at-bats-per-game.Home,0.21641753972039637
-team2_stats.slugging-pct.Home,0.20120707787290357
-team1_stats.opponent-runs-per-game.Away,0.19654747740669185
-team2_stats.walks-plus-hits-per-inning-pitched.2025,0.19131658876333826
-team1_stats.total-bases-per-game.Home,0.1851521712637035
-team1_stats.runs-per-game.Away,0.1828164227989962
-team1_stats.win-pct-all-games.Away,0.1750555728906086
-team2_stats.runs-per-game.Home,0.16251511475685232
-team1_stats.at-bats-per-game.Away,0.1570013923330395
-team2_stats.runs-per-game.Last 3,0.15452131516696466
-team2_stats.opponent-runs-per-game.Away,0.15116264236016091
-team1_stats.runs-per-game.Home,0.14848890083106533
-team2_stats.strikeouts-per-9.Home,0.14823923412830753
-team2_stats.runs-per-game.2025,0.14722729062868314
-team2_stats.win-pct-all-games.Home,0.14410542684400904
-team1_stats.batting-average.2025,0.1430114560498954
-team2_stats.on-base-plus-slugging-pct.Last 3,0.1336765082557396
-team1_stats.win-pct-all-games.Home,0.1317968961865706
-team1_stats.earned-run-average.Away,0.12792000366524756
-team1_stats.hits-per-game.Away,0.09214886944398178
-team1_stats.runs-per-game.Last 3,0.0919842501902523
-team1_stats.strikeouts-per-9.Home,0.08800340643568633
-team1_stats.earned-run-average.Home,0.08757143342600834
-team1_stats.at-bats-per-game.Home,0.08393439070326908
-team1_stats.opponent-runs-per-game.Home,0.08130835949156358
-team2_stats.win-pct-all-games.Away,0.07872619338674848
-team1_stats.runs-per-game.2025,0.06294600968581432
-team1_stats.batting-average.Away,0.05901436645946531
-team1_stats.strikeouts-per-9.Away,0.05606813921985603
-team1_stats.walks-plus-hits-per-inning-pitched.2025,0.05404378379008117
-team2_stats.hits-per-game.Home,0.05206901239327915
-team2_stats.total-bases-per-game.Away,0.050309192507165645
-team2_stats.slugging-pct.Last 1,0.03759616058952339
-team2_stats.earned-run-average.Away,0.03440473672067751
-team2_stats.earned-run-average.Home,0.029555277494330096
-team2_stats.runs-per-game.Away,0.02568107494368661
-team1_stats.walks-plus-hits-per-inning-pitched.Away,0.02376993744146503
-team1_stats.slugging-pct.Home,0.021276836129306434
-team2_stats.total-bases-per-game.Home,0.012000276425421414
-team1_stats.on-base-plus-slugging-pct.Home,0.010409872043137952
-team1_stats.on-base-plus-slugging-pct.Last 3,0.004656321424573805
-team1_stats.slugging-pct.Last 1,0.0028765522867113115
+team1_stats.opponent-slugging-pct.Away,0.24667473177210045
+team1_stats.opponent-runs-per-game.Last 3,0.22587087089366634
+team2_stats.opponent-strikeouts-per-game.2025,0.17398121267114203
+team2_stats.runs-per-game.Away,0.1611451941612525
+team2_stats.rbis-per-game.Last 3,0.13801894114557112
+team1_stats.opponent-run-differential.Last 3,0.11382849291501887
+team2_stats.team-left-on-base-per-game.Home,0.1133002219572252
+team2_stats.hits-per-9.Last 1,0.10730304368368736
+team2_stats.singles-per-game.Rank,0.09742093820907005
+weather.rain,0.09260566765709093
+team1_stats.plate-appearances.2025,0.09145758550859483
+team2_stats.opponent-first-4-innings-runs-per-game.2024,0.08977495629785112
+team1_stats.strikeouts-per-game.2024,0.07826124412368994
+team1_stats.sacrifice-flys-per-game.Away,0.07465811279572479
+team1_stats.opponent-home-run-pct.2025,0.07253287849206055
+team1_stats.batting-average-on-balls-in-play.Home,0.07104667660778281
+team2_stats.opponent-home-runs-per-game.Last 1,0.06936322764058861
+team2_stats.yes-run-first-inning-pct.Rank,0.06824477382295671
+team1_stats.opponent-no-run-first-inning-pct.Home,0.06663588776842565
+team2_stats.secondary-average.Last 3,0.06513159710030053
+team1_stats.opponent-hits-per-game.2025,0.05754786030839858
+team1_stats.opponent-8th-inning-runs-per-game.Rank,0.05629768939036899
+team2_stats.last-3-innings-runs-per-game.2025,0.05604541507131255
+team2_stats.opponent-8th-inning-runs-per-game.Rank,0.05562783915234299
+team1_stats.opponent-yes-run-first-inning-pct.Last 3,0.0482389286592732
+team2_stats.in-division-by-other.Rating,0.045814527824663845
+team1_stats.opponent-stolen-bases-attempted.Rank,0.04557903602657143
+team1_stats.hits-per-game.Away,0.04552411888704765
+team2_stats.triples-per-game.Home,0.044874679825943405
+team1_stats.hits-for-extra-bases-pct.Last 1,0.04435561963951566
+team2_stats.opponent-runs-per-game.Away,0.03810090753036685
+team2_stats.opponent-walks-per-game.Last 1,0.0368066839982397
+team1_stats.opponent-first-4-innings-runs-per-game.Rank,0.03390647299490909
+team2_stats.opponent-6th-inning-runs-per-game.Last 3,0.03228883082109528
+team1_stats.strikeouts-per-walk.Home,0.03168231285243345
+team1_stats.schedule-strength-by-other.Lo,0.030340331024587927
+team1_stats.away-by-other.Hi,0.029762356296601566
+team2_stats.opponent-hits-per-game.Last 3,0.02870094197654064
+team2_stats.opponent-last-2-innings-runs-per-game.Away,0.025118914269274876
+team2_stats.opponent-triples-per-game.Last 3,0.023235000194180934
+team2_stats.opponent-hits-per-9.Rank,0.02301938806101211
+team2_stats.home-run-pct.Rank,0.022289366762533288
+team2_stats.opponent-stolen-base-pct.Last 3,0.02088974677672896
+team1_stats.opponent-last-2-innings-runs-per-game.Rank,0.019394606802968194
+team1_stats.opponent-last-2-innings-runs-per-game.2024,0.018646391671250016
+weather.apparent_temperature,0.01694754953819747
+team2_stats.opponent-at-bats-per-home-run.Away,0.014667387120473727
+team2_stats.opponent-run-differential.Home,0.009726233576188908
+team2_stats.opponent-walks-per-game.Away,0.007278578277755378
+team1_stats.secondary-average.Home,0.006979504690431258
+team1_stats.opponent-extra-inning-runs-per-game.Away,0.006681916796025736
+team1_stats.opponent-3rd-inning-runs-per-game.2025,0.004841150508551416
+team2_stats.predictive-by-other.Rank,0.0021531716537075583
+team1_stats.walk-pct.2025,0.0018026732414039692
+team2_stats.hit-by-pitch-per-game.Away,0.0015951788529047996
