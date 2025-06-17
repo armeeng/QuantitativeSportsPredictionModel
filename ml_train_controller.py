@@ -127,7 +127,7 @@ def main():
         'team2_stats.runs-per-game.Last 3',
     ]
     # ── CONFIG ─────────────────────────────────────
-    MODEL_TYPE   = "linear_regression"   # linear_regression, random_forest, xgboost, neural_network
+    MODEL_TYPE   = "logistic_regression"   # linear_regression, random_forest, xgboost, neural_network
     COLUMN       = "stats"    # stats or normalized_stats
     TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB';"
 
@@ -135,7 +135,7 @@ def main():
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, use_random_subset_of_features=False, subset_fraction=0.025 )#feature_allowlist=features)
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN)#feature_allowlist=features
     model.train(TRAIN_QUERY)
 
 if __name__ == "__main__":

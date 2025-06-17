@@ -105,7 +105,7 @@ class MLModel(BaseModel):
     # Public API: Main Methods
     # =================================================================================
 
-    def train(self, query: str, test_size: float = 0.5, random_state: int = 42):
+    def train(self, query: str, test_size: float = 0.8, random_state: int = 42):
         """
         Trains a model and prepares test set predictions for external evaluation.
         Routes to the appropriate training method based on model_type.
