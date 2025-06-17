@@ -19,6 +19,8 @@ from sklearn.multioutput import MultiOutputRegressor
 from sklearn.inspection import permutation_importance # Import permutation_importance
 from TestModel import TestModel
 
+pd.set_option('display.max_colwidth', None)
+
 # A simple base class for defining common attributes.
 class BaseModel:
     def __init__(self, model_name: str, column: str):
@@ -59,7 +61,7 @@ class MLModel(BaseModel):
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
-                 subset_fraction: float = None):
+                 subset_fraction: float = None, feature_allowlist: list[str] = None):
         """
         Initializes the MLModel.
 
@@ -69,35 +71,35 @@ class MLModel(BaseModel):
             column (str): The database column containing the JSON features.
             use_random_subset_of_features (bool): If True, train on a random subset of features.
             subset_fraction (float): The fraction of features to use if subsetting is enabled.
-                                     If None, a random fraction is chosen.
+            feature_allowlist (list[str], optional): A specific list of feature names to use for training.
         """
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
         if self.model_type not in self._MODELS:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}. Supported types are {list(self._MODELS.keys())}")
 
+        # NEW: Add validation for feature selection methods
+        if use_random_subset_of_features and feature_allowlist is not None:
+            raise ValueError("Cannot set `use_random_subset_of_features` to True and provide a `feature_allowlist` simultaneously.")
+
         self.use_random_subset_of_features = use_random_subset_of_features
+        self.feature_allowlist = feature_allowlist  # NEW: Store the allowlist
+
         if subset_fraction is None:
             self.subset_fraction = random.uniform(0.01, 1.0)
         else:
             if not (0 < subset_fraction <= 1.0):
                 raise ValueError("If specified, subset_fraction must be > 0 and <= 1.")
             self.subset_fraction = subset_fraction
-        
-        # Attributes to hold test data for external evaluation
+
+        # ... (rest of the __init__ method is the same) ...
         self.predictions = None
         self.y_test = None
         self.test_odds = None
-        
-        # Stores the indices of features selected during training.
         self.feature_indices_ = None
-        # Stores the fitted scaler
         self.scaler = None
-        
-        # New attributes for feature importance
         self.feature_names_ = None
         self.model_ = None
-
 
     # =================================================================================
     # Public API: Main Methods
@@ -214,7 +216,7 @@ class MLModel(BaseModel):
             'importance': importances
         }).sort_values(by='importance', ascending=False)
 
-        return feature_importance_df.head(n_top_features)
+        return feature_importance_df#.head(n_top_features)
 
     # =================================================================================
     # Internal Training Methods
@@ -266,10 +268,15 @@ class MLModel(BaseModel):
         )
         test_evaluator.display_results()
         
-        # Display feature importance
-        print("\nFeature Importance:")
-        feature_importance = self.get_feature_importance(model=self.model_, X_test=X_test_scaled, y_test=self.y_test)
-        print(feature_importance)
+        feature_importance = self.get_feature_importance(
+            model=self.model_,
+            X_test=X_test_scaled,
+            y_test=self.y_test
+        )
+
+        # Save to CSV
+        feature_importance.to_csv("Feature Importance/feature_importance.csv", index=False)
+        print("Saved feature importance to feature_importance.csv")
 
         self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
@@ -346,17 +353,33 @@ class MLModel(BaseModel):
         )
         test_evaluator.display_results()
         
-        # Display feature importance for each classifier
-        print("\n--- Win Model Feature Importance ---")
-        print(self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win))
-        
-        test_spread_non_push = y_test_spread_outcome != 0
-        print("\n--- Spread Model Feature Importance ---")
-        print(self.get_feature_importance(model=model_spread, X_test=X_test_scaled[test_spread_non_push], y_test=(y_test_spread_outcome[test_spread_non_push] > 0).astype(int)))
-        
-        test_total_non_push = y_test_total_outcome != 0
-        print("\n--- Over/Under Model Feature Importance ---")
-        print(self.get_feature_importance(model=model_over, X_test=X_test_scaled[test_total_non_push], y_test=(y_test_total_outcome[test_total_non_push] > 0).astype(int)))
+        df_win = self.get_feature_importance(
+            model=model_win,
+            X_test=X_test_scaled,
+            y_test=y_test_win
+        )
+        df_win.to_csv("Feature Importance/feature_importance_win.csv", index=False)
+        print("\nSaved Win model importances to feature_importance_win.csv")
+
+        # Spread model (non-push games)
+        mask = y_test_spread_outcome != 0
+        df_spread = self.get_feature_importance(
+            model=model_spread,
+            X_test=X_test_scaled[mask],
+            y_test=(y_test_spread_outcome[mask] > 0).astype(int)
+        )
+        df_spread.to_csv("Feature Importance/feature_importance_spread.csv", index=False)
+        print("Saved Spread model importances to feature_importance_spread.csv")
+
+        # Over/Under model (non-push games)
+        mask = y_test_total_outcome != 0
+        df_over = self.get_feature_importance(
+            model=model_over,
+            X_test=X_test_scaled[mask],
+            y_test=(y_test_total_outcome[mask] > 0).astype(int)
+        )
+        df_over.to_csv("Feature Importance/feature_importance_overunder.csv", index=False)
+        print("Saved Over/Under model importances to feature_importance_overunder.csv")
 
         self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
@@ -368,13 +391,46 @@ class MLModel(BaseModel):
     # =================================================================================
 
     def _select_features(self, X: np.ndarray, random_state: int) -> np.ndarray:
-        """Selects a random subset of features if enabled."""
-        if self.use_random_subset_of_features:
+        """
+        Selects features based on the initialization settings.
+        Priority: 1. feature_allowlist, 2. random_subset, 3. all features.
+        """
+        # Case 1: A specific list of features is provided
+        if self.feature_allowlist:
+            print(f"INFO: Filtering features based on the provided allowlist of {len(self.feature_allowlist)} features.")
+            
+            # Create a mapping from feature name to its index in the full dataset
+            name_to_index = {name: i for i, name in enumerate(self.feature_names_)}
+            
+            found_indices = []
+            missing_features = []
+            
+            for feature_name in self.feature_allowlist:
+                if feature_name in name_to_index:
+                    found_indices.append(name_to_index[feature_name])
+                else:
+                    missing_features.append(feature_name)
+            
+            if missing_features:
+                print(f"Warning: The following {len(missing_features)} features from the allowlist were not found and will be ignored: {missing_features}")
+
+            if not found_indices:
+                raise ValueError("None of the features in the allowlist were found in the dataset. Aborting.")
+
+            # Sort indices to maintain order and update the feature names attribute
+            found_indices.sort()
+            self.feature_names_ = [self.feature_names_[i] for i in found_indices]
+            self.feature_indices_ = found_indices # Store the selected indices
+
+            print(f"INFO: Using {len(found_indices)} features from the provided allowlist.")
+            return X[:, found_indices]
+
+        # Case 2: A random subset of features is requested
+        elif self.use_random_subset_of_features:
             n_features = X.shape[1]
             n_selected_features = max(1, int(n_features * self.subset_fraction))
 
-            #rng = np.random.default_rng(random_state) # Use random_state for reproducibility
-            rng = np.random.default_rng()
+            rng = np.random.default_rng(random_state)
             indices = rng.choice(n_features, size=n_selected_features, replace=False)
             indices.sort()
             
@@ -383,6 +439,8 @@ class MLModel(BaseModel):
             self.feature_names_ = [self.feature_names_[i] for i in indices]
             print(f"INFO: Using a random subset of {len(self.feature_indices_)} out of {n_features} features.")
             return X[:, self.feature_indices_]
+
+        # Case 3: Default, use all features
         else:
             self.feature_indices_ = None
             return X
