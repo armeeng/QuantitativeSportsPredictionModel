@@ -8,6 +8,7 @@ import pandas as pd
 import random
 import joblib
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler  # Import StandardScaler
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.neural_network import MLPRegressor
@@ -30,7 +31,8 @@ class MLModel(BaseModel):
     This class trains a model on historical sports data and makes predictions on a
     held-out test set. All metric calculations are removed. The test set predictions,
     true outcomes, and betting odds are stored as instance attributes for external evaluation.
-    It supports training on a full or random subset of features.
+    It supports training on a full or random subset of features and uses StandardScaler
+    to scale features.
     """
     _MODELS = {
         'linear_regression': LinearRegression,
@@ -88,6 +90,8 @@ class MLModel(BaseModel):
         
         # Stores the indices of features selected during training.
         self.feature_indices_ = None
+        # Stores the fitted scaler
+        self.scaler = None
 
     # =================================================================================
     # Public API: Main Methods
@@ -105,12 +109,13 @@ class MLModel(BaseModel):
 
     def predict(self, query: str) -> list:
         """
-        Loads the latest model from disk and returns predictions for new, unseen data.
+        Loads the latest model and scaler from disk and returns predictions for new, unseen data.
         This method is for inference, not for test set evaluation during training.
         """
         try:
             info = self._load_model()
             model = info['model']
+            self.scaler = info.get('scaler') # Use .get() for backward compatibility
             column = info['column']
             feature_indices = info.get('feature_indices')
             original_shape = info.get('original_input_shape', info.get('input_shape'))
@@ -135,16 +140,24 @@ class MLModel(BaseModel):
         if X.shape[1] != model_input_shape:
             raise ValueError(f"Model input shape mismatch: model expects {model_input_shape} features, got {X.shape[1]}.")
 
+        # Scale the features using the loaded scaler
+        if self.scaler:
+            X_scaled = self.scaler.transform(X)
+        else:
+            # If no scaler was saved, use the unscaled data (legacy model)
+            print("Warning: No scaler found in the model file. Predicting on unscaled data.")
+            X_scaled = X
+
         if isinstance(model, dict):  # Classifier
-            prob_win = model['win'].predict_proba(X)[:, 1]
-            prob_cover = model['spread'].predict_proba(X)[:, 1]
-            prob_over = model['over'].predict_proba(X)[:, 1]
+            prob_win = model['win'].predict_proba(X_scaled)[:, 1]
+            prob_cover = model['spread'].predict_proba(X_scaled)[:, 1]
+            prob_over = model['over'].predict_proba(X_scaled)[:, 1]
             return [
                 {"game_id": gid, "team1_id": t1, "team2_id": t2, "team1_win_prob": pw, "team1_cover_prob": pc, "over_prob": po}
                 for gid, t1, t2, pw, pc, po in zip(df["game_id"], df["team1_id"], df["team2_id"], prob_win, prob_cover, prob_over)
             ]
         else:  # Regressor
-            predictions = model.predict(X)
+            predictions = model.predict(X_scaled)
             return [
                 {"game_id": gid, "team1_id": t1, "team2_id": t2, "pred_team1": p1, "pred_team2": p2}
                 for gid, t1, t2, (p1, p2) in zip(df["game_id"], df["team1_id"], df["team2_id"], predictions)
@@ -179,25 +192,28 @@ class MLModel(BaseModel):
         
         X_train, X_test, y_train, self.y_test = splits[0], splits[1], splits[2], splits[3]
         
+        # Scale features
+        self.scaler = StandardScaler()
+        X_train_scaled = self.scaler.fit_transform(X_train)
+        X_test_scaled = self.scaler.transform(X_test)
+        
         # Store test odds for external evaluation
         self.test_odds = dict(zip(betting_cols.keys(), splits[5::2]))
 
         model = self._get_model()
-        model.fit(X_train, y_train)
+        model.fit(X_train_scaled, y_train)
 
-        # Generate and store predictions on the test set
-        self.predictions = model.predict(X_test)
+        # Generate and store predictions on the scaled test set
+        self.predictions = model.predict(X_test_scaled)
 
         test_evaluator = TestModel(
             predictions=self.predictions,
             y_test=self.y_test,
             test_odds=self.test_odds
         )
-
-        # 5. Display the results
         test_evaluator.display_results()
 
-        self._save_model(model, query, X.shape[1], original_feature_count)
+        self._save_model(model, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
         print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
@@ -236,28 +252,33 @@ class MLModel(BaseModel):
         y_train_spread_outcome, _ = splits[4], splits[5]
         y_train_total_outcome, _ = splits[6], splits[7]
         
+        # Scale features
+        self.scaler = StandardScaler()
+        X_train_scaled = self.scaler.fit_transform(X_train)
+        X_test_scaled = self.scaler.transform(X_test)
+
         # Store the actual scores for the test set
         self.y_test = splits[9] 
         # Store test odds for external evaluation
         self.test_odds = dict(zip(betting_cols.keys(), splits[11::2]))
 
-        # Train three separate models
-        model_win = self._get_model().fit(X_train, y_train_win)
+        # Train three separate models on scaled data
+        model_win = self._get_model().fit(X_train_scaled, y_train_win)
         
         # Filter out pushes for spread and total training data
         train_spread_non_push = y_train_spread_outcome != 0
-        model_spread = self._get_model().fit(X_train[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
+        model_spread = self._get_model().fit(X_train_scaled[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
 
         train_total_non_push = y_train_total_outcome != 0
-        model_over = self._get_model().fit(X_train[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
+        model_over = self._get_model().fit(X_train_scaled[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
 
         models = {'win': model_win, 'spread': model_spread, 'over': model_over}
         
-        # Generate and store predictions (probabilities) on the test set
+        # Generate and store predictions (probabilities) on the scaled test set
         self.predictions = {
-            'win': models['win'].predict_proba(X_test),
-            'spread': models['spread'].predict_proba(X_test),
-            'over': models['over'].predict_proba(X_test)
+            'win': models['win'].predict_proba(X_test_scaled),
+            'spread': models['spread'].predict_proba(X_test_scaled),
+            'over': models['over'].predict_proba(X_test_scaled)
         }
 
         test_evaluator = TestModel(
@@ -265,11 +286,9 @@ class MLModel(BaseModel):
             y_test=self.y_test,
             test_odds=self.test_odds
         )
-
-        # 5. Display the results
         test_evaluator.display_results()
 
-        self._save_model(models, query, X.shape[1], original_feature_count)
+        self._save_model(models, self.scaler, query, X.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
         print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
@@ -284,6 +303,7 @@ class MLModel(BaseModel):
             n_features = X.shape[1]
             n_selected_features = max(1, int(n_features * self.subset_fraction))
 
+            #rng = np.random.default_rng(random_state) # Use random_state for reproducibility
             rng = np.random.default_rng()
             indices = rng.choice(n_features, size=n_selected_features, replace=False)
             indices.sort()
@@ -297,7 +317,6 @@ class MLModel(BaseModel):
 
     def _load_data_from_db(self, query: str) -> pd.DataFrame:
         """Connects to the database and returns a DataFrame."""
-        # Ensure the database file exists or handle creation
         db_path = "sports.db"
         if not os.path.exists(db_path):
              raise FileNotFoundError(f"Database file not found at {db_path}")
@@ -316,7 +335,6 @@ class MLModel(BaseModel):
         feature_list = []
         for idx, js_obj in enumerate(parsed_json):
             if js_obj is None:
-                # We add a print statement to help debug which row is causing issues
                 print(f"Warning: JSON object is None for DataFrame index {df.index[idx]}. Skipping.")
                 continue
             temp_obj = js_obj.copy()
@@ -330,28 +348,24 @@ class MLModel(BaseModel):
         if not feature_list:
             return np.array([])
 
-        # --- REPLACEMENT BLOCK ---
-        # Validate that all feature vectors have the same length.
         it = iter(feature_list)
         first_row_len = len(next(it, []))
         if not all(len(row) == first_row_len for row in it):
-            # Find and show the lengths to help debug the source data
             all_lengths = {len(r) for r in feature_list}
             raise ValueError(
                 f"Inconsistent feature lengths detected. All rows must produce a feature vector of the same size. "
                 f"Found lengths: {all_lengths}. This suggests the JSON data structure is not consistent across all rows. "
                 f"Please fix the upstream data generation process."
             )
-        # --- END REPLACEMENT BLOCK ---
-
+        
         return np.array(feature_list, dtype=float)
 
     def _get_model(self):
         """Initializes a model instance from the model factory."""
         return self._MODELS[self.model_type]()
 
-    def _save_model(self, model, query: str, trained_input_shape: int, original_input_shape: int):
-        """Saves the model and metadata to a versioned .joblib file."""
+    def _save_model(self, model, scaler, query: str, trained_input_shape: int, original_input_shape: int):
+        """Saves the model, scaler, and metadata to a versioned .joblib file."""
         os.makedirs("models", exist_ok=True)
         base_path = os.path.join("models", self.model_name)
         output_path = f"{base_path}.joblib"
@@ -364,6 +378,7 @@ class MLModel(BaseModel):
 
         model_info = {
             "model": model,
+            "scaler": scaler,  # Save the scaler
             "model_type": self.model_type,
             "trained_input_shape": trained_input_shape,
             "original_input_shape": original_input_shape,
@@ -372,7 +387,7 @@ class MLModel(BaseModel):
             "query": query,
         }
         joblib.dump(model_info, output_path)
-        print(f"Model saved to {output_path}\n")
+        print(f"Model and scaler saved to {output_path}\n")
 
     def _load_model(self) -> dict:
         """Loads the most recent model file matching the model_name."""
