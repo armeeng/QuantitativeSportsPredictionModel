@@ -1,63 +1,174 @@
 feature,importance
-team2_stats.runs-per-game.Home,0.6692254805085269
-team2_stats.on-base-plus-slugging-pct.Away,0.6641110361324366
-team1_stats.hits-per-game.Away,0.6474881217084227
-team1_stats.walks-plus-hits-per-inning-pitched.2025,0.6247363093693943
-team1_stats.at-bats-per-game.Home,0.47045144880890144
-team2_stats.batting-average.Away,0.45005547321006345
-team1_stats.hits-per-game.Home,0.4430413039110344
-team1_stats.earned-run-average.Home,0.4338172232800755
-team1_stats.total-bases-per-game.Away,0.4223251258020226
-team1_stats.walks-plus-hits-per-inning-pitched.Home,0.38396520660424016
-team2_stats.walks-plus-hits-per-inning-pitched.Home,0.368162893736129
-team2_stats.runs-per-game.Away,0.3568028032761865
-team2_stats.slugging-pct.Home,0.35331674214272873
-team1_stats.batting-average.Away,0.30875677684786185
-team2_stats.earned-run-average.Away,0.2866518550230627
-team1_stats.walks-plus-hits-per-inning-pitched.Away,0.27600800169365725
-team1_stats.strikeouts-per-9.Home,0.27502705256956705
-team1_stats.batting-average.Home,0.27177580271680934
-team2_stats.slugging-pct.Away,0.26876297423144824
-team2_stats.opponent-runs-per-game.Away,0.2601753043947105
-team1_stats.slugging-pct.Home,0.25969238578001963
-team1_stats.runs-per-game.Away,0.255566516772775
-team2_stats.strikeouts-per-9.Away,0.2548662633588399
-team2_stats.walks-plus-hits-per-inning-pitched.2025,0.24983796484026755
-team1_stats.runs-per-game.Home,0.24211576455875128
-team1_stats.on-base-plus-slugging-pct.Home,0.23830779137496466
-team2_stats.on-base-plus-slugging-pct.Home,0.238111637615895
-team1_stats.win-pct-all-games.Away,0.2350097285974872
-team1_stats.slugging-pct.Away,0.2285232853600277
-team2_stats.runs-per-game.2025,0.2211419676165475
-team2_stats.win-pct-all-games.Home,0.21999487637350312
-team1_stats.at-bats-per-game.2025,0.21034637132620881
-team1_stats.batting-average.2025,0.20941376987482344
-team2_stats.total-bases-per-game.Home,0.20793280804073716
-team2_stats.walks-plus-hits-per-inning-pitched.Away,0.20678223028953163
-team2_stats.at-bats-per-game.Home,0.19919435215074827
-team2_stats.strikeouts-per-9.Home,0.19382180786710929
-team1_stats.strikeouts-per-9.Away,0.19337705544276185
-team2_stats.at-bats-per-game.2025,0.18402447506080613
-team2_stats.hits-per-game.Away,0.18054548060950543
-team1_stats.earned-run-average.Away,0.17959993472210606
-team1_stats.at-bats-per-game.Away,0.17427007485199467
-team1_stats.runs-per-game.2025,0.17254729387482953
-team2_stats.hits-per-game.Home,0.17095722237798322
-team2_stats.opponent-runs-per-game.Home,0.16164546655539835
-team2_stats.total-bases-per-game.Away,0.16008941359524215
-team2_stats.earned-run-average.Home,0.1538703799496504
-team1_stats.win-pct-all-games.Home,0.1502647911051885
-team1_stats.on-base-plus-slugging-pct.Last 3,0.14570489666735004
-team1_stats.opponent-runs-per-game.Home,0.13584858934522134
-team2_stats.at-bats-per-game.Away,0.135345912354761
-team2_stats.batting-average.2025,0.12473873879171718
-team1_stats.runs-per-game.Last 3,0.12288473840199439
-team1_stats.total-bases-per-game.Home,0.12094621612391618
-team1_stats.opponent-runs-per-game.Away,0.11393993191047688
-team2_stats.runs-per-game.Last 3,0.1100227304561803
-team2_stats.win-pct-all-games.Away,0.10245369806128313
-team2_stats.on-base-plus-slugging-pct.Last 3,0.09419632632307753
-team2_stats.batting-average.Home,0.09279395811421556
-team1_stats.on-base-plus-slugging-pct.Away,0.07315187765477406
-team1_stats.slugging-pct.Last 1,0.04927476750426478
-team2_stats.slugging-pct.Last 1,0.013859531515269941
+team1_stats.opponent-overtime-points-per-game.Rank,0.012343558978638813
+team1_stats.sos-rpi-rating-by-team.Last,0.011685010881512681
+team2_stats.total-rebounding-percentage.Rank,0.011608868878512441
+team1_stats.future-sos-by-other.Last,0.011522764538757885
+team1_stats.consistency-by-other.Last,0.01125069793773118
+team1_stats.opponent-three-pointers-attempted-per-game.Rank,0.010814928574332593
+team1_stats.in-conference-by-other.Rating,0.010625240353797116
+team1_stats.vs-26-50-by-other.Last,0.010440694841959003
+team1_stats.predictive-by-other.v 26-50,0.01018569371720816
+team1_stats.opponent-assists-per-fgm.Rank,0.010035955841113659
+team2_stats.non-conference-sos-by-other.Lo,0.009799964764909786
+team2_stats.home-adv-by-other.Lo,0.009502188889872382
+team2_stats.three-point-pct.2023,0.00948743072891715
+team1_stats.win-pct-close-games.Away,0.009139784756534713
+team1_stats.opponent-overtime-points-per-game.2024,0.009118760861559976
+team1_stats.defensive-efficiency.Rank,0.008906455512347733
+team1_stats.average-overtime-margin.Rank,0.008783661249710962
+team1_stats.opponent-field-goals-attempted-per-game.Rank,0.008759231538519957
+is_conference,0.008357736773276054
+team1_stats.assist--per--turnover-ratio.2023,0.008303400527165123
+is_neutral,0.008285281356844393
+team2_stats.consistency-by-other.Last,0.008001251473637394
+team1_stats.overtime-points-per-game.Rank,0.007813197963355339
+team1_stats.opponent-win-pct-all-games.2024,0.00771748504529593
+team1_stats.effective-possession-ratio.Rank,0.007573161472616513
+team2_stats.effective-possession-ratio.Rank,0.007247146977405338
+weather.sea_level_pressure,0.007188362390205888
+team1_stats.vs-101-200-by-other.Lo,0.0071646504132517105
+team2_stats.defensive-rebounds-per-game.Rank,0.00687337207803077
+team2_stats.defensive-rebounding-pct.Rank,0.006587795881419894
+team1_stats.2nd-half-points-per-game.Last 3,0.006583625801948501
+team1_stats.extra-chances-per-game.Home,0.006508716155488786
+team1_stats.consistency-by-other.Lo,0.006502573964878733
+team1_stats.rpi-rating-by-team.Lo,0.006444240410361629
+team1_stats.opponent-non-blocked-2-pt-pct.Rank,0.006258575169537017
+team1_stats.home-adv-by-other.Lo,0.00621893961402104
+team1_stats.opponent-assists-per-fgm.2023,0.006216250579877408
+team2_stats.defensive-efficiency.Last 1,0.0060884146334290404
+team1_stats.opponent-defensive-rebounds-per-game.Rank,0.006065789807764749
+team1_stats.vs-1-25-by-other.Lo,0.005959694536943938
+team2_stats.vs-1-25-by-other.Hi,0.005924661647902535
+team1_stats.opponent-win-pct-close-games.Rank,0.005868110377749691
+team1_stats.non-conference-sos-by-other.Lo,0.005738208558179259
+team1_stats.assist--per--turnover-ratio.Away,0.005733685886405088
+team2_stats.predictive-by-other.v 26-50,0.0057232169730718095
+team1_stats.opponent-steal-pct.Rank,0.005686784245627324
+team2_stats.block-pct.Rank,0.005230647110235287
+team2_stats.opponent-field-goals-attempted-per-game.Rank,0.005180666882349655
+team2_stats.opponent-percent-of-points-from-2-pointers.Rank,0.005174433746963464
+team2_stats.opponent-non-blocked-2-pt-pct.Rank,0.005142627110727427
+team1_stats.consistency-by-other.Rating,0.004982528459978231
+team2_stats.opponent-defensive-rebounds-per-game.Rank,0.004942843534190172
+team1_stats.vs-26-50-by-other.Hi,0.004897319798598143
+team1_stats.block-pct.Last 3,0.004857648579736318
+team2_stats.percent-of-points-from-2-pointers.Rank,0.004800058912859134
+team1_stats.opponent-assist--per--turnover-ratio.Home,0.004791001827633273
+team2_stats.overtime-points-per-game.Rank,0.004678696975229319
+team1_stats.defensive-efficiency.Last 1,0.0046707185577193775
+team1_stats.turnovers-per-game.Rank,0.0046484874793147665
+team1_stats.three-point-pct.2023,0.004577179957313016
+team1_stats.defensive-rebounds-per-game.Rank,0.004463710529597565
+team1_stats.opponent-block-pct.Home,0.004458427801275905
+team1_stats.defensive-rebounding-pct.Rank,0.004394918449457036
+team1_stats.opponent-three-point-pct.Rank,0.004298250662680803
+team1_stats.opponent-defensive-rebounds-per-game.Last 1,0.004179151123422065
+team2_stats.opponent-three-pointers-attempted-per-game.Rank,0.00408604807330723
+team2_stats.neutral-by-other.Last,0.0038982865693670933
+team2_stats.vs-1-25-by-other.Lo,0.003838513897496987
+team1_stats.percent-of-points-from-2-pointers.Rank,0.0037475987039401137
+team2_stats.in-conference-by-other.Rating,0.003687172822528173
+team2_stats.opponent-overtime-points-per-game.2024,0.0036021889444855294
+team2_stats.sos-rpi-rating-by-team.Last,0.003583815046138944
+team2_stats.opponent-three-point-pct.Rank,0.0035411769523778945
+team1_stats.home-adv-by-other.v 26-50,0.0035054865829313
+team2_stats.opponent-win-pct-close-games.Rank,0.0034528840520234084
+team2_stats.three-point-pct.Last 3,0.003395658100431653
+team1_stats.vs-1-25-by-other.Hi,0.0033655597638775014
+team1_stats.vs-51-100-by-other.Hi,0.003328348275857712
+team2_stats.predictive-by-other.v 51-100,0.00330199404549823
+team1_stats.assists-per-fgm.2024,0.003298974010663075
+team2_stats.offensive-rebounding-pct.Home,0.003274942442732065
+team2_stats.home-adv-by-other.Last,0.003225981550581841
+team2_stats.opponent-percent-of-points-from-3-pointers.2024,0.003122338866919949
+team1_stats.non-blocked-2-pt-pct.Last 3,0.0030855520614812395
+team1_stats.opponent-assists-per-fgm.Home,0.0030520600742123425
+team2_stats.average-overtime-margin.Home,0.0028841834516447453
+team2_stats.opponent-assist--per--turnover-ratio.Home,0.00281367866176222
+team1_stats.rpi-rating-by-team.Hi,0.0027632900971724995
+team1_stats.free-throw-pct.Last 3,0.0027292817938235014
+team2_stats.opponent-offensive-rebounding-pct.2024,0.002679275097796474
+team2_stats.opponent-win-pct-all-games.2024,0.002656859375809484
+team2_stats.vs-26-50-by-other.Hi,0.0026414641052251164
+team2_stats.future-sos-by-other.Last,0.0025884782278036257
+team2_stats.opponent-steal-pct.Rank,0.002511085679955499
+team1_stats.average-scoring-margin.Last 1,0.002509546337434304
+team2_stats.vs-51-100-by-other.Hi,0.002421741211555567
+team2_stats.average-overtime-margin.Rank,0.002419400489059065
+team1_stats.opponent-overtime-points-per-game.2023,0.002417977109290881
+team2_stats.opponent-assist--per--turnover-ratio.Last 1,0.002411775480726164
+team2_stats.rpi-rating-by-team.Hi,0.002409213979216679
+team2_stats.free-throw-pct.Last 3,0.0021851554551018336
+team2_stats.opponent-overtime-points-per-game.Rank,0.002153108452382102
+team1_stats.away-by-other.v 51-100,0.0021289023381872328
+team1_stats.opponent-steal-pct.2024,0.0020756466706011332
+team2_stats.opponent-three-point-rate.Last 1,0.0020126497266022393
+team2_stats.defensive-efficiency.Rank,0.001995564582304499
+team1_stats.home-adv-by-other.Last,0.001993059529440222
+team1_stats.opponent-percent-of-points-from-2-pointers.Rank,0.0019518434323813117
+team2_stats.win-pct-close-games.Away,0.0018698084068810073
+team2_stats.free-throw-pct.Last 1,0.0018456908190704225
+team1_stats.free-throw-pct.Last 1,0.0018448661226164898
+team2_stats.average-scoring-margin.Last 1,0.001833567889977683
+team1_stats.offensive-rebounding-pct.Home,0.0018116931916177582
+team2_stats.assist--per--turnover-ratio.2023,0.001733275058470657
+team2_stats.opponent-percent-of-points-from-2-pointers.2024,0.0017295783282794907
+team1_stats.opponent-assist--per--turnover-ratio.Last 1,0.0017015201921757428
+team1_stats.sos-rpi-rating-by-team.Hi,0.0015931841867199148
+team2_stats.opponent-assists-per-fgm.Rank,0.0015396377552323814
+team1_stats.neutral-by-other.Last,0.0014958094309252378
+team1_stats.opponent-assist--per--turnover-ratio.Last 3,0.0014390445901958538
+team2_stats.opponent-assists-per-fgm.Home,0.001385495240289647
+team2_stats.vs-26-50-by-other.Last,0.0013807108773005172
+team1_stats.opponent-three-point-rate.Last 1,0.0013254388216714873
+team2_stats.vs-101-200-by-other.Lo,0.0012658962048700984
+team1_stats.block-pct.Rank,0.001236759221877598
+team2_stats.sos-rpi-rating-by-team.Hi,0.0012159046444277567
+team2_stats.away-by-other.v 51-100,0.001188024792252096
+team2_stats.2nd-half-points-per-game.Last 3,0.0011418664389837463
+team1_stats.average-overtime-margin.Home,0.0011197990869636354
+team2_stats.rpi-rating-by-team.Lo,0.0011070080092561497
+team1_stats.defensive-rebounds-per-game.Last 3,0.0010376843995891893
+team2_stats.opponent-overtime-points-per-game.2023,0.001016749151261892
+team2_stats.consistency-by-other.Lo,0.0008934760390686303
+team2_stats.home-adv-by-other.v 26-50,0.000889645326897276
+team1_stats.opponent-defensive-rebounds-per-game.Last 3,0.0008779887335182812
+team1_stats.opponent-three-point-pct.Last 3,0.0008603415209406829
+team1_stats.vs-26-50-by-other.Lo,0.0008137828144859138
+team2_stats.opponent-blocks-per-game.Rank,0.0007959763663622721
+team2_stats.consistency-by-other.Rating,0.0007875778814550483
+team1_stats.opponent-free-throw-pct.Last 3,0.0007452432414079724
+team2_stats.opponent-free-throw-pct.Last 3,0.0007421521603467763
+team2_stats.1st-half-points-per-game.2024,0.0006792183000792262
+team2_stats.vs-26-50-by-other.Lo,0.0005994527523620286
+team1_stats.predictive-by-other.v 51-100,0.00045035629490055575
+team2_stats.opponent-defensive-rebounds-per-game.Last 3,0.0001614550781945001
+team2_stats.block-pct.Last 3,0.00014168392356436187
+team2_stats.opponent-steal-pct.2024,-6.714660594793753e-05
+team2_stats.opponent-block-pct.Home,-0.00020362271643136753
+team2_stats.turnovers-per-game.Rank,-0.00032470309813750764
+team2_stats.defensive-rebounds-per-game.Last 3,-0.00039001304063407405
+team2_stats.block-pct.2023,-0.00039957899472276015
+team1_stats.opponent-percent-of-points-from-2-pointers.2024,-0.0004366263458366271
+team1_stats.opponent-offensive-rebounding-pct.Home,-0.0005072249248252614
+team2_stats.points-from-2-pointers.2023,-0.0006102862588086788
+team2_stats.opponent-assists-per-fgm.2023,-0.0008708022811993954
+team1_stats.1st-half-points-per-game.2024,-0.0009522674606950333
+team2_stats.opponent-assist--per--turnover-ratio.Last 3,-0.0011253952599132977
+team2_stats.1st-half-points-per-game.Home,-0.0015412067366508907
+team1_stats.1st-half-points-per-game.Home,-0.0017050111363031916
+team1_stats.total-rebounding-percentage.Rank,-0.0017188698479703058
+team1_stats.block-pct.2023,-0.001970810482836377
+team1_stats.opponent-percent-of-points-from-3-pointers.2024,-0.0021766048214927947
+team2_stats.non-blocked-2-pt-pct.Last 3,-0.0022094220985253545
+team2_stats.opponent-defensive-rebounds-per-game.Last 1,-0.002375447165111777
+team2_stats.assists-per-fgm.2024,-0.0025321741704964875
+team2_stats.opponent-three-point-pct.Last 3,-0.002705665001258989
+team2_stats.assist--per--turnover-ratio.Away,-0.003707293038218462
+team1_stats.opponent-offensive-rebounding-pct.Away,-0.003747978705161098
+team1_stats.free-throw-rate.Away,-0.0038398392831006213
+team2_stats.opponent-offensive-rebounding-pct.Away,-0.0046270401050342806
+team2_stats.percent-of-points-from-3-pointers.Away,-0.0054607377706597845
+team1_stats.three-point-pct.Last 3,-0.005498818379396986
+team2_stats.free-throw-rate.Away,-0.005703741112285615
