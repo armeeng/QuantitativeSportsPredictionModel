@@ -10,13 +10,15 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.neural_network import MLPRegressor
-from xgboost import XGBRegressor
+from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingClassifier
+from sklearn.neural_network import MLPRegressor, MLPClassifier
+from xgboost import XGBRegressor, XGBClassifier
+from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.inspection import permutation_importance # Import permutation_importance
+
 from TestModel import TestModel
 
 pd.set_option('display.max_colwidth', None)
@@ -38,21 +40,45 @@ class MLModel(BaseModel):
     to scale features.
     """
     _MODELS = {
+        # Regressors
         'linear_regression': LinearRegression,
-        'random_forest': lambda: RandomForestRegressor(n_estimators=100, random_state=42),
-        'xgboost': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42),
-        'mlp': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
-        'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
+        'random_forest_regressor': lambda: RandomForestRegressor(n_estimators=100, random_state=42), # <--- RENAMED for clarity
+        'xgboost_regressor': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42), # <--- RENAMED for clarity
+        'mlp_regressor': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
         'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5),
-        'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
         'svr': lambda: MultiOutputRegressor(SVR(kernel='rbf')),
-        'svm': lambda: SVC(probability=True, random_state=42)
-    }
-    _MODELS['neural_network'] = _MODELS['mlp']
-    _MODELS['mlp_regressor'] = _MODELS['mlp']
-    _MODELS['svc'] = _MODELS['svm']
 
-    _CLASSIFIER_TYPES = {'logistic_regression', 'knn_classifier', 'svm', 'svc'}
+        # Classifiers
+        'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
+        'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
+        'svc': lambda: SVC(probability=True, random_state=42),
+
+        # --- NEWLY ADDED CLASSIFIERS ---
+        'random_forest_classifier': lambda: RandomForestClassifier(n_estimators=100, random_state=42),
+        'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=42),
+        'mlp_classifier': lambda: MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
+        'gradient_boosting_classifier': lambda: GradientBoostingClassifier(n_estimators=100, random_state=42),
+        'gaussian_nb': lambda: GaussianNB(),
+    }
+    # Legacy aliases for backward compatibility
+    _MODELS['random_forest'] = _MODELS['random_forest_regressor']
+    _MODELS['xgboost'] = _MODELS['xgboost_regressor']
+    _MODELS['mlp'] = _MODELS['mlp_regressor']
+    _MODELS['neural_network'] = _MODELS['mlp_regressor']
+    _MODELS['svm'] = _MODELS['svc']
+
+
+    # <--- MODIFIED: Added all the new classifier keys to this set
+    _CLASSIFIER_TYPES = {
+        'logistic_regression',
+        'knn_classifier',
+        'svc',
+        'random_forest_classifier',
+        'xgboost_classifier',
+        'mlp_classifier',
+        'gradient_boosting_classifier',
+        'gaussian_nb'
+    }
 
     _FEATURE_KEYS_TO_DROP = {
         "team1_id", "team2_id", "venue_id", "season_type", "day", "month",
