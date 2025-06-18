@@ -201,7 +201,7 @@ class CorrelationAnalyzer:
 if __name__ == '__main__':
     # --- Configuration ---
     DB_FILE_PATH = "sports.db" # UPDATE if your database has a different name
-    JSON_DATA_COLUMN = "stats"  # The column with the feature JSON
+    JSON_DATA_COLUMN = "normalized_stats"  # The column with the feature JSON
     
     # Use a query to get a representative sample of your data
     # Using a LIMIT is a good idea for a quick analysis. Remove it for a full analysis.
@@ -215,5 +215,5 @@ if __name__ == '__main__':
     )
     
     # Define the correlation threshold for filtering
-    CORRELATION_THRESHOLD = 0.5
+    CORRELATION_THRESHOLD = 0.9
     analyzer.analyze_and_filter(threshold=CORRELATION_THRESHOLD)
