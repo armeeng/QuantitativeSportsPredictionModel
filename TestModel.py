@@ -307,10 +307,10 @@ class TestModel:
                 max_fraction (float): The maximum fraction of the bankroll to bet on a single event.
 
             Returns:
-                A dictionary with the final bankroll and number of bets for each bet type.
+                A dictionary with the final bankroll, number of bets, and total amount wagered for each bet type.
             """
             if not isinstance(self.predictions, dict):
-                nan_result = {'final_bankroll': np.nan, 'bets_placed': 0}
+                nan_result = {'final_bankroll': np.nan, 'bets_placed': 0, 'total_wagered': np.nan}
                 return {'moneyline': nan_result, 'spread': nan_result, 'ou': nan_result}
 
             o = self._get_outcomes()
@@ -318,6 +318,7 @@ class TestModel:
             # Separate bankrolls for each bet type to see individual performance
             bankrolls = {'moneyline': initial_bankroll, 'spread': initial_bankroll, 'ou': initial_bankroll}
             bets_placed = {'moneyline': 0, 'spread': 0, 'ou': 0}
+            total_wagered = {'moneyline': 0.0, 'spread': 0.0, 'ou': 0.0} # Added to track total wagered
 
             # Get probabilities from the classifier
             prob_t1_win = self.predictions['win'][:, 1]
@@ -351,19 +352,23 @@ class TestModel:
                         if kelly_t1 > kelly_t2:
                             fraction_to_bet = min(kelly_t1, max_fraction)
                             bet_amount = bankrolls['moneyline'] * fraction_to_bet
-                            if outcomes_np['actual_winner_is_t1'][i]:
-                                bankrolls['moneyline'] += bet_amount * (decimal_odds_np['t1_ml'][i] - 1)
-                            else:
-                                bankrolls['moneyline'] -= bet_amount
-                            bets_placed['moneyline'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['moneyline'] += bet_amount # Accumulate wagered amount
+                                if outcomes_np['actual_winner_is_t1'][i]:
+                                    bankrolls['moneyline'] += bet_amount * (decimal_odds_np['t1_ml'][i] - 1)
+                                else:
+                                    bankrolls['moneyline'] -= bet_amount
+                                bets_placed['moneyline'] += 1
                         else:
                             fraction_to_bet = min(kelly_t2, max_fraction)
                             bet_amount = bankrolls['moneyline'] * fraction_to_bet
-                            if not outcomes_np['actual_winner_is_t1'][i]:
-                                bankrolls['moneyline'] += bet_amount * (decimal_odds_np['t2_ml'][i] - 1)
-                            else:
-                                bankrolls['moneyline'] -= bet_amount
-                            bets_placed['moneyline'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['moneyline'] += bet_amount # Accumulate wagered amount
+                                if not outcomes_np['actual_winner_is_t1'][i]:
+                                    bankrolls['moneyline'] += bet_amount * (decimal_odds_np['t2_ml'][i] - 1)
+                                else:
+                                    bankrolls['moneyline'] -= bet_amount
+                                bets_placed['moneyline'] += 1
 
                 # --- Spread Simulation ---
                 if not outcomes_np['spread_pushes'][i] and not np.isnan(decimal_odds_np['t1_spread'][i]) and not np.isnan(decimal_odds_np['t2_spread'][i]):
@@ -374,19 +379,23 @@ class TestModel:
                         if kelly_t1_cover > kelly_t2_cover:
                             fraction_to_bet = min(kelly_t1_cover, max_fraction)
                             bet_amount = bankrolls['spread'] * fraction_to_bet
-                            if outcomes_np['actual_spread_is_t1_cover'][i]:
-                                bankrolls['spread'] += bet_amount * (decimal_odds_np['t1_spread'][i] - 1)
-                            else:
-                                bankrolls['spread'] -= bet_amount
-                            bets_placed['spread'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['spread'] += bet_amount # Accumulate wagered amount
+                                if outcomes_np['actual_spread_is_t1_cover'][i]:
+                                    bankrolls['spread'] += bet_amount * (decimal_odds_np['t1_spread'][i] - 1)
+                                else:
+                                    bankrolls['spread'] -= bet_amount
+                                bets_placed['spread'] += 1
                         else:
                             fraction_to_bet = min(kelly_t2_cover, max_fraction)
                             bet_amount = bankrolls['spread'] * fraction_to_bet
-                            if not outcomes_np['actual_spread_is_t1_cover'][i]:
-                                bankrolls['spread'] += bet_amount * (decimal_odds_np['t2_spread'][i] - 1)
-                            else:
-                                bankrolls['spread'] -= bet_amount
-                            bets_placed['spread'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['spread'] += bet_amount # Accumulate wagered amount
+                                if not outcomes_np['actual_spread_is_t1_cover'][i]:
+                                    bankrolls['spread'] += bet_amount * (decimal_odds_np['t2_spread'][i] - 1)
+                                else:
+                                    bankrolls['spread'] -= bet_amount
+                                bets_placed['spread'] += 1
 
                 # --- Over/Under Simulation ---
                 if not outcomes_np['ou_pushes'][i] and not np.isnan(decimal_odds_np['over'][i]) and not np.isnan(decimal_odds_np['under'][i]):
@@ -397,24 +406,28 @@ class TestModel:
                         if kelly_over > kelly_under:
                             fraction_to_bet = min(kelly_over, max_fraction)
                             bet_amount = bankrolls['ou'] * fraction_to_bet
-                            if outcomes_np['actual_is_over'][i]:
-                                bankrolls['ou'] += bet_amount * (decimal_odds_np['over'][i] - 1)
-                            else:
-                                bankrolls['ou'] -= bet_amount
-                            bets_placed['ou'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['ou'] += bet_amount # Accumulate wagered amount
+                                if outcomes_np['actual_is_over'][i]:
+                                    bankrolls['ou'] += bet_amount * (decimal_odds_np['over'][i] - 1)
+                                else:
+                                    bankrolls['ou'] -= bet_amount
+                                bets_placed['ou'] += 1
                         else:
                             fraction_to_bet = min(kelly_under, max_fraction)
                             bet_amount = bankrolls['ou'] * fraction_to_bet
-                            if not outcomes_np['actual_is_over'][i]:
-                                bankrolls['ou'] += bet_amount * (decimal_odds_np['under'][i] - 1)
-                            else:
-                                bankrolls['ou'] -= bet_amount
-                            bets_placed['ou'] += 1
+                            if bet_amount > 0: # Only place bet if amount is positive
+                                total_wagered['ou'] += bet_amount # Accumulate wagered amount
+                                if not outcomes_np['actual_is_over'][i]:
+                                    bankrolls['ou'] += bet_amount * (decimal_odds_np['under'][i] - 1)
+                                else:
+                                    bankrolls['ou'] -= bet_amount
+                                bets_placed['ou'] += 1
 
             return {
-                'moneyline': {'final_bankroll': bankrolls['moneyline'], 'bets_placed': bets_placed['moneyline']},
-                'spread': {'final_bankroll': bankrolls['spread'], 'bets_placed': bets_placed['spread']},
-                'ou': {'final_bankroll': bankrolls['ou'], 'bets_placed': bets_placed['ou']}
+                'moneyline': {'final_bankroll': bankrolls['moneyline'], 'bets_placed': bets_placed['moneyline'], 'total_wagered': total_wagered['moneyline']},
+                'spread': {'final_bankroll': bankrolls['spread'], 'bets_placed': bets_placed['spread'], 'total_wagered': total_wagered['spread']},
+                'ou': {'final_bankroll': bankrolls['ou'], 'bets_placed': bets_placed['ou'], 'total_wagered': total_wagered['ou']}
             }
 
     # --- MODIFIED: Updated to display Kelly Criterion results ---
@@ -452,8 +465,8 @@ class TestModel:
             kelly_ou = kelly_results['ou']
 
             print(f"\nKelly Criterion Simulation (Initial Bankroll: ${initial_bankroll}):")
-            print(f"  - Moneyline:  Final Bankroll: ${kelly_ml['final_bankroll']:.2f} (Profit: ${kelly_ml['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ml['bets_placed']} bets")
-            print(f"  - Spread:     Final Bankroll: ${kelly_spread['final_bankroll']:.2f} (Profit: ${kelly_spread['final_bankroll'] - initial_bankroll:.2f}) from {kelly_spread['bets_placed']} bets")
-            print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Profit: ${kelly_ou['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ou['bets_placed']} bets")
+            print(f"  - Moneyline:  Final Bankroll: ${kelly_ml['final_bankroll']:.2f} (Total Wagered: ${kelly_ml['total_wagered']:.2f}, Profit: ${kelly_ml['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ml['bets_placed']} bets")
+            print(f"  - Spread:     Final Bankroll: ${kelly_spread['final_bankroll']:.2f} (Total Wagered: ${kelly_spread['total_wagered']:.2f}, Profit: ${kelly_spread['final_bankroll'] - initial_bankroll:.2f}) from {kelly_spread['bets_placed']} bets")
+            print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Total Wagered: ${kelly_ou['total_wagered']:.2f}, Profit: ${kelly_ou['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ou['bets_placed']} bets")
 
         print("\n------------------------------------")

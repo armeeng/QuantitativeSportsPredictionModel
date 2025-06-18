@@ -205,7 +205,7 @@ if __name__ == '__main__':
     
     # Use a query to get a representative sample of your data
     # Using a LIMIT is a good idea for a quick analysis. Remove it for a full analysis.
-    QUERY_FOR_ANALYSIS = f"SELECT * FROM games WHERE sport = 'CBB';"
+    QUERY_FOR_ANALYSIS = f"SELECT * FROM games WHERE sport = 'MLB';"
     
     # --- Run Analysis ---
     analyzer = CorrelationAnalyzer(
