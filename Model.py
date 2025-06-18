@@ -17,7 +17,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
-from sklearn.inspection import permutation_importance # Import permutation_importance
+from sklearn.inspection import permutation_importance
 
 from TestModel import TestModel
 
@@ -33,17 +33,18 @@ class MLModel(BaseModel):
     """
     A simplified ML class focused strictly on training models and generating predictions.
 
-    This class trains a model on historical sports data and makes predictions on a
-    held-out test set. All metric calculations are removed. The test set predictions,
-    true outcomes, and betting odds are stored as instance attributes for external evaluation.
+    This class trains a model on historical sports data from a training query and
+    evaluates it on a separate test query. All metric calculations are handled
+    by the TestModel class. The test set predictions, true outcomes, and betting
+    odds are stored as instance attributes for external evaluation.
     It supports training on a full or random subset of features and uses StandardScaler
     to scale features.
     """
     _MODELS = {
         # Regressors
         'linear_regression': LinearRegression,
-        'random_forest_regressor': lambda: RandomForestRegressor(n_estimators=100, random_state=42), # <--- RENAMED for clarity
-        'xgboost_regressor': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42), # <--- RENAMED for clarity
+        'random_forest_regressor': lambda: RandomForestRegressor(n_estimators=100, random_state=42),
+        'xgboost_regressor': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42),
         'mlp_regressor': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
         'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5),
         'svr': lambda: MultiOutputRegressor(SVR(kernel='rbf')),
@@ -52,32 +53,22 @@ class MLModel(BaseModel):
         'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
         'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
         'svc': lambda: SVC(probability=True, random_state=42),
-
-        # --- NEWLY ADDED CLASSIFIERS ---
         'random_forest_classifier': lambda: RandomForestClassifier(n_estimators=100, random_state=42),
         'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=42),
         'mlp_classifier': lambda: MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
         'gradient_boosting_classifier': lambda: GradientBoostingClassifier(n_estimators=100, random_state=42),
         'gaussian_nb': lambda: GaussianNB(),
     }
-    # Legacy aliases for backward compatibility
+    # Legacy aliases
     _MODELS['random_forest'] = _MODELS['random_forest_regressor']
     _MODELS['xgboost'] = _MODELS['xgboost_regressor']
     _MODELS['mlp'] = _MODELS['mlp_regressor']
     _MODELS['neural_network'] = _MODELS['mlp_regressor']
     _MODELS['svm'] = _MODELS['svc']
 
-
-    # <--- MODIFIED: Added all the new classifier keys to this set
     _CLASSIFIER_TYPES = {
-        'logistic_regression',
-        'knn_classifier',
-        'svc',
-        'random_forest_classifier',
-        'xgboost_classifier',
-        'mlp_classifier',
-        'gradient_boosting_classifier',
-        'gaussian_nb'
+        'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier',
+        'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb'
     }
 
     _FEATURE_KEYS_TO_DROP = {
@@ -88,28 +79,16 @@ class MLModel(BaseModel):
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
                  subset_fraction: float = None, feature_allowlist: list[str] = None):
-        """
-        Initializes the MLModel.
-
-        Args:
-            model_name (str): A unique name for saving and loading the model.
-            model_type (str): The type of algorithm to use.
-            column (str): The database column containing the JSON features.
-            use_random_subset_of_features (bool): If True, train on a random subset of features.
-            subset_fraction (float): The fraction of features to use if subsetting is enabled.
-            feature_allowlist (list[str], optional): A specific list of feature names to use for training.
-        """
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
         if self.model_type not in self._MODELS:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}. Supported types are {list(self._MODELS.keys())}")
 
-        # NEW: Add validation for feature selection methods
         if use_random_subset_of_features and feature_allowlist is not None:
             raise ValueError("Cannot set `use_random_subset_of_features` to True and provide a `feature_allowlist` simultaneously.")
 
         self.use_random_subset_of_features = use_random_subset_of_features
-        self.feature_allowlist = feature_allowlist  # NEW: Store the allowlist
+        self.feature_allowlist = feature_allowlist
 
         if subset_fraction is None:
             self.subset_fraction = random.uniform(0.01, 1.0)
@@ -118,7 +97,6 @@ class MLModel(BaseModel):
                 raise ValueError("If specified, subset_fraction must be > 0 and <= 1.")
             self.subset_fraction = subset_fraction
 
-        # ... (rest of the __init__ method is the same) ...
         self.predictions = None
         self.y_test = None
         self.test_odds = None
@@ -131,15 +109,18 @@ class MLModel(BaseModel):
     # Public API: Main Methods
     # =================================================================================
 
-    def train(self, query: str, test_size: float = 0.5, random_state: int = 100):
+    def train(self, train_query: str, test_query: str):
         """
-        Trains a model and prepares test set predictions for external evaluation.
-        Routes to the appropriate training method based on model_type.
+        Trains a model using data from `train_query` and evaluates it on `test_query`.
+
+        Args:
+            train_query (str): The SQL query to fetch the training dataset.
+            test_query (str): The SQL query to fetch the test dataset for evaluation.
         """
         if self.model_type in self._CLASSIFIER_TYPES:
-            self._train_classifier(query, test_size, random_state)
+            self._train_classifier(train_query, test_query)
         else:
-            self._train_regressor(query, test_size, random_state)
+            self._train_regressor(train_query, test_query)
 
     def predict(self, query: str) -> list:
         """
@@ -149,11 +130,11 @@ class MLModel(BaseModel):
         try:
             info = self._load_model()
             model = info['model']
-            self.scaler = info.get('scaler') # Use .get() for backward compatibility
+            self.scaler = info.get('scaler')
             column = info['column']
             feature_indices = info.get('feature_indices')
-            original_shape = info.get('original_input_shape', info.get('input_shape'))
-            model_input_shape = info.get('trained_input_shape', info.get('input_shape'))
+            original_shape = info.get('original_input_shape')
+            model_input_shape = info.get('trained_input_shape')
         except FileNotFoundError as e:
             print(f"Error: {e}")
             return []
@@ -164,7 +145,7 @@ class MLModel(BaseModel):
             return []
         
         self.column = column
-        X_raw, _ = self._prepare_features(df) # We don't need feature names here
+        X_raw, _ = self._prepare_features(df)
 
         if X_raw.shape[1] != original_shape:
             raise ValueError(f"Feature shape mismatch: model trained on {original_shape} features, new data has {X_raw.shape[1]}.")
@@ -174,12 +155,10 @@ class MLModel(BaseModel):
         if X.shape[1] != model_input_shape:
             raise ValueError(f"Model input shape mismatch: model expects {model_input_shape} features, got {X.shape[1]}.")
 
-        # Scale the features using the loaded scaler
         if self.scaler:
             X_scaled = self.scaler.transform(X)
         else:
-            # If no scaler was saved, use the unscaled data (legacy model)
-            print("Warning: No scaler found in the model file. Predicting on unscaled data.")
+            print("Warning: No scaler found. Predicting on unscaled data.")
             X_scaled = X
 
         if isinstance(model, dict):  # Classifier
@@ -197,23 +176,11 @@ class MLModel(BaseModel):
                 for gid, t1, t2, (p1, p2) in zip(df["game_id"], df["team1_id"], df["team2_id"], predictions)
             ]
             
-    # New method for feature importance
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """
         Calculates and returns feature importances for the trained model.
-
-        Args:
-            model: The trained model. If None, uses self.model_.
-            X_test: The test features. If None, this will be skipped for permutation importance.
-            y_test: The test labels. If None, this will be skipped for permutation importance.
-            n_top_features (int): The number of top features to display.
-
-        Returns:
-            A pandas DataFrame with feature names and their importance scores.
         """
-        if model is None:
-            model = self.model_
-
+        if model is None: model = self.model_
         if self.feature_names_ is None:
             print("Feature names are not available. Please train the model first.")
             return None
@@ -222,141 +189,146 @@ class MLModel(BaseModel):
         if hasattr(model, 'feature_importances_'):
             importances = model.feature_importances_
         elif hasattr(model, 'coef_'):
-            # For linear models, we use the absolute value of the coefficients
-            if model.coef_.ndim > 1:
-                importances = np.mean(np.abs(model.coef_), axis=0)
-            else:
-                importances = np.abs(model.coef_)
+            if model.coef_.ndim > 1: importances = np.mean(np.abs(model.coef_), axis=0)
+            else: importances = np.abs(model.coef_)
         elif X_test is not None and y_test is not None:
-            # Use permutation importance for models without direct importance attributes
-            result = permutation_importance(
-                model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1
-            )
+            result = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
             importances = result.importances_mean
         else:
-            print(f"Cannot get feature importance for model type {type(model).__name__} without test data for permutation.")
+            print(f"Cannot get feature importance for model type {type(model).__name__} without test data.")
             return None
 
-        feature_importance_df = pd.DataFrame({
+        return pd.DataFrame({
             'feature': self.feature_names_,
             'importance': importances
         }).sort_values(by='importance', ascending=False)
-
-        return feature_importance_df#.head(n_top_features)
 
     # =================================================================================
     # Internal Training Methods
     # =================================================================================
 
-    def _train_regressor(self, query: str, test_size: float, random_state: int):
-        """Trains a regression model and stores test set results."""
-        df = self._load_data_from_db(query)
-        df.dropna(subset=["team1_score", "team2_score"], inplace=True)
-        if df.empty:
-            print("Query returned no data to train on. Aborting.")
+    def _train_regressor(self, train_query: str, test_query: str):
+        """Trains a regression model and evaluates on a separate test set."""
+        # Load Data
+        df_train = self._load_data_from_db(train_query)
+        df_test = self._load_data_from_db(test_query)
+
+        df_train.dropna(subset=["team1_score", "team2_score"], inplace=True)
+        df_test.dropna(subset=["team1_score", "team2_score"], inplace=True)
+        
+        if df_train.empty:
+            print("Training query returned no data. Aborting.")
+            return
+        if df_test.empty:
+            print("Test query returned no data. Aborting.")
             return
 
-        X_raw, self.feature_names_ = self._prepare_features(df)
-        original_feature_count = X_raw.shape[1]
-        X = self._select_features(X_raw, random_state)
-        y = df[["team1_score", "team2_score"]].to_numpy()
+        # Prepare Training Data
+        X_train_raw, self.feature_names_ = self._prepare_features(df_train)
+        original_feature_count = X_train_raw.shape[1]
+        X_train = self._select_features(X_train_raw, random_state=42) # Use fixed random state for reproducibility
+        y_train = df_train[["team1_score", "team2_score"]].to_numpy()
 
-        betting_cols = {
-            "team1_ml": df.get("team1_moneyline"), "team2_ml": df.get("team2_moneyline"),
-            "team1_spread": df.get("team1_spread"), "team2_spread": df.get("team2_spread"),
-            "team1_spread_odds": df.get("team1_spread_odds"), "team2_spread_odds": df.get("team2_spread_odds"),
-            "total_score": df.get("total_score"), "over_odds": df.get("over_odds"), "under_odds": df.get("under_odds")
+        # Prepare Test Data
+        X_test_raw, _ = self._prepare_features(df_test)
+        if X_test_raw.shape[1] != original_feature_count:
+            raise ValueError(f"Feature count mismatch: train data has {original_feature_count} features, test data has {X_test_raw.shape[1]}.")
+        
+        X_test = X_test_raw[:, self.feature_indices_] if self.feature_indices_ is not None else X_test_raw
+        self.y_test = df_test[["team1_score", "team2_score"]].to_numpy()
+        
+        self.test_odds = {
+            "team1_ml": pd.to_numeric(df_test.get("team1_moneyline"), errors='coerce').fillna(0),
+            "team2_ml": pd.to_numeric(df_test.get("team2_moneyline"), errors='coerce').fillna(0),
+            "team1_spread": pd.to_numeric(df_test.get("team1_spread"), errors='coerce').fillna(0),
+            "team2_spread": pd.to_numeric(df_test.get("team2_spread"), errors='coerce').fillna(0),
+            "team1_spread_odds": pd.to_numeric(df_test.get("team1_spread_odds"), errors='coerce').fillna(0),
+            "team2_spread_odds": pd.to_numeric(df_test.get("team2_spread_odds"), errors='coerce').fillna(0),
+            "total_score": pd.to_numeric(df_test.get("total_score"), errors='coerce').fillna(0),
+            "over_odds": pd.to_numeric(df_test.get("over_odds"), errors='coerce').fillna(0),
+            "under_odds": pd.to_numeric(df_test.get("under_odds"), errors='coerce').fillna(0)
         }
-        
-        data_to_split = [X, y] + [pd.to_numeric(col, errors='coerce').fillna(0) for col in betting_cols.values()]
-        splits = train_test_split(*data_to_split, test_size=test_size, random_state=random_state)
-        
-        X_train, X_test, y_train, self.y_test = splits[0], splits[1], splits[2], splits[3]
-        
+
         # Scale features
         self.scaler = StandardScaler()
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
         
-        # Store test odds for external evaluation
-        self.test_odds = dict(zip(betting_cols.keys(), splits[5::2]))
-
+        # Train Model
         self.model_ = self._get_model()
         self.model_.fit(X_train_scaled, y_train)
 
-        # Generate and store predictions on the scaled test set
+        # Evaluate Model
         self.predictions = self.model_.predict(X_test_scaled)
-
-        test_evaluator = TestModel(
-            predictions=self.predictions,
-            y_test=self.y_test,
-            test_odds=self.test_odds
-        )
+        test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
         test_evaluator.display_results()
         
-        feature_importance = self.get_feature_importance(
-            model=self.model_,
-            X_test=X_test_scaled,
-            y_test=self.y_test
-        )
+        # Feature Importance
+        feature_importance = self.get_feature_importance(model=self.model_, X_test=X_test_scaled, y_test=self.y_test)
+        if feature_importance is not None:
+            feature_importance.to_csv("Feature Importance/feature_importance.csv", index=False)
+            print("Saved feature importance to feature_importance.csv")
 
-        # Save to CSV
-        feature_importance.to_csv("Feature Importance/feature_importance.csv", index=False)
-        print("Saved feature importance to feature_importance.csv")
-
-        self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, train_query, X_train.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
-        print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
+    def _train_classifier(self, train_query: str, test_query: str):
+        """Trains classification models and evaluates on a separate test set."""
+        # Load Data
+        df_train = self._load_data_from_db(train_query)
+        df_test = self._load_data_from_db(test_query)
 
-    def _train_classifier(self, query: str, test_size: float, random_state: int):
-        """Trains classification models and stores test set results."""
-        df = self._load_data_from_db(query)
-        df.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
-        if df.empty:
-            print("Query returned no data to train on. Aborting.")
+        df_train.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
+        df_test.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
+
+        if df_train.empty:
+            print("Training query returned no data. Aborting.")
+            return
+        if df_test.empty:
+            print("Test query returned no data. Aborting.")
             return
 
-        X_raw, self.feature_names_ = self._prepare_features(df)
-        original_feature_count = X_raw.shape[1]
-        X = self._select_features(X_raw, random_state)
+        # Prepare Training Data
+        X_train_raw, self.feature_names_ = self._prepare_features(df_train)
+        original_feature_count = X_train_raw.shape[1]
+        X_train = self._select_features(X_train_raw, random_state=42)
 
-        actual_margin = df["team1_score"] - df["team2_score"]
-        actual_total = df["team1_score"] + df["team2_score"]
-        y_win = (actual_margin > 0).astype(int)
-        y_spread_outcome = actual_margin + pd.to_numeric(df["team1_spread"], errors='coerce').fillna(0)
-        y_total_outcome = actual_total - pd.to_numeric(df["total_score"], errors='coerce').fillna(0)
+        y_train_win = (df_train["team1_score"] > df_train["team2_score"]).astype(int)
+        y_train_spread_outcome = (df_train["team1_score"] - df_train["team2_score"]) + pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0)
+        y_train_total_outcome = (df_train["team1_score"] + df_train["team2_score"]) - pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0)
 
-        betting_cols = {
-            "team1_ml": df.get("team1_moneyline"), "team2_ml": df.get("team2_moneyline"),
-            "team1_spread": df.get("team1_spread"), "team2_spread": df.get("team2_spread"),
-            "team1_spread_odds": df.get("team1_spread_odds"), "team2_spread_odds": df.get("team2_spread_odds"),
-            "total_score": df.get("total_score"), "over_odds": df.get("over_odds"), "under_odds": df.get("under_odds")
+        # Prepare Test Data
+        X_test_raw, _ = self._prepare_features(df_test)
+        if X_test_raw.shape[1] != original_feature_count:
+            raise ValueError(f"Feature count mismatch: train data has {original_feature_count} features, test data has {X_test_raw.shape[1]}.")
+        
+        X_test = X_test_raw[:, self.feature_indices_] if self.feature_indices_ is not None else X_test_raw
+        
+        self.y_test = df_test[["team1_score", "team2_score"]]
+        y_test_win = (df_test["team1_score"] > df_test["team2_score"]).astype(int)
+        y_test_spread_outcome = (df_test["team1_score"] - df_test["team2_score"]) + pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0)
+        y_test_total_outcome = (df_test["team1_score"] + df_test["team2_score"]) - pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0)
+        
+        self.test_odds = {
+            "team1_ml": pd.to_numeric(df_test.get("team1_moneyline"), errors='coerce').fillna(0),
+            "team2_ml": pd.to_numeric(df_test.get("team2_moneyline"), errors='coerce').fillna(0),
+            "team1_spread": pd.to_numeric(df_test.get("team1_spread"), errors='coerce').fillna(0),
+            "team2_spread": pd.to_numeric(df_test.get("team2_spread"), errors='coerce').fillna(0),
+            "team1_spread_odds": pd.to_numeric(df_test.get("team1_spread_odds"), errors='coerce').fillna(0),
+            "team2_spread_odds": pd.to_numeric(df_test.get("team2_spread_odds"), errors='coerce').fillna(0),
+            "total_score": pd.to_numeric(df_test.get("total_score"), errors='coerce').fillna(0),
+            "over_odds": pd.to_numeric(df_test.get("over_odds"), errors='coerce').fillna(0),
+            "under_odds": pd.to_numeric(df_test.get("under_odds"), errors='coerce').fillna(0)
         }
-        
-        data_to_split = [X, y_win, y_spread_outcome, y_total_outcome, df[["team1_score", "team2_score"]]] + \
-                        [pd.to_numeric(col, errors='coerce').fillna(0) for col in betting_cols.values()]
-        
-        splits = train_test_split(*data_to_split, test_size=test_size, random_state=random_state, stratify=y_win)
-        X_train, X_test = splits[0], splits[1]
-        y_train_win, y_test_win = splits[2], splits[3]
-        y_train_spread_outcome, y_test_spread_outcome = splits[4], splits[5]
-        y_train_total_outcome, y_test_total_outcome = splits[6], splits[7]
-        
-        # Scale features
+
+        # Scale Features
         self.scaler = StandardScaler()
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
 
-        # Store the actual scores for the test set
-        self.y_test = splits[9] 
-        # Store test odds for external evaluation
-        self.test_odds = dict(zip(betting_cols.keys(), splits[11::2]))
-
-        # Train three separate models on scaled data
+        # Train Models
         model_win = self._get_model().fit(X_train_scaled, y_train_win)
         
-        # Filter out pushes for spread and total training data
         train_spread_non_push = y_train_spread_outcome != 0
         model_spread = self._get_model().fit(X_train_scaled[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
 
@@ -365,51 +337,32 @@ class MLModel(BaseModel):
 
         self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
         
-        # Generate and store predictions (probabilities) on the scaled test set
+        # Evaluate Models
         self.predictions = {
             'win': self.model_['win'].predict_proba(X_test_scaled),
             'spread': self.model_['spread'].predict_proba(X_test_scaled),
             'over': self.model_['over'].predict_proba(X_test_scaled)
         }
-
-        test_evaluator = TestModel(
-            predictions=self.predictions,
-            y_test=self.y_test,
-            test_odds=self.test_odds
-        )
+        test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
         test_evaluator.display_results()
         
-        df_win = self.get_feature_importance(
-            model=model_win,
-            X_test=X_test_scaled,
-            y_test=y_test_win
-        )
+        # Feature Importance
+        df_win = self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win)
         df_win.to_csv("Feature Importance/feature_importance_win.csv", index=False)
         print("\nSaved Win model importances to feature_importance_win.csv")
 
-        # Spread model (non-push games)
         mask = y_test_spread_outcome != 0
-        df_spread = self.get_feature_importance(
-            model=model_spread,
-            X_test=X_test_scaled[mask],
-            y_test=(y_test_spread_outcome[mask] > 0).astype(int)
-        )
+        df_spread = self.get_feature_importance(model=model_spread, X_test=X_test_scaled[mask], y_test=(y_test_spread_outcome[mask] > 0).astype(int))
         df_spread.to_csv("Feature Importance/feature_importance_spread.csv", index=False)
         print("Saved Spread model importances to feature_importance_spread.csv")
 
-        # Over/Under model (non-push games)
         mask = y_test_total_outcome != 0
-        df_over = self.get_feature_importance(
-            model=model_over,
-            X_test=X_test_scaled[mask],
-            y_test=(y_test_total_outcome[mask] > 0).astype(int)
-        )
+        df_over = self.get_feature_importance(model=model_over, X_test=X_test_scaled[mask], y_test=(y_test_total_outcome[mask] > 0).astype(int))
         df_over.to_csv("Feature Importance/feature_importance_overunder.csv", index=False)
         print("Saved Over/Under model importances to feature_importance_overunder.csv")
 
-        self._save_model(self.model_, self.scaler, query, X.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, train_query, X_train.shape[1], original_feature_count)
         print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
-        print("Test predictions and data are now available in instance attributes (e.g., model.predictions).")
 
 
     # =================================================================================
@@ -418,55 +371,40 @@ class MLModel(BaseModel):
 
     def _select_features(self, X: np.ndarray, random_state: int) -> np.ndarray:
         """
-        Selects features based on the initialization settings.
+        Selects features based on initialization settings and stores the choices.
         Priority: 1. feature_allowlist, 2. random_subset, 3. all features.
         """
-        # Case 1: A specific list of features is provided
         if self.feature_allowlist:
-            print(f"INFO: Filtering features based on the provided allowlist of {len(self.feature_allowlist)} features.")
-            
-            # Create a mapping from feature name to its index in the full dataset
+            print(f"INFO: Filtering features based on allowlist of {len(self.feature_allowlist)} features.")
             name_to_index = {name: i for i, name in enumerate(self.feature_names_)}
-            
-            found_indices = []
-            missing_features = []
-            
-            for feature_name in self.feature_allowlist:
-                if feature_name in name_to_index:
-                    found_indices.append(name_to_index[feature_name])
-                else:
-                    missing_features.append(feature_name)
+            found_indices, missing_features = [], []
+            for name in self.feature_allowlist:
+                if name in name_to_index: found_indices.append(name_to_index[name])
+                else: missing_features.append(name)
             
             if missing_features:
-                print(f"Warning: The following {len(missing_features)} features from the allowlist were not found and will be ignored: {missing_features}")
-
+                print(f"Warning: {len(missing_features)} features from allowlist not found: {missing_features}")
             if not found_indices:
-                raise ValueError("None of the features in the allowlist were found in the dataset. Aborting.")
+                raise ValueError("None of the allowlist features were found in the dataset.")
 
-            # Sort indices to maintain order and update the feature names attribute
             found_indices.sort()
             self.feature_names_ = [self.feature_names_[i] for i in found_indices]
-            self.feature_indices_ = found_indices # Store the selected indices
-
-            print(f"INFO: Using {len(found_indices)} features from the provided allowlist.")
+            self.feature_indices_ = found_indices
+            print(f"INFO: Using {len(found_indices)} features from the allowlist.")
             return X[:, found_indices]
 
-        # Case 2: A random subset of features is requested
         elif self.use_random_subset_of_features:
             n_features = X.shape[1]
-            n_selected_features = max(1, int(n_features * self.subset_fraction))
-
-            rng = np.random.default_rng()
-            indices = rng.choice(n_features, size=n_selected_features, replace=False)
+            n_selected = max(1, int(n_features * self.subset_fraction))
+            rng = np.random.default_rng(random_state) # Use seeded generator for reproducibility
+            indices = rng.choice(n_features, size=n_selected, replace=False)
             indices.sort()
             
             self.feature_indices_ = indices
-            # Update feature_names_ to match the selected features
             self.feature_names_ = [self.feature_names_[i] for i in indices]
-            print(f"INFO: Using a random subset of {len(self.feature_indices_)} out of {n_features} features.")
-            return X[:, self.feature_indices_]
+            print(f"INFO: Using a random subset of {len(indices)} out of {n_features} features.")
+            return X[:, indices]
 
-        # Case 3: Default, use all features
         else:
             self.feature_indices_ = None
             return X
@@ -496,33 +434,22 @@ class MLModel(BaseModel):
                 continue
             
             temp_obj = js_obj.copy()
-            for key in self._FEATURE_KEYS_TO_DROP:
-                temp_obj.pop(key, None)
+            for key in self._FEATURE_KEYS_TO_DROP: temp_obj.pop(key, None)
 
-            row_features = []
-            row_feature_names = []
+            row_features, row_feature_names = [], []
             
-            # Generate feature names only for the first valid JSON object
             if feature_names is None:
                 self._flatten_json_to_list(temp_obj, row_features, row_feature_names, generate_names=True)
                 feature_names = row_feature_names
             else:
                 self._flatten_json_to_list(temp_obj, row_features)
-
             feature_list.append(row_features)
 
-        if not feature_list:
-            return np.array([]), []
+        if not feature_list: return np.array([]), []
 
-        it = iter(feature_list)
-        first_row_len = len(next(it, []))
-        if not all(len(row) == first_row_len for row in it):
-            all_lengths = {len(r) for r in feature_list}
-            raise ValueError(
-                f"Inconsistent feature lengths detected. All rows must produce a feature vector of the same size. "
-                f"Found lengths: {all_lengths}. This suggests the JSON data structure is not consistent across all rows. "
-                f"Please fix the upstream data generation process."
-            )
+        first_row_len = len(feature_list[0])
+        if not all(len(row) == first_row_len for row in feature_list):
+            raise ValueError("Inconsistent feature lengths detected across rows.")
         
         return np.array(feature_list, dtype=float), feature_names
 
@@ -543,17 +470,10 @@ class MLModel(BaseModel):
             print(f"Archived existing model to {archive_path}")
 
         model_info = {
-            "model": model,
-            "scaler": scaler,
-            "model_type": self.model_type,
+            "model": model, "scaler": scaler, "model_type": self.model_type,
             "trained_input_shape": trained_input_shape,
             "original_input_shape": original_input_shape,
-            "feature_indices": self.feature_indices_,
-            "column": self.column,
-            "query": query,
-            # We don't save feature names in the model file to keep it lean.
-            # They are regenerated during the predict phase if needed,
-            # but are primarily for interactive analysis after training.
+            "feature_indices": self.feature_indices_, "column": self.column, "query": query,
         }
         joblib.dump(model_info, output_path)
         print(f"Model and scaler saved to {output_path}\n")
@@ -562,40 +482,29 @@ class MLModel(BaseModel):
         """Loads the most recent model file matching the model_name."""
         path = os.path.join("models", f"{self.model_name}.joblib")
         if not os.path.exists(path):
-            pattern = os.path.join("models", f"{self.model_name}*.joblib")
-            candidates = glob.glob(pattern)
-            if not candidates:
-                raise FileNotFoundError(f"No model files found for '{self.model_name}'")
-            latest_file = max(candidates, key=os.path.getmtime)
-            print(f"Loading latest versioned model from {latest_file}")
-            return joblib.load(latest_file)
+            candidates = glob.glob(os.path.join("models", f"{self.model_name}*.joblib"))
+            if not candidates: raise FileNotFoundError(f"No model files found for '{self.model_name}'")
+            path = max(candidates, key=os.path.getmtime)
+            print(f"Loading latest versioned model from {path}")
         
         print(f"Loading model from {path}")
         return joblib.load(path)
 
     @staticmethod
     def _flatten_json_to_list(obj, out_list: list, name_list: list = None, prefix: str = '', generate_names: bool = False):
-        """
-        Recursively flattens a JSON object (dict/list) into a single list of values
-        and optionally generates a corresponding list of feature names.
-        """
+        """Recursively flattens a JSON object/list into a single list."""
         if isinstance(obj, dict):
             for key in sorted(obj.keys()):
-                new_prefix = f"{prefix}.{key}" if prefix else key
-                MLModel._flatten_json_to_list(obj[key], out_list, name_list, new_prefix, generate_names)
+                MLModel._flatten_json_to_list(obj[key], out_list, name_list, f"{prefix}.{key}" if prefix else key, generate_names)
         elif isinstance(obj, list):
             for i, v in enumerate(obj):
-                new_prefix = f"{prefix}.{i}"
-                MLModel._flatten_json_to_list(v, out_list, name_list, new_prefix, generate_names)
+                MLModel._flatten_json_to_list(v, out_list, name_list, f"{prefix}.{i}", generate_names)
         elif isinstance(obj, bool):
             out_list.append(1.0 if obj else 0.0)
-            if generate_names:
-                name_list.append(prefix)
+            if generate_names: name_list.append(prefix)
         elif isinstance(obj, (int, float)):
             out_list.append(float(obj))
-            if generate_names:
-                name_list.append(prefix)
+            if generate_names: name_list.append(prefix)
         elif obj is None:
             out_list.append(0.0)
-            if generate_names:
-                name_list.append(prefix)
+            if generate_names: name_list.append(prefix)
