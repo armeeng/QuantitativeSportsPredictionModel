@@ -13,6 +13,7 @@ class CorrelationAnalyzer:
     This class loads data, prepares a feature matrix from a JSON column,
     and then calculates, visualizes, and filters a correlation matrix
     to identify and remove highly correlated features (multicollinearity).
+    The final output is a list of feature indices to keep.
     """
 
     # These keys will be removed from the JSON object before flattening
@@ -130,7 +131,8 @@ class CorrelationAnalyzer:
 
     def analyze_and_filter(self, threshold: float = 0.95):
         """
-        Calculates correlation, identifies features to drop, and plots a heatmap.
+        MODIFIED: Calculates correlation and identifies a list of feature INDICES to keep
+        after removing highly correlated features.
 
         Args:
             threshold (float): The correlation threshold above which to drop features.
@@ -144,45 +146,42 @@ class CorrelationAnalyzer:
         # 1. Calculate the absolute correlation matrix
         corr_matrix = self.feature_df.corr().abs()
 
-        # 2. Iteratively identify and remove correlated features
-        to_drop = set()
-        columns = corr_matrix.columns
-        for i in range(len(columns)):
-            if columns[i] in to_drop:
+        # 2. Create a map from feature name to its original index
+        feature_names = self.feature_df.columns
+        name_to_index = {name: i for i, name in enumerate(feature_names)}
+
+        # 3. Iteratively identify the NAMES of features to remove
+        names_to_drop = set()
+        for i in range(len(feature_names)):
+            if feature_names[i] in names_to_drop:
                 continue
-            for j in range(i + 1, len(columns)):
-                if columns[j] in to_drop:
+            for j in range(i + 1, len(feature_names)):
+                if feature_names[j] in names_to_drop:
                     continue
                 if corr_matrix.iloc[i, j] > threshold:
-                    to_drop.add(columns[j])
+                    # When a pair is found, drop the feature that appears later in the list
+                    names_to_drop.add(feature_names[j])
         
-        to_drop = list(to_drop)
-        final_features = self.feature_df.columns.tolist()
+        # 4. Convert the set of names to drop into a set of indices to drop
+        indices_to_drop = {name_to_index[name] for name in names_to_drop}
+        all_indices = set(range(len(feature_names)))
+        final_indices = sorted(list(all_indices - indices_to_drop))
 
-        # 3. Plot the original heatmap before filtering
-        #print("\nDisplaying the full correlation heatmap...")
-        #self._plot_heatmap(self.feature_df.corr(), "Full Feature Correlation Matrix")
-
-        # 4. Process the results
-        if not to_drop:
+        # 5. Process and report the results
+        if not names_to_drop:
             print("\nNo features found with a correlation greater than the threshold.")
         else:
-            print(f"\nFound and removed {len(to_drop)} features to resolve multicollinearity: {to_drop}")
+            print(f"\nIdentified {len(names_to_drop)} features to remove to resolve multicollinearity.")
+            print(f"Indices of features to be dropped: {sorted(list(indices_to_drop))}")
             
-            # Drop the identified features and plot the new heatmap
-            df_filtered = self.feature_df.drop(columns=to_drop)
-            final_features = df_filtered.columns.tolist() # Get the final list of features
-            
-            print(f"\nOriginal shape: {self.feature_df.shape}")
-            print(f"Shape after dropping columns: {df_filtered.shape}")
-            #print("\nDisplaying the filtered correlation heatmap...")
-            #self._plot_heatmap(df_filtered.corr(), f"Filtered Correlation Matrix (Threshold > {threshold})")
-
-        # 5. Print the final list of features
+        print(f"\nOriginal number of features: {len(feature_names)}")
+        print(f"Number of features after filtering: {len(final_indices)}")
+        
+        # 6. Print the final list of INDICES
         print("\n" + "="*50)
-        print("Final list of features after filtering:")
+        print("Final list of feature INDICES after filtering:")
         print("="*50)
-        print(f"features = {final_features}")
+        print(f"indices = {final_indices}")
         print("\nThis list can be used as a 'feature_allowlist' in the MLModel class.")
 
 

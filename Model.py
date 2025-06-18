@@ -78,7 +78,10 @@ class MLModel(BaseModel):
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
-                 subset_fraction: float = None, feature_allowlist: list[str] = None):
+                 subset_fraction: float = None, feature_allowlist: list[int] = None):
+        """
+        MODIFIED: `feature_allowlist` now accepts a list of integer indices.
+        """
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
         if self.model_type not in self._MODELS:
@@ -178,7 +181,8 @@ class MLModel(BaseModel):
             
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """
-        Calculates and returns feature importances for the trained model.
+        MODIFIED: Calculates and returns feature importances, including the feature index
+        from the original flattened input array.
         """
         if model is None: model = self.model_
         if self.feature_names_ is None:
@@ -198,7 +202,16 @@ class MLModel(BaseModel):
             print(f"Cannot get feature importance for model type {type(model).__name__} without test data.")
             return None
 
+        # Determine the original indices of the features used by the model.
+        if self.feature_indices_ is not None:
+            # A subset of features was selected during training.
+            feature_indices = self.feature_indices_
+        else:
+            # All features were used; indices are a simple range.
+            feature_indices = list(range(len(self.feature_names_)))
+
         return pd.DataFrame({
+            'feature_index': feature_indices,
             'feature': self.feature_names_,
             'importance': importances
         }).sort_values(by='importance', ascending=False)
@@ -371,41 +384,42 @@ class MLModel(BaseModel):
 
     def _select_features(self, X: np.ndarray, random_state: int) -> np.ndarray:
         """
-        Selects features based on initialization settings and stores the choices.
-        Priority: 1. feature_allowlist, 2. random_subset, 3. all features.
+        MODIFIED: Selects features based on initialization settings.
+        The `feature_allowlist` is now a list of integer indices.
+        Priority: 1. feature_allowlist (indices), 2. random_subset, 3. all features.
         """
-        if self.feature_allowlist:
-            print(f"INFO: Filtering features based on allowlist of {len(self.feature_allowlist)} features.")
-            name_to_index = {name: i for i, name in enumerate(self.feature_names_)}
-            found_indices, missing_features = [], []
-            for name in self.feature_allowlist:
-                if name in name_to_index: found_indices.append(name_to_index[name])
-                else: missing_features.append(name)
-            
-            if missing_features:
-                print(f"Warning: {len(missing_features)} features from allowlist not found: {missing_features}")
-            if not found_indices:
-                raise ValueError("None of the allowlist features were found in the dataset.")
+        n_features_total = X.shape[1]
 
-            found_indices.sort()
-            self.feature_names_ = [self.feature_names_[i] for i in found_indices]
-            self.feature_indices_ = found_indices
-            print(f"INFO: Using {len(found_indices)} features from the allowlist.")
-            return X[:, found_indices]
+        if self.feature_allowlist:
+            print(f"INFO: Filtering features based on allowlist of {len(self.feature_allowlist)} indices.")
+            
+            # Validate that all provided indices are within the valid range.
+            invalid_indices = [i for i in self.feature_allowlist if not (0 <= i < n_features_total)]
+            if invalid_indices:
+                raise ValueError(f"Feature allowlist contains invalid indices. Max index is {n_features_total - 1}, but got: {invalid_indices}")
+
+            # Use a sorted list of unique indices from the allowlist.
+            indices_to_use = sorted(list(set(self.feature_allowlist)))
+
+            self.feature_indices_ = indices_to_use
+            self.feature_names_ = [self.feature_names_[i] for i in indices_to_use]
+            
+            print(f"INFO: Using {len(indices_to_use)} features from the allowlist.")
+            return X[:, indices_to_use]
 
         elif self.use_random_subset_of_features:
-            n_features = X.shape[1]
-            n_selected = max(1, int(n_features * self.subset_fraction))
+            n_selected = max(1, int(n_features_total * self.subset_fraction))
             rng = np.random.default_rng(random_state) # Use seeded generator for reproducibility
-            indices = rng.choice(n_features, size=n_selected, replace=False)
+            indices = rng.choice(n_features_total, size=n_selected, replace=False)
             indices.sort()
             
             self.feature_indices_ = indices
             self.feature_names_ = [self.feature_names_[i] for i in indices]
-            print(f"INFO: Using a random subset of {len(indices)} out of {n_features} features.")
+            print(f"INFO: Using a random subset of {len(indices)} out of {n_features_total} features.")
             return X[:, indices]
 
         else:
+            # Use all features. self.feature_indices_ is None to indicate this.
             self.feature_indices_ = None
             return X
 
@@ -413,7 +427,7 @@ class MLModel(BaseModel):
         """Connects to the database and returns a DataFrame."""
         db_path = "sports.db"
         if not os.path.exists(db_path):
-             raise FileNotFoundError(f"Database file not found at {db_path}")
+                 raise FileNotFoundError(f"Database file not found at {db_path}")
         with sqlite3.connect(db_path) as conn:
             return pd.read_sql_query(query, conn)
 

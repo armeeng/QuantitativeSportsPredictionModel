@@ -1,19 +1,20 @@
 import csv
 import argparse
 
-def extract_important_features(file_path, num_features, match_stats=False):
+def extract_important_indices(file_path, num_features, match_stats=False):
     """
-    Extracts the most important features from a CSV file.
+    Extracts the indices of the most important features from a CSV file.
+
+    The input CSV is expected to have 'feature_index', 'feature', and 'importance' columns.
 
     Args:
-        file_path (str): The path to the CSV file containing feature importance.
-        num_features (int): The number of top features to extract.
-        match_stats (bool): If True, ensures that if 'team1_stats.X' is selected,
-                            'team2_stats.X' is also included (if present in the CSV),
-                            and vice-versa, for consistency.
+        file_path (str): The path to the CSV file.
+        num_features (int): The number of top features to consider.
+        match_stats (bool): If True, ensures that if a stat for team1 is selected,
+                            the corresponding stat for team2 is also included, and vice-versa.
 
     Returns:
-        list: A list of the most important features.
+        list: A sorted list of the most important feature indices.
     """
     all_features = []
     try:
@@ -21,9 +22,12 @@ def extract_important_features(file_path, num_features, match_stats=False):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 try:
-                    feature = row['feature']
-                    importance = float(row['importance'])
-                    all_features.append({'feature': feature, 'importance': importance})
+                    # Read the index, name, and importance for each feature
+                    all_features.append({
+                        'index': int(row['feature_index']),
+                        'feature': row['feature'],
+                        'importance': float(row['importance'])
+                    })
                 except (ValueError, KeyError) as e:
                     print(f"Skipping row due to malformed data: {row} - Error: {e}")
                     continue
@@ -34,33 +38,44 @@ def extract_important_features(file_path, num_features, match_stats=False):
         print(f"An error occurred while reading the file: {e}")
         return []
 
-    # Sort features by importance in descending order
+    # Sort all features by importance in descending order
     all_features.sort(key=lambda x: x['importance'], reverse=True)
 
-    # Create a dictionary for quick lookup of all features
-    all_feature_names = {f['feature'] for f in all_features}
-    
-    # Get the top N features based on importance
-    top_features = [f['feature'] for f in all_features[:num_features]]
+    # Get the top N feature dictionaries based on importance
+    top_feature_dicts = all_features[:num_features]
 
-    if match_stats:
-        final_features = set(top_features) # Use a set to avoid duplicates
-        
-        for feature in top_features:
-            if feature.startswith('team1_stats.'):
-                stat_name = feature.replace('team1_stats.', '')
-                counterpart = f'team2_stats.{stat_name}'
-                if counterpart in all_feature_names:
-                    final_features.add(counterpart)
-            elif feature.startswith('team2_stats.'):
-                stat_name = feature.replace('team2_stats.', '')
-                counterpart = f'team1_stats.{stat_name}'
-                if counterpart in all_feature_names:
-                    final_features.add(counterpart)
-        
-        return sorted(list(final_features)) # Return sorted list
+    if not match_stats:
+        # If not matching, simply return the indices of the top N features
+        return [f['index'] for f in top_feature_dicts]
     else:
-        return top_features
+        # If matching, perform the counterpart logic
+        # Create lookup maps from the full feature list for efficiency
+        all_feature_names = {f['feature'] for f in all_features}
+        name_to_index_map = {f['feature']: f['index'] for f in all_features}
+        
+        # Start with a set of the indices from the top N features
+        final_indices = {f['index'] for f in top_feature_dicts}
+        
+        # Iterate through the top features to find and add their counterparts
+        for feature_dict in top_feature_dicts:
+            feature_name = feature_dict['feature']
+            
+            if feature_name.startswith('team1_stats.'):
+                stat_name = feature_name.replace('team1_stats.', '')
+                counterpart = f'team2_stats.{stat_name}'
+                # If the counterpart exists, add its index to the set
+                if counterpart in all_feature_names:
+                    final_indices.add(name_to_index_map[counterpart])
+
+            elif feature_name.startswith('team2_stats.'):
+                stat_name = feature_name.replace('team2_stats.', '')
+                counterpart = f'team1_stats.{stat_name}'
+                # If the counterpart exists, add its index to the set
+                if counterpart in all_feature_names:
+                    final_indices.add(name_to_index_map[counterpart])
+        
+        # Return a sorted list of the unique indices
+        return sorted(list(final_indices))
 
 if __name__ == "__main__":
     # --- Configuration for Feature Extraction ---
@@ -71,17 +86,18 @@ if __name__ == "__main__":
     num_features_to_extract = 100
     
     # Set to True if you want to ensure consistency between team1 and team2 stats
-    # (e.g., if 'team1_stats.X' is selected, 'team2_stats.X' will also be included if present)
     should_match_stats = True
     # ------------------------------------------
 
-    important_features = extract_important_features(
+    # The function now returns indices, so the variable name is updated for clarity
+    important_indices = extract_important_indices(
         csv_file_path,
         num_features_to_extract,
         should_match_stats
     )
 
-    if important_features:
-        print(f"features = {important_features}")
+    if important_indices:
+        # The output format is updated to reflect that it's a list of indices
+        print(f"indices = {important_indices}")
     else:
-        print("No features extracted. Please check file path and content.")
+        print("No feature indices extracted. Please check file path and content.")
