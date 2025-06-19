@@ -80,7 +80,7 @@ def extract_important_indices(file_path, num_features, match_stats=False):
 if __name__ == "__main__":
     # --- Configuration for Feature Extraction ---
     # Set the path to your CSV file
-    csv_file_path = 'Feature Importance/feature_importance_spread.csv' 
+    csv_file_path = 'Feature Importance/feature_importance_overunder.csv' 
     
     # Set the number of top features you want to extract
     num_features_to_extract = 35
