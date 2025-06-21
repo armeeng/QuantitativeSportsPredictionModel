@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import random
 import joblib
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingClassifier
@@ -18,6 +18,8 @@ from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.inspection import permutation_importance
+from scipy.stats import randint, uniform
+
 
 from TestModel import TestModel
 
@@ -66,6 +68,94 @@ class MLModel(BaseModel):
     _MODELS['neural_network'] = _MODELS['mlp_regressor']
     _MODELS['svm'] = _MODELS['svc']
 
+    # =================================================================================
+    # NEW: HYPERPARAMETER GRIDS FOR RandomizedSearchCV
+    # =================================================================================
+    _HYPERPARAMETER_GRIDS = {
+        'linear_regression': {},
+        'random_forest_regressor': {
+            'n_estimators': randint(50, 500),
+            'max_depth': [None] + list(range(10, 111, 20)),
+            'min_samples_split': randint(2, 20),
+            'min_samples_leaf': randint(1, 20),
+            'max_features': ['sqrt', 'log2', None]
+        },
+        'xgboost_regressor': {
+            'n_estimators': randint(50, 500),
+            'learning_rate': uniform(0.01, 0.3),
+            'max_depth': randint(3, 10),
+            'subsample': uniform(0.6, 0.4),
+            'colsample_bytree': uniform(0.6, 0.4),
+            'gamma': uniform(0, 0.5)
+        },
+        'mlp_regressor': {
+            'hidden_layer_sizes': [(50,), (100,), (100, 50), (200, 100)],
+            'activation': ['relu', 'tanh'],
+            'solver': ['adam', 'sgd'],
+            'alpha': uniform(0.0001, 0.01),
+            'learning_rate_init': uniform(0.001, 0.1),
+        },
+        'knn_regressor': {
+            'n_neighbors': randint(3, 20),
+            'weights': ['uniform', 'distance'],
+            'p': [1, 2]
+        },
+        'svr': { # Note: Parameters are prefixed with 'estimator__' for MultiOutputRegressor
+            'estimator__C': uniform(0.1, 10),
+            'estimator__gamma': ['scale', 'auto'] + list(uniform(0.001, 0.1).rvs(5)),
+            'estimator__kernel': ['rbf', 'poly', 'sigmoid']
+        },
+        'logistic_regression': {
+            'C': uniform(0.1, 10),
+            'penalty': ['l1', 'l2']
+        },
+        'knn_classifier': {
+            'n_neighbors': randint(3, 20),
+            'weights': ['uniform', 'distance'],
+            'p': [1, 2]
+        },
+        'svc': {
+            'C': uniform(0.1, 10),
+            'gamma': ['scale', 'auto'] + list(uniform(0.001, 0.1).rvs(5)),
+            'kernel': ['rbf', 'poly', 'sigmoid']
+        },
+        'random_forest_classifier': {
+            'n_estimators': randint(50, 500),
+            'max_depth': [None] + list(range(10, 111, 20)),
+            'min_samples_split': randint(2, 20),
+            'min_samples_leaf': randint(1, 20),
+            'class_weight': ['balanced', 'balanced_subsample', None]
+        },
+        'xgboost_classifier': {
+            'n_estimators': randint(50, 500),
+            'learning_rate': uniform(0.01, 0.3),
+            'max_depth': randint(3, 10),
+            'subsample': uniform(0.6, 0.4),
+            'colsample_bytree': uniform(0.6, 0.4),
+            'gamma': uniform(0, 0.5)
+        },
+        'mlp_classifier': {
+            'hidden_layer_sizes': [(50,), (100,), (100, 50), (200, 100)],
+            'activation': ['relu', 'tanh'],
+            'solver': ['adam', 'sgd'],
+            'alpha': uniform(0.0001, 0.01),
+            'learning_rate_init': uniform(0.001, 0.1),
+        },
+        'gradient_boosting_classifier': {
+            'n_estimators': randint(100, 500),
+            'learning_rate': uniform(0.01, 0.2),
+            'max_depth': randint(3, 8),
+            'subsample': uniform(0.7, 0.3)
+        },
+        'gaussian_nb': {}
+    }
+    # Add aliases for hyperparameter grids
+    _HYPERPARAMETER_GRIDS['random_forest'] = _HYPERPARAMETER_GRIDS['random_forest_regressor']
+    _HYPERPARAMETER_GRIDS['xgboost'] = _HYPERPARAMETER_GRIDS['xgboost_regressor']
+    _HYPERPARAMETER_GRIDS['mlp'] = _HYPERPARAMETER_GRIDS['mlp_regressor']
+    _HYPERPARAMETER_GRIDS['neural_network'] = _HYPERPARAMETER_GRIDS['mlp_regressor']
+    _HYPERPARAMETER_GRIDS['svm'] = _HYPERPARAMETER_GRIDS['svc']
+
     _CLASSIFIER_TYPES = {
         'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier',
         'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb'
@@ -78,9 +168,15 @@ class MLModel(BaseModel):
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
-                 subset_fraction: float = None, feature_allowlist: list[int] = None):
+                 subset_fraction: float = None, feature_allowlist: list[int] = None,
+                 hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5):
         """
-        MODIFIED: `feature_allowlist` now accepts a list of integer indices.
+        MODIFIED: `__init__` now accepts hyperparameter tuning options.
+        
+        Args:
+            hyperparameter_tuning (bool): If True, run RandomizedSearchCV to find the best hyperparameters.
+            tuning_n_iter (int): The number of parameter settings that are sampled. `n_iter` trades off runtime vs quality of the solution.
+            tuning_cv (int): The number of folds to use for cross-validation during tuning.
         """
         super().__init__(model_name, column=column)
         self.model_type = model_type.lower()
@@ -93,12 +189,15 @@ class MLModel(BaseModel):
         self.use_random_subset_of_features = use_random_subset_of_features
         self.feature_allowlist = feature_allowlist
 
-        if subset_fraction is None:
-            self.subset_fraction = random.uniform(0.01, 1.0)
+        if subset_fraction is None: self.subset_fraction = random.uniform(0.01, 1.0)
         else:
-            if not (0 < subset_fraction <= 1.0):
-                raise ValueError("If specified, subset_fraction must be > 0 and <= 1.")
+            if not (0 < subset_fraction <= 1.0): raise ValueError("If specified, subset_fraction must be > 0 and <= 1.")
             self.subset_fraction = subset_fraction
+
+        # NEW: Store tuning parameters
+        self.hyperparameter_tuning = hyperparameter_tuning
+        self.tuning_n_iter = tuning_n_iter
+        self.tuning_cv = tuning_cv
 
         self.predictions = None
         self.y_test = None
@@ -268,8 +367,19 @@ class MLModel(BaseModel):
         X_test_scaled = self.scaler.transform(X_test)
         
         # Train Model
-        self.model_ = self._get_model()
-        self.model_.fit(X_train_scaled, y_train)
+        # --- MODIFIED: Model Training Step ---
+        initial_model = self._get_model()
+
+        if self.hyperparameter_tuning:
+            print(f"--- Starting Hyperparameter Tuning for {self.model_type} ---")
+            self.model_ = self._tune_hyperparameters(initial_model, X_train_scaled, y_train)
+            print("--- Hyperparameter Tuning Finished ---")
+            print(f"Best model parameters: {self.model_.get_params()}")
+        else:
+            print("--- Training with default hyperparameters ---")
+            self.model_ = initial_model
+            self.model_.fit(X_train_scaled, y_train)
+        # ----------------------------------------
 
         # Evaluate Model
         self.predictions = self.model_.predict(X_test_scaled)
@@ -360,17 +470,55 @@ class MLModel(BaseModel):
         X_test_scaled = self.scaler.transform(X_test)
 
         # Train Models
-        model_win = self._get_model().fit(X_train_scaled, y_train_win)
-        
+        # --- MODIFIED: Model Training Step ---
+        # Train Win Model
+        initial_win_model = self._get_model()
+        if self.hyperparameter_tuning:
+            print(f"\n--- Tuning WIN model ({self.model_type}) ---")
+            model_win = self._tune_hyperparameters(initial_win_model, X_train_scaled, y_train_win)
+            print(f"Best WIN model parameters: {model_win.get_params()}")
+        else:
+            model_win = initial_win_model.fit(X_train_scaled, y_train_win)
+
+        # Train Spread Model
         train_spread_non_push = y_train_spread_outcome != 0
-        model_spread = self._get_model().fit(X_train_scaled[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
+        initial_spread_model = self._get_model()
+        if self.hyperparameter_tuning:
+            print(f"\n--- Tuning SPREAD model ({self.model_type}) ---")
+            model_spread = self._tune_hyperparameters(
+                initial_spread_model,
+                X_train_scaled[train_spread_non_push],
+                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
+            )
+            print(f"Best SPREAD model parameters: {model_spread.get_params()}")
+        else:
+            model_spread = initial_spread_model.fit(
+                X_train_scaled[train_spread_non_push], 
+                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
+            )
 
+        # Train Over/Under Model
         train_total_non_push = y_train_total_outcome != 0
-        model_over = self._get_model().fit(X_train_scaled[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
-
-        self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
+        initial_over_model = self._get_model()
+        if self.hyperparameter_tuning:
+            print(f"\n--- Tuning OVER/UNDER model ({self.model_type}) ---")
+            model_over = self._tune_hyperparameters(
+                initial_over_model,
+                X_train_scaled[train_total_non_push],
+                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
+            )
+            print(f"Best OVER/UNDER model parameters: {model_over.get_params()}")
+        else:
+            model_over = initial_over_model.fit(
+                X_train_scaled[train_total_non_push],
+                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
+            )
         
-        # Evaluate Models
+        print("\n--- Hyperparameter Tuning Finished for all models ---\n")
+        self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
+        # ----------------------------------------
+        
+        # --- Evaluation and Saving (Unchanged) ---
         self.predictions = {
             'win': self.model_['win'].predict_proba(X_test_scaled),
             'spread': self.model_['spread'].predict_proba(X_test_scaled),
@@ -402,6 +550,41 @@ class MLModel(BaseModel):
     # Internal Helper Methods
     # =================================================================================
 
+    # NEW: Method to handle hyperparameter tuning
+    def _tune_hyperparameters(self, model, X_train, y_train):
+        """
+        Performs hyperparameter tuning using RandomizedSearchCV.
+
+        Args:
+            model: The scikit-learn model instance to tune.
+            X_train: The training feature data.
+            y_train: The training target data.
+
+        Returns:
+            The best model found by the search, refit on the entire training data.
+        """
+        param_grid = self._HYPERPARAMETER_GRIDS.get(self.model_type)
+
+        if not param_grid:
+            print(f"No hyperparameter grid defined for {self.model_type}. Training with default parameters.")
+            model.fit(X_train, y_train)
+            return model
+
+        # For MultiOutputRegressor (like SVR), y_train can be 2D. RandomizedSearchCV handles this.
+        search = RandomizedSearchCV(
+            estimator=model,
+            param_distributions=param_grid,
+            n_iter=self.tuning_n_iter,
+            cv=self.tuning_cv,
+            verbose=1, # Set to 2 for more details
+            random_state=42,
+            n_jobs=-1  # Use all available CPU cores
+        )
+        search.fit(X_train, y_train)
+        
+        # The search object automatically refits the best model on the whole dataset
+        return search.best_estimator_
+    
     def _select_features(self, X: np.ndarray, random_state: int, force_include_indices: list[int] = None) -> np.ndarray:
         """
         MODIFIED: Selects features based on initialization settings, now with an option

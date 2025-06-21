@@ -38,8 +38,7 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
     return f"{m_abbr}_{col_part}_{sport}_{suffix}"
 
 def main():
-    indices = [23, 58, 136, 240, 284, 847, 974, 1043, 1133, 1168, 1246, 1350, 1394, 1957, 2084, 2153, 2231, 2238]
-    MODEL_TYPE   = "logistic_regression"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
+    MODEL_TYPE   = "linear_regression"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
     COLUMN       = "stats"    # stats or normalized_stats
     TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB' AND DATE < '2024-12-10';"
     TEST_QUERY   = "SELECT * FROM games WHERE sport = 'MLB' AND DATE > '2024-12-10';"
@@ -48,7 +47,7 @@ def main():
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, feature_allowlist=indices)#feature_allowlist=indices
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, hyperparameter_tuning=True, tuning_n_iter=100)#feature_allowlist=indices
     model.train(TRAIN_QUERY, TEST_QUERY)
 
 if __name__ == "__main__":
