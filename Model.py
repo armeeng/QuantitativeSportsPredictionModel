@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import random
 import joblib
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.model_selection import train_test_split, RandomizedSearchCV, TimeSeriesSplit
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingClassifier
@@ -553,11 +553,12 @@ class MLModel(BaseModel):
     # NEW: Method to handle hyperparameter tuning
     def _tune_hyperparameters(self, model, X_train, y_train):
         """
-        Performs hyperparameter tuning using RandomizedSearchCV.
+        Performs hyperparameter tuning using RandomizedSearchCV with TimeSeriesSplit
+        to respect the temporal order of the data.
 
         Args:
             model: The scikit-learn model instance to tune.
-            X_train: The training feature data.
+            X_train: The training feature data, MUST be sorted chronologically.
             y_train: The training target data.
 
         Returns:
@@ -570,17 +571,25 @@ class MLModel(BaseModel):
             model.fit(X_train, y_train)
             return model
 
+        # =========================================================================
+        # KEY CHANGE: Use TimeSeriesSplit instead of a simple integer for 'cv'
+        # =========================================================================
+        time_series_cv = TimeSeriesSplit(n_splits=self.tuning_cv)
+
         # For MultiOutputRegressor (like SVR), y_train can be 2D. RandomizedSearchCV handles this.
         search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param_grid,
             n_iter=self.tuning_n_iter,
-            cv=self.tuning_cv,
+            # Pass the TimeSeriesSplit object here
+            cv=time_series_cv,
             scoring='neg_log_loss' if self.model_type in self._CLASSIFIER_TYPES else 'neg_mean_squared_error',
             verbose=1, # Set to 2 for more details
             random_state=42,
             n_jobs=-1  # Use all available CPU cores
         )
+        
+        print(f"--- Starting Hyperparameter Tuning with TimeSeriesSplit (n_splits={self.tuning_cv}) ---")
         search.fit(X_train, y_train)
         
         # The search object automatically refits the best model on the whole dataset
