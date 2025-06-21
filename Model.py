@@ -576,6 +576,7 @@ class MLModel(BaseModel):
             param_distributions=param_grid,
             n_iter=self.tuning_n_iter,
             cv=self.tuning_cv,
+            scoring='neg_log_loss' if self.model_type in self._CLASSIFIER_TYPES else 'neg_mean_squared_error',
             verbose=1, # Set to 2 for more details
             random_state=42,
             n_jobs=-1  # Use all available CPU cores

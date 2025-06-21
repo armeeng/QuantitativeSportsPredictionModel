@@ -214,5 +214,5 @@ if __name__ == '__main__':
     )
     
     # Define the correlation threshold for filtering
-    CORRELATION_THRESHOLD = 0.5
+    CORRELATION_THRESHOLD = 0.7
     analyzer.analyze_and_filter(threshold=CORRELATION_THRESHOLD)

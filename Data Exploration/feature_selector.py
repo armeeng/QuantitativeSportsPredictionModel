@@ -83,10 +83,10 @@ if __name__ == "__main__":
     csv_file_path = 'Feature Importance/feature_importance_spread.csv' 
     
     # Set the number of top features you want to extract
-    num_features_to_extract = 10
+    num_features_to_extract = 100
     
     # Set to True if you want to ensure consistency between team1 and team2 stats
-    should_match_stats = True
+    should_match_stats = False
     # ------------------------------------------
 
     # The function now returns indices, so the variable name is updated for clarity
