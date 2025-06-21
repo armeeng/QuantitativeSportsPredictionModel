@@ -301,17 +301,37 @@ class MLModel(BaseModel):
             print("Test query returned no data. Aborting.")
             return
 
-        # Prepare Training Data
+        # Prepare Training Data from JSON
         X_train_raw, self.feature_names_ = self._prepare_features(df_train)
+        
+        # Add spread and total features to the matrix
+        spread_feature_train = pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+        total_feature_train = pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+        X_train_raw = np.hstack((X_train_raw, spread_feature_train, total_feature_train))
+        self.feature_names_.extend(['market_team1_spread', 'market_total_score'])
+        
+        # <<< START: MODIFICATION TO FORCE INCLUDE SPREAD/TOTAL >>>
+        # Get the indices of the features we just added. They will be the last two.
         original_feature_count = X_train_raw.shape[1]
-        X_train = self._select_features(X_train_raw, random_state=42)
+        forced_indices = [original_feature_count - 2, original_feature_count - 1]
+
+        # Call _select_features, passing the indices to force include
+        X_train = self._select_features(X_train_raw, random_state=42, force_include_indices=forced_indices)
+        # <<< END: MODIFICATION >>>
+
+        # --- The rest of the function proceeds as before ---
 
         y_train_win = (df_train["team1_score"] > df_train["team2_score"]).astype(int)
+        # ... (y_train_spread_outcome, y_train_total_outcome definitions) ...
         y_train_spread_outcome = (df_train["team1_score"] - df_train["team2_score"]) + pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0)
         y_train_total_outcome = (df_train["team1_score"] + df_train["team2_score"]) - pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0)
 
         # Prepare Test Data
         X_test_raw, _ = self._prepare_features(df_test)
+        spread_feature_test = pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+        total_feature_test = pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+        X_test_raw = np.hstack((X_test_raw, spread_feature_test, total_feature_test))
+
         if X_test_raw.shape[1] != original_feature_count:
             raise ValueError(f"Feature count mismatch: train data has {original_feature_count} features, test data has {X_test_raw.shape[1]}.")
         
@@ -382,46 +402,76 @@ class MLModel(BaseModel):
     # Internal Helper Methods
     # =================================================================================
 
-    def _select_features(self, X: np.ndarray, random_state: int) -> np.ndarray:
+    def _select_features(self, X: np.ndarray, random_state: int, force_include_indices: list[int] = None) -> np.ndarray:
         """
-        MODIFIED: Selects features based on initialization settings.
-        The `feature_allowlist` is now a list of integer indices.
-        Priority: 1. feature_allowlist (indices), 2. random_subset, 3. all features.
+        MODIFIED: Selects features based on initialization settings, now with an option
+        to force the inclusion of specific feature indices.
+
+        Priority:
+        1. feature_allowlist: Uses the union of the allowlist and forced indices.
+        2. random_subset: Uses the union of a random subset and forced indices.
+        3. all features: Uses all features (forced indices are naturally included).
         """
         n_features_total = X.shape[1]
+        if force_include_indices is None:
+            force_include_indices = []
+
+        # Validate that forced indices are within the valid range.
+        invalid_forced_indices = [i for i in force_include_indices if not (0 <= i < n_features_total)]
+        if invalid_forced_indices:
+            raise ValueError(f"Forced indices contains invalid values. Max index is {n_features_total - 1}, but got: {invalid_forced_indices}")
+
+        indices_to_use = []
 
         if self.feature_allowlist:
-            print(f"INFO: Filtering features based on allowlist of {len(self.feature_allowlist)} indices.")
+            print(f"INFO: Using feature allowlist, ensuring forced indices are included.")
             
-            # Validate that all provided indices are within the valid range.
+            # Validate that all provided allowlist indices are within the valid range.
             invalid_indices = [i for i in self.feature_allowlist if not (0 <= i < n_features_total)]
             if invalid_indices:
                 raise ValueError(f"Feature allowlist contains invalid indices. Max index is {n_features_total - 1}, but got: {invalid_indices}")
 
-            # Use a sorted list of unique indices from the allowlist.
-            indices_to_use = sorted(list(set(self.feature_allowlist)))
-
-            self.feature_indices_ = indices_to_use
-            self.feature_names_ = [self.feature_names_[i] for i in indices_to_use]
-            
-            print(f"INFO: Using {len(indices_to_use)} features from the allowlist.")
-            return X[:, indices_to_use]
+            # Combine the user's allowlist with the forced indices
+            final_indices_set = set(self.feature_allowlist) | set(force_include_indices)
+            indices_to_use = sorted(list(final_indices_set))
 
         elif self.use_random_subset_of_features:
-            n_selected = max(1, int(n_features_total * self.subset_fraction))
-            rng = np.random.default_rng(random_state) # Use seeded generator for reproducibility
-            indices = rng.choice(n_features_total, size=n_selected, replace=False)
-            indices.sort()
+            print(f"INFO: Using random feature subset, ensuring forced indices are included.")
             
-            self.feature_indices_ = indices
-            self.feature_names_ = [self.feature_names_[i] for i in indices]
-            print(f"INFO: Using a random subset of {len(indices)} out of {n_features_total} features.")
-            return X[:, indices]
+            # We must select enough random features to account for any overlap with forced indices.
+            n_forced = len(force_include_indices)
+            n_to_select_randomly = max(1, int(n_features_total * self.subset_fraction))
+
+            # Exclude forced indices from the pool of potential random choices
+            available_indices = np.setdiff1d(np.arange(n_features_total), force_include_indices)
+            
+            # Calculate how many more we need to pick
+            n_random_needed = max(0, n_to_select_randomly - n_forced)
+
+            rng = np.random.default_rng(random_state)
+            if n_random_needed > 0 and len(available_indices) > 0:
+                 # Ensure we don't try to pick more than are available
+                n_random_to_pick = min(n_random_needed, len(available_indices))
+                random_indices = rng.choice(available_indices, size=n_random_to_pick, replace=False)
+                final_indices_set = set(random_indices) | set(force_include_indices)
+            else:
+                # Use only the forced indices if no more are needed or available
+                final_indices_set = set(force_include_indices)
+
+            indices_to_use = sorted(list(final_indices_set))
 
         else:
-            # Use all features. self.feature_indices_ is None to indicate this.
+            # Use all features. The forced indices are already included by default.
             self.feature_indices_ = None
+            print(f"INFO: Using all {n_features_total} features.")
             return X
+
+        # Set the final indices and names for the selected features
+        self.feature_indices_ = indices_to_use
+        self.feature_names_ = [self.feature_names_[i] for i in indices_to_use]
+        
+        print(f"INFO: Final feature count is {len(indices_to_use)}.")
+        return X[:, indices_to_use]
 
     def _load_data_from_db(self, query: str) -> pd.DataFrame:
         """Connects to the database and returns a DataFrame."""

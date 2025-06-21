@@ -38,8 +38,8 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
     return f"{m_abbr}_{col_part}_{sport}_{suffix}"
 
 def main():
-    indices = [23, 24, 37, 58, 71, 94, 101, 102, 108, 110, 116, 136, 158, 198, 240, 334, 553, 770, 968, 974, 1043, 1045, 1133, 1134, 1147, 1168, 1181, 1204, 1211, 1212, 1218, 1220, 1226, 1246, 1268, 1308, 1350, 1375, 1444, 1663, 1880, 2078, 2084, 2153, 2155]
-    MODEL_TYPE   = "svr"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
+    indices = [23, 58, 136, 240, 284, 847, 974, 1043, 1133, 1168, 1246, 1350, 1394, 1957, 2084, 2153, 2231, 2238]
+    MODEL_TYPE   = "logistic_regression"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
     COLUMN       = "stats"    # stats or normalized_stats
     TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB' AND DATE < '2024-12-10';"
     TEST_QUERY   = "SELECT * FROM games WHERE sport = 'MLB' AND DATE > '2024-12-10';"
