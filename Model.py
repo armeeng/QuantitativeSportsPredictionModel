@@ -34,7 +34,7 @@ class BaseModel:
 class MLModel(BaseModel):
     """
     A simplified ML class focused strictly on training models and generating predictions.
-
+    
     This class trains a model on historical sports data from a training query and
     evaluates it on a separate test query. All metric calculations are handled
     by the TestModel class. The test set predictions, true outcomes, and betting
@@ -42,35 +42,8 @@ class MLModel(BaseModel):
     It supports training on a full or random subset of features and uses StandardScaler
     to scale features.
     """
-    _MODELS = {
-        # Regressors
-        'linear_regression': LinearRegression,
-        'random_forest_regressor': lambda: RandomForestRegressor(n_estimators=100, random_state=42),
-        'xgboost_regressor': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=42),
-        'mlp_regressor': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
-        'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5),
-        'svr': lambda: MultiOutputRegressor(SVR(kernel='rbf')),
-
-        # Classifiers
-        'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=42),
-        'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
-        'svc': lambda: SVC(probability=True, random_state=42),
-        'random_forest_classifier': lambda: RandomForestClassifier(n_estimators=100, random_state=42),
-        'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=42),
-        'mlp_classifier': lambda: MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=42),
-        'gradient_boosting_classifier': lambda: GradientBoostingClassifier(n_estimators=100, random_state=42),
-        'gaussian_nb': lambda: GaussianNB(),
-    }
-    # Legacy aliases
-    _MODELS['random_forest'] = _MODELS['random_forest_regressor']
-    _MODELS['xgboost'] = _MODELS['xgboost_regressor']
-    _MODELS['mlp'] = _MODELS['mlp_regressor']
-    _MODELS['neural_network'] = _MODELS['mlp_regressor']
-    _MODELS['svm'] = _MODELS['svc']
-
-    # =================================================================================
-    # NEW: HYPERPARAMETER GRIDS FOR RandomizedSearchCV
-    # =================================================================================
+    
+    # These dictionaries remain at the class level as they don't depend on the instance state.
     _HYPERPARAMETER_GRIDS = {
         'linear_regression': {},
         'random_forest_regressor': {
@@ -149,7 +122,6 @@ class MLModel(BaseModel):
         },
         'gaussian_nb': {}
     }
-    # Add aliases for hyperparameter grids
     _HYPERPARAMETER_GRIDS['random_forest'] = _HYPERPARAMETER_GRIDS['random_forest_regressor']
     _HYPERPARAMETER_GRIDS['xgboost'] = _HYPERPARAMETER_GRIDS['xgboost_regressor']
     _HYPERPARAMETER_GRIDS['mlp'] = _HYPERPARAMETER_GRIDS['mlp_regressor']
@@ -169,16 +141,48 @@ class MLModel(BaseModel):
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
                  subset_fraction: float = None, feature_allowlist: list[int] = None,
-                 hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5):
+                 hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
+                 random_state: int = 42): # <<< NEW: Added random_state parameter
         """
-        MODIFIED: `__init__` now accepts hyperparameter tuning options.
+        MODIFIED: `__init__` now accepts a `random_state` for reproducibility.
         
         Args:
             hyperparameter_tuning (bool): If True, run RandomizedSearchCV to find the best hyperparameters.
             tuning_n_iter (int): The number of parameter settings that are sampled. `n_iter` trades off runtime vs quality of the solution.
             tuning_cv (int): The number of folds to use for cross-validation during tuning.
+            random_state (int): The seed used for all random operations, ensuring reproducibility.
         """
         super().__init__(model_name, column=column)
+        self.random_state = random_state # <<< NEW: Store random_state as an instance attribute
+
+        # <<< MODIFIED: _MODELS dictionary moved here to become an instance attribute >>>
+        # This allows it to access `self.random_state` when creating model instances.
+        self._MODELS = {
+            # Regressors
+            'linear_regression': LinearRegression,
+            'random_forest_regressor': lambda: RandomForestRegressor(n_estimators=100, random_state=self.random_state),
+            'xgboost_regressor': lambda: XGBRegressor(objective='reg:squarederror', n_estimators=100, random_state=self.random_state),
+            'mlp_regressor': lambda: MLPRegressor(hidden_layer_sizes=(100, 50), max_iter=500, random_state=self.random_state),
+            'knn_regressor': lambda: KNeighborsRegressor(n_neighbors=5),
+            'svr': lambda: MultiOutputRegressor(SVR(kernel='rbf')),
+
+            # Classifiers
+            'logistic_regression': lambda: LogisticRegression(solver='liblinear', max_iter=1000, random_state=self.random_state),
+            'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
+            'svc': lambda: SVC(probability=True, random_state=self.random_state),
+            'random_forest_classifier': lambda: RandomForestClassifier(n_estimators=100, random_state=self.random_state),
+            'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=self.random_state),
+            'mlp_classifier': lambda: MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=self.random_state),
+            'gradient_boosting_classifier': lambda: GradientBoostingClassifier(n_estimators=100, random_state=self.random_state),
+            'gaussian_nb': lambda: GaussianNB(),
+        }
+        # Legacy aliases
+        self._MODELS['random_forest'] = self._MODELS['random_forest_regressor']
+        self._MODELS['xgboost'] = self._MODELS['xgboost_regressor']
+        self._MODELS['mlp'] = self._MODELS['mlp_regressor']
+        self._MODELS['neural_network'] = self._MODELS['mlp_regressor']
+        self._MODELS['svm'] = self._MODELS['svc']
+
         self.model_type = model_type.lower()
         if self.model_type not in self._MODELS:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}. Supported types are {list(self._MODELS.keys())}")
@@ -194,7 +198,6 @@ class MLModel(BaseModel):
             if not (0 < subset_fraction <= 1.0): raise ValueError("If specified, subset_fraction must be > 0 and <= 1.")
             self.subset_fraction = subset_fraction
 
-        # NEW: Store tuning parameters
         self.hyperparameter_tuning = hyperparameter_tuning
         self.tuning_n_iter = tuning_n_iter
         self.tuning_cv = tuning_cv
@@ -295,7 +298,7 @@ class MLModel(BaseModel):
             if model.coef_.ndim > 1: importances = np.mean(np.abs(model.coef_), axis=0)
             else: importances = np.abs(model.coef_)
         elif X_test is not None and y_test is not None:
-            result = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=-1)
+            result = permutation_importance(model, X_test, y_test, n_repeats=10, random_state=self.random_state, n_jobs=-1)
             importances = result.importances_mean
         else:
             print(f"Cannot get feature importance for model type {type(model).__name__} without test data.")
@@ -338,7 +341,7 @@ class MLModel(BaseModel):
         # Prepare Training Data
         X_train_raw, self.feature_names_ = self._prepare_features(df_train)
         original_feature_count = X_train_raw.shape[1]
-        X_train = self._select_features(X_train_raw, random_state=42) # Use fixed random state for reproducibility
+        X_train = self._select_features(X_train_raw, random_state=self.random_state) # Use fixed random state for reproducibility
         y_train = df_train[["team1_score", "team2_score"]].to_numpy()
 
         # Prepare Test Data
@@ -426,7 +429,7 @@ class MLModel(BaseModel):
         forced_indices = [original_feature_count - 2, original_feature_count - 1]
 
         # Call _select_features, passing the indices to force include
-        X_train = self._select_features(X_train_raw, random_state=42, force_include_indices=forced_indices)
+        X_train = self._select_features(X_train_raw, random_state=self.random_state, force_include_indices=forced_indices)
         # <<< END: MODIFICATION >>>
 
         # --- The rest of the function proceeds as before ---
@@ -585,7 +588,7 @@ class MLModel(BaseModel):
             cv=time_series_cv,
             scoring='neg_log_loss' if self.model_type in self._CLASSIFIER_TYPES else 'neg_mean_squared_error',
             verbose=1, # Set to 2 for more details
-            random_state=42,
+            random_state=self.random_state,
             n_jobs=-1  # Use all available CPU cores
         )
         

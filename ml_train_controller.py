@@ -48,7 +48,7 @@ def main():
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
     # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, hyperparameter_tuning=True, tuning_n_iter=100, feature_allowlist=indices)#feature_allowlist=indices
+    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, hyperparameter_tuning=True, tuning_n_iter=100, feature_allowlist=indices, random_state=130)#feature_allowlist=indices
     model.train(TRAIN_QUERY, TEST_QUERY)
 
 if __name__ == "__main__":
