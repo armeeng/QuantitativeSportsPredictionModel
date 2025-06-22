@@ -1,5 +1,8 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import brier_score_loss
+from sklearn.calibration import CalibrationDisplay
 
 class TestModel:
     """
@@ -429,6 +432,75 @@ class TestModel:
                 'spread': {'final_bankroll': bankrolls['spread'], 'bets_placed': bets_placed['spread'], 'total_wagered': total_wagered['spread']},
                 'ou': {'final_bankroll': bankrolls['ou'], 'bets_placed': bets_placed['ou'], 'total_wagered': total_wagered['ou']}
             }
+    
+    def check_calibration(self, n_bins=10):
+        """
+        Calculates the Brier score and generates calibration plots to assess
+        the reliability of the model's probabilities. This is only applicable for classifiers.
+
+        Args:
+            n_bins (int): The number of bins to use for the calibration plot.
+        """
+        if not isinstance(self.predictions, dict):
+            print("\nCalibration check is only available for classifier models that output probabilities.")
+            return
+
+        print("\nModel Calibration Analysis")
+        print("="*50)
+        
+        # Get the actual outcomes, ignoring pushes for spread and O/U
+        o = self._get_outcomes()
+        
+        calibration_data = {
+            'Moneyline': {
+                'y_true': o['actual_winner_is_t1'],
+                'y_prob': self.predictions['win'][:, 1], # Probability of T1 winning
+                'mask': np.full_like(o['actual_winner_is_t1'], True, dtype=bool) # No pushes
+            },
+            'Spread': {
+                'y_true': o['actual_spread_is_t1_cover'],
+                'y_prob': self.predictions['spread'][:, 1], # Probability of T1 covering
+                'mask': ~o['spread_pushes'] # Exclude pushes
+            },
+            'Over/Under': {
+                'y_true': o['actual_is_over'],
+                'y_prob': self.predictions['over'][:, 1], # Probability of 'Over'
+                'mask': ~o['ou_pushes'] # Exclude pushes
+            }
+        }
+
+        # Create a figure for the plots
+        fig, axes = plt.subplots(1, 3, figsize=(21, 6))
+        fig.suptitle('Calibration Plots (Reliability Diagrams)', fontsize=16)
+
+        for i, (bet_type, data) in enumerate(calibration_data.items()):
+            ax = axes[i]
+            
+            # Apply mask to filter out pushes where necessary
+            y_true = data['y_true'][data['mask']]
+            y_prob = data['y_prob'][data['mask']]
+            
+            # --- 1. Calculate and Print Brier Score ---
+            # The Brier score measures the mean squared difference between the predicted
+            # probability and the actual outcome. Lower is better.
+            brier = brier_score_loss(y_true, y_prob)
+            print(f"\n{bet_type} Brier Score: {brier:.4f}")
+            print("  (A lower score is better. A score of 0.25 is the baseline for random guessing.)")
+            
+            # --- 2. Generate Calibration Plot ---
+            # This plots the true frequency of an event against its predicted probability.
+            display = CalibrationDisplay.from_predictions(
+                y_true,
+                y_prob,
+                n_bins=n_bins,
+                ax=ax,
+                name=f'{bet_type} Model'
+            )
+            ax.set_title(f'{bet_type} Calibration')
+            ax.grid(True, linestyle='--', alpha=0.6)
+
+        plt.tight_layout(rect=[0, 0, 1, 0.96]) # Adjust layout for suptitle
+        plt.show()
 
     # --- MODIFIED: Updated to display Kelly Criterion results ---
     def display_results(self, initial_bankroll=1000):
@@ -468,5 +540,7 @@ class TestModel:
             print(f"  - Moneyline:  Final Bankroll: ${kelly_ml['final_bankroll']:.2f} (Total Wagered: ${kelly_ml['total_wagered']:.2f}, Profit: ${kelly_ml['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ml['bets_placed']} bets")
             print(f"  - Spread:     Final Bankroll: ${kelly_spread['final_bankroll']:.2f} (Total Wagered: ${kelly_spread['total_wagered']:.2f}, Profit: ${kelly_spread['final_bankroll'] - initial_bankroll:.2f}) from {kelly_spread['bets_placed']} bets")
             print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Total Wagered: ${kelly_ou['total_wagered']:.2f}, Profit: ${kelly_ou['final_bankroll'] - initial_bankroll:.2f}) from {kelly_ou['bets_placed']} bets")
+            self.check_calibration()
 
         print("\n------------------------------------")
+        
