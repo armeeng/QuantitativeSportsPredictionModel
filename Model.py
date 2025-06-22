@@ -19,6 +19,7 @@ from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.inspection import permutation_importance
 from scipy.stats import randint, uniform
+from sklearn.calibration import CalibratedClassifierCV
 
 
 from TestModel import TestModel
@@ -142,7 +143,9 @@ class MLModel(BaseModel):
                  column: str = "normalized_stats", use_random_subset_of_features: bool = False,
                  subset_fraction: float = None, feature_allowlist: list[int] = None,
                  hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
-                 random_state: int = 42): # <<< NEW: Added random_state parameter
+                 random_state: int = 42,
+                 calibrate_model: bool = False, # <<< NEW: To enable/disable calibration
+                 calibration_method: str = 'isotonic'): # <<< NEW: 'isotonic' or 'sigmoid'
         """
         MODIFIED: `__init__` now accepts a `random_state` for reproducibility.
         
@@ -201,6 +204,15 @@ class MLModel(BaseModel):
         self.hyperparameter_tuning = hyperparameter_tuning
         self.tuning_n_iter = tuning_n_iter
         self.tuning_cv = tuning_cv
+
+        # <<< ADD THESE LINES AT THE END OF __init__ >>>
+        if calibrate_model and self.model_type not in self._CLASSIFIER_TYPES:
+            raise ValueError("Calibration is only supported for classifier models.")
+        if calibration_method not in ['isotonic', 'sigmoid']:
+            raise ValueError("`calibration_method` must be either 'isotonic' or 'sigmoid'.")
+            
+        self.calibrate_model = calibrate_model
+        self.calibration_method = calibration_method
 
         self.predictions = None
         self.y_test = None
@@ -321,6 +333,31 @@ class MLModel(BaseModel):
     # =================================================================================
     # Internal Training Methods
     # =================================================================================
+
+    def _get_calibrated_model(self, base_estimator):
+        """
+        Wraps a base estimator with CalibratedClassifierCV to improve probability outputs.
+
+        This uses TimeSeriesSplit for its internal cross-validation to ensure
+        that the calibration model is always trained on data that occurs *after* the
+        data used to train the base model in each fold.
+
+        Args:
+            base_estimator: The instantiated scikit-learn classifier to be calibrated.
+
+        Returns:
+            A CalibratedClassifierCV instance, ready to be fitted.
+        """
+        # Use a time-series-aware cross-validation strategy for calibration.
+        # 3 splits is a good balance between performance and robustness.
+        cv_splitter = TimeSeriesSplit(n_splits=3)
+        
+        return CalibratedClassifierCV(
+            estimator=base_estimator,
+            method=self.calibration_method,
+            cv=cv_splitter,
+            n_jobs=-1  # Use all available cores
+        )
 
     def _train_regressor(self, train_query: str, test_query: str):
         """Trains a regression model and evaluates on a separate test set."""
@@ -475,49 +512,79 @@ class MLModel(BaseModel):
         # Train Models
         # --- MODIFIED: Model Training Step ---
         # Train Win Model
+        # --- MODIFIED: Model Training Step with optional Calibration ---
+
+        # --- Train Win Model ---
         initial_win_model = self._get_model()
+        # Define the model we are going to fit. This might be the base model or a calibrated version.
+        model_to_fit = initial_win_model
+        
         if self.hyperparameter_tuning:
             print(f"\n--- Tuning WIN model ({self.model_type}) ---")
-            model_win = self._tune_hyperparameters(initial_win_model, X_train_scaled, y_train_win)
-            print(f"Best WIN model parameters: {model_win.get_params()}")
-        else:
-            model_win = initial_win_model.fit(X_train_scaled, y_train_win)
+            # First, find the best *base* model using hyperparameter tuning
+            best_base_model = self._tune_hyperparameters(initial_win_model, X_train_scaled, y_train_win)
+            print(f"Best WIN model base parameters: {best_base_model.get_params()}")
+            # If calibration is on, wrap the *tuned* base model
+            if self.calibrate_model:
+                model_to_fit = self._get_calibrated_model(best_base_model)
+            else:
+                model_to_fit = best_base_model
+        elif self.calibrate_model:
+            # If not tuning but calibration is on, wrap the *initial* model
+            model_to_fit = self._get_calibrated_model(initial_win_model)
+        
+        # Now, fit the final model (either calibrated or not) on the full training data
+        if self.calibrate_model:
+            print(f"--- Fitting Calibrated WIN model using '{self.calibration_method}' regression ---")
+        model_win = model_to_fit.fit(X_train_scaled, y_train_win)
 
-        # Train Spread Model
+
+        # --- Train Spread Model (repeat the pattern) ---
         train_spread_non_push = y_train_spread_outcome != 0
         initial_spread_model = self._get_model()
+        y_train_spread_target = (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
+        X_train_spread_data = X_train_scaled[train_spread_non_push]
+
+        model_to_fit = initial_spread_model
         if self.hyperparameter_tuning:
             print(f"\n--- Tuning SPREAD model ({self.model_type}) ---")
-            model_spread = self._tune_hyperparameters(
-                initial_spread_model,
-                X_train_scaled[train_spread_non_push],
-                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
-            )
-            print(f"Best SPREAD model parameters: {model_spread.get_params()}")
-        else:
-            model_spread = initial_spread_model.fit(
-                X_train_scaled[train_spread_non_push], 
-                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
-            )
+            best_base_model = self._tune_hyperparameters(initial_spread_model, X_train_spread_data, y_train_spread_target)
+            print(f"Best SPREAD model base parameters: {best_base_model.get_params()}")
+            if self.calibrate_model:
+                model_to_fit = self._get_calibrated_model(best_base_model)
+            else:
+                model_to_fit = best_base_model
+        elif self.calibrate_model:
+            model_to_fit = self._get_calibrated_model(initial_spread_model)
+        
+        if self.calibrate_model:
+            print(f"--- Fitting Calibrated SPREAD model using '{self.calibration_method}' regression ---")
+        model_spread = model_to_fit.fit(X_train_spread_data, y_train_spread_target)
+        
 
-        # Train Over/Under Model
+        # --- Train Over/Under Model (repeat the pattern) ---
         train_total_non_push = y_train_total_outcome != 0
         initial_over_model = self._get_model()
+        y_train_over_target = (y_train_total_outcome[train_total_non_push] > 0).astype(int)
+        X_train_over_data = X_train_scaled[train_total_non_push]
+
+        model_to_fit = initial_over_model
         if self.hyperparameter_tuning:
             print(f"\n--- Tuning OVER/UNDER model ({self.model_type}) ---")
-            model_over = self._tune_hyperparameters(
-                initial_over_model,
-                X_train_scaled[train_total_non_push],
-                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
-            )
-            print(f"Best OVER/UNDER model parameters: {model_over.get_params()}")
-        else:
-            model_over = initial_over_model.fit(
-                X_train_scaled[train_total_non_push],
-                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
-            )
+            best_base_model = self._tune_hyperparameters(initial_over_model, X_train_over_data, y_train_over_target)
+            print(f"Best OVER/UNDER model base parameters: {best_base_model.get_params()}")
+            if self.calibrate_model:
+                model_to_fit = self._get_calibrated_model(best_base_model)
+            else:
+                model_to_fit = best_base_model
+        elif self.calibrate_model:
+            model_to_fit = self._get_calibrated_model(initial_over_model)
+            
+        if self.calibrate_model:
+            print(f"--- Fitting Calibrated OVER/UNDER model using '{self.calibration_method}' regression ---")
+        model_over = model_to_fit.fit(X_train_over_data, y_train_over_target)
         
-        print("\n--- Hyperparameter Tuning Finished for all models ---\n")
+        print("\n--- Model training finished for all models ---\n")
         self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
         # ----------------------------------------
         
