@@ -485,8 +485,11 @@ class TestModel:
             # probability and the actual outcome. Lower is better.
             brier = brier_score_loss(y_true, y_prob)
             print(f"\n{bet_type} Brier Score: {brier:.4f}")
-            print("  (A lower score is better. A score of 0.25 is the baseline for random guessing.)")
-            
+            p = y_true.mean()                     # event base-rate
+            baseline_brier = p * (1 - p)          # no-skill Brier
+            bss = 1 - (brier / baseline_brier)    # Brier Skill Score
+            print(f"{bet_type} Brier Score: {brier:.4f}  |  Baseline: {baseline_brier:.4f}  |  BSS: {bss:.3f}")
+
             # --- 2. Generate Calibration Plot ---
             # This plots the true frequency of an event against its predicted probability.
             display = CalibrationDisplay.from_predictions(
