@@ -1,3 +1,4 @@
 test.py
 *.db
 models/
+__pycache__/
