@@ -8,7 +8,7 @@ import pandas as pd
 import random
 import joblib
 from sklearn.model_selection import train_test_split, RandomizedSearchCV, TimeSeriesSplit
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neural_network import MLPRegressor, MLPClassifier
@@ -34,7 +34,7 @@ class BaseModel:
 class MLModel(BaseModel):
     """
     A simplified ML class focused strictly on training models and generating predictions.
-    
+
     This class trains a model on historical sports data from a training query and
     evaluates it on a separate test query. All metric calculations are handled
     by the TestModel class. The test set predictions, true outcomes, and betting
@@ -42,8 +42,7 @@ class MLModel(BaseModel):
     It supports training on a full or random subset of features and uses StandardScaler
     to scale features.
     """
-    
-    # These dictionaries remain at the class level as they don't depend on the instance state.
+
     _HYPERPARAMETER_GRIDS = {
         'linear_regression': {},
         'random_forest_regressor': {
@@ -133,30 +132,45 @@ class MLModel(BaseModel):
         'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb'
     }
 
-    _FEATURE_KEYS_TO_DROP = {
+    _DEFAULT_CATEGORICAL_FEATURES = [
         "team1_id", "team2_id", "venue_id", "season_type", "day", "month",
-        "year", "days_since_epoch", "game_time", "day_of_week"
-    }
+        "year", "day_of_week"
+    ]
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
-                 column: str = "normalized_stats", use_random_subset_of_features: bool = False,
-                 subset_fraction: float = None, feature_allowlist: list[int] = None,
+                 column: str = "normalized_stats",
+                 # NEW: Granular feature selection parameters
+                 numerical_feature_indices: list[int] = None,
+                 categorical_feature_names: list[str] = None,
+                 include_market_features: bool = False,
+                 # Modified: Random selection now applies only to numerical features
+                 use_random_subset_of_numerical_features: bool = False,
+                 subset_fraction: float = None,
+                 # Hyperparameter tuning and reproducibility
                  hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
-                 random_state: int = 42): # <<< NEW: Added random_state parameter
+                 random_state: int = 42):
         """
-        MODIFIED: `__init__` now accepts a `random_state` for reproducibility.
-        
+        REWRITTEN: `__init__` now accepts granular controls for feature selection.
+
         Args:
+            model_name (str): A unique name for saving and loading the model.
+            model_type (str): The type of algorithm to use (e.g., 'random_forest_regressor').
+            column (str): The DataFrame column containing the JSON features.
+            numerical_feature_indices (list[int], optional): An allowlist of indices for numerical features.
+                If provided, only these numerical features will be used. Defaults to None (use all).
+            categorical_feature_names (list[str], optional): An allowlist of names for categorical features.
+                If provided, only these categorical features will be encoded and used. Defaults to None (use all defined in _DEFAULT_CATEGORICAL_FEATURES).
+            include_market_features (bool): If True, market spread and total score are included as features for any model type.
+            use_random_subset_of_numerical_features (bool): If True, a random subset of numerical features is used.
+            subset_fraction (float, optional): The fraction of numerical features to use if random selection is enabled.
             hyperparameter_tuning (bool): If True, run RandomizedSearchCV to find the best hyperparameters.
-            tuning_n_iter (int): The number of parameter settings that are sampled. `n_iter` trades off runtime vs quality of the solution.
+            tuning_n_iter (int): The number of parameter settings that are sampled during tuning.
             tuning_cv (int): The number of folds to use for cross-validation during tuning.
-            random_state (int): The seed used for all random operations, ensuring reproducibility.
+            random_state (int): The seed for all random operations, ensuring reproducibility.
         """
         super().__init__(model_name, column=column)
-        self.random_state = random_state # <<< NEW: Store random_state as an instance attribute
+        self.random_state = random_state
 
-        # <<< MODIFIED: _MODELS dictionary moved here to become an instance attribute >>>
-        # This allows it to access `self.random_state` when creating model instances.
         self._MODELS = {
             # Regressors
             'linear_regression': LinearRegression,
@@ -187,11 +201,14 @@ class MLModel(BaseModel):
         if self.model_type not in self._MODELS:
             raise ValueError(f"Unsupported model_type: {self.model_type!r}. Supported types are {list(self._MODELS.keys())}")
 
-        if use_random_subset_of_features and feature_allowlist is not None:
-            raise ValueError("Cannot set `use_random_subset_of_features` to True and provide a `feature_allowlist` simultaneously.")
+        if use_random_subset_of_numerical_features and numerical_feature_indices is not None:
+            raise ValueError("Cannot set `use_random_subset_of_numerical_features` to True and provide `numerical_feature_indices` simultaneously.")
 
-        self.use_random_subset_of_features = use_random_subset_of_features
-        self.feature_allowlist = feature_allowlist
+        # Store feature selection parameters
+        self.numerical_feature_indices = numerical_feature_indices
+        self.categorical_feature_names = categorical_feature_names
+        self.include_market_features = include_market_features
+        self.use_random_subset_of_numerical_features = use_random_subset_of_numerical_features
 
         if subset_fraction is None: self.subset_fraction = random.uniform(0.01, 1.0)
         else:
@@ -202,13 +219,17 @@ class MLModel(BaseModel):
         self.tuning_n_iter = tuning_n_iter
         self.tuning_cv = tuning_cv
 
+        # Instance attributes to be populated during training
         self.predictions = None
         self.y_test = None
         self.test_odds = None
-        self.feature_indices_ = None
         self.scaler = None
-        self.feature_names_ = None
+        self.one_hot_encoder = None
         self.model_ = None
+        
+        # Final feature names and indices used for training the model
+        self.feature_names_ = None
+        self.trained_numerical_indices_ = None # The final indices of numerical features used
 
     # =================================================================================
     # Public API: Main Methods
@@ -229,17 +250,19 @@ class MLModel(BaseModel):
 
     def predict(self, query: str) -> list:
         """
-        Loads the latest model and scaler from disk and returns predictions for new, unseen data.
-        This method is for inference, not for test set evaluation during training.
+        REWRITTEN: Loads the latest model and metadata, then processes new data using the
+        exact same feature engineering pipeline from training to generate predictions.
         """
         try:
             info = self._load_model()
             model = info['model']
             self.scaler = info.get('scaler')
-            column = info['column']
-            feature_indices = info.get('feature_indices')
-            original_shape = info.get('original_input_shape')
-            model_input_shape = info.get('trained_input_shape')
+            self.one_hot_encoder = info.get('one_hot_encoder')
+            self.column = info['column']
+            # Load the feature selection metadata the model was trained with
+            self.trained_numerical_indices_ = info.get('trained_numerical_indices')
+            self.categorical_feature_names = info.get('categorical_feature_names')
+            self.include_market_features = info.get('include_market_features', False)
         except FileNotFoundError as e:
             print(f"Error: {e}")
             return []
@@ -248,23 +271,41 @@ class MLModel(BaseModel):
         if df.empty:
             print("Query returned no data to predict on.")
             return []
+
+        # --- Start Prediction Feature Engineering Pipeline ---
+        # This pipeline mirrors the training process exactly.
         
-        self.column = column
-        X_raw, _ = self._prepare_features(df)
+        # 1. Determine which categorical features to use (from loaded model info)
+        cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
 
-        if X_raw.shape[1] != original_shape:
-            raise ValueError(f"Feature shape mismatch: model trained on {original_shape} features, new data has {X_raw.shape[1]}.")
+        # 2. Prepare numerical features (extracts all from JSON)
+        X_num, _ = self._prepare_numerical_features(df)
 
-        X = X_raw[:, feature_indices] if feature_indices is not None else X_raw
+        # 3. Select the specific numerical features the model was trained on
+        X_num_selected = X_num[:, self.trained_numerical_indices_] if self.trained_numerical_indices_ is not None else X_num
+        
+        # 4. Prepare categorical features
+        cat_df = self._extract_categorical_features(df, features_to_extract=cats_to_use)
+        X_cat = self.one_hot_encoder.transform(cat_df) if self.one_hot_encoder and cat_df.shape[1] > 0 else np.array([[] for _ in range(len(df))])
 
-        if X.shape[1] != model_input_shape:
-            raise ValueError(f"Model input shape mismatch: model expects {model_input_shape} features, got {X.shape[1]}.")
+        # 5. Combine numerical and categorical
+        X_combined = np.hstack([X_num_selected, X_cat])
+        
+        # 6. Add market features if the model was trained with them
+        if self.include_market_features:
+            spread_feature = pd.to_numeric(df["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            total_feature = pd.to_numeric(df["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_final = np.hstack((X_combined, spread_feature, total_feature))
+        else:
+            X_final = X_combined
+        # --- End Prediction Feature Engineering Pipeline ---
 
+        # 7. Scale and Predict
         if self.scaler:
-            X_scaled = self.scaler.transform(X)
+            X_scaled = self.scaler.transform(X_final)
         else:
             print("Warning: No scaler found. Predicting on unscaled data.")
-            X_scaled = X
+            X_scaled = X_final
 
         if isinstance(model, dict):  # Classifier
             prob_win = model['win'].predict_proba(X_scaled)[:, 1]
@@ -280,11 +321,10 @@ class MLModel(BaseModel):
                 {"game_id": gid, "team1_id": t1, "team2_id": t2, "pred_team1": p1, "pred_team2": p2}
                 for gid, t1, t2, (p1, p2) in zip(df["game_id"], df["team1_id"], df["team2_id"], predictions)
             ]
-            
+
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """
-        MODIFIED: Calculates and returns feature importances, including the feature index
-        from the original flattened input array.
+        Calculates and returns feature importances for the final features used in the model.
         """
         if model is None: model = self.model_
         if self.feature_names_ is None:
@@ -304,75 +344,48 @@ class MLModel(BaseModel):
             print(f"Cannot get feature importance for model type {type(model).__name__} without test data.")
             return None
 
-        # Determine the original indices of the features used by the model.
-        if self.feature_indices_ is not None:
-            # A subset of features was selected during training.
-            feature_indices = self.feature_indices_
-        else:
-            # All features were used; indices are a simple range.
-            feature_indices = list(range(len(self.feature_names_)))
+        importance_df = pd.DataFrame({
+            'importance': importances,
+            'feature': self.feature_names_
+        })
 
-        return pd.DataFrame({
-            'feature_index': feature_indices,
-            'feature': self.feature_names_,
-            'importance': importances
-        }).sort_values(by='importance', ascending=False)
+        # The feature names are already final, so we just sort by importance.
+        return importance_df.sort_values(by='importance', ascending=False)
 
     # =================================================================================
     # Internal Training Methods
     # =================================================================================
 
     def _train_regressor(self, train_query: str, test_query: str):
-        """Trains a regression model and evaluates on a separate test set."""
+        """ REWRITTEN: Trains a regression model using the new granular feature engineering pipeline."""
         # Load Data
         df_train = self._load_data_from_db(train_query)
         df_test = self._load_data_from_db(test_query)
 
         df_train.dropna(subset=["team1_score", "team2_score"], inplace=True)
         df_test.dropna(subset=["team1_score", "team2_score"], inplace=True)
-        
-        if df_train.empty:
-            print("Training query returned no data. Aborting.")
-            return
-        if df_test.empty:
-            print("Test query returned no data. Aborting.")
+
+        if df_train.empty or df_test.empty:
+            print("Training or test query returned no data. Aborting.")
             return
 
-        # Prepare Training Data
-        X_train_raw, self.feature_names_ = self._prepare_features(df_train)
-        original_feature_count = X_train_raw.shape[1]
-        X_train = self._select_features(X_train_raw, random_state=self.random_state) # Use fixed random state for reproducibility
+        # Prepare features using the new modular pipeline
+        X_train, X_test = self._prepare_and_select_features(df_train, df_test)
         y_train = df_train[["team1_score", "team2_score"]].to_numpy()
-
-        # Prepare Test Data
-        X_test_raw, _ = self._prepare_features(df_test)
-        if X_test_raw.shape[1] != original_feature_count:
-            raise ValueError(f"Feature count mismatch: train data has {original_feature_count} features, test data has {X_test_raw.shape[1]}.")
-        
-        X_test = X_test_raw[:, self.feature_indices_] if self.feature_indices_ is not None else X_test_raw
         self.y_test = df_test[["team1_score", "team2_score"]].to_numpy()
         
-        self.test_odds = {
-            "team1_ml": pd.to_numeric(df_test.get("team1_moneyline"), errors='coerce').fillna(0),
-            "team2_ml": pd.to_numeric(df_test.get("team2_moneyline"), errors='coerce').fillna(0),
-            "team1_spread": pd.to_numeric(df_test.get("team1_spread"), errors='coerce').fillna(0),
-            "team2_spread": pd.to_numeric(df_test.get("team2_spread"), errors='coerce').fillna(0),
-            "team1_spread_odds": pd.to_numeric(df_test.get("team1_spread_odds"), errors='coerce').fillna(0),
-            "team2_spread_odds": pd.to_numeric(df_test.get("team2_spread_odds"), errors='coerce').fillna(0),
-            "total_score": pd.to_numeric(df_test.get("total_score"), errors='coerce').fillna(0),
-            "over_odds": pd.to_numeric(df_test.get("over_odds"), errors='coerce').fillna(0),
-            "under_odds": pd.to_numeric(df_test.get("under_odds"), errors='coerce').fillna(0)
-        }
+        # Save training data for inspection
+        self._save_training_dataframe(X_train, self.feature_names_, f"{self.model_name}_training_data")
+
+        self.test_odds = self._extract_test_odds(df_test)
 
         # Scale features
         self.scaler = StandardScaler()
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
-        
-        # Train Model
-        # --- MODIFIED: Model Training Step ---
-        initial_model = self._get_model()
 
+        # Train Model
+        initial_model = self._get_model()
         if self.hyperparameter_tuning:
             print(f"--- Starting Hyperparameter Tuning for {self.model_type} ---")
             self.model_ = self._tune_hyperparameters(initial_model, X_train_scaled, y_train)
@@ -382,24 +395,24 @@ class MLModel(BaseModel):
             print("--- Training with default hyperparameters ---")
             self.model_ = initial_model
             self.model_.fit(X_train_scaled, y_train)
-        # ----------------------------------------
 
         # Evaluate Model
         self.predictions = self.model_.predict(X_test_scaled)
         test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
         test_evaluator.display_results()
-        
+
         # Feature Importance
         feature_importance = self.get_feature_importance(model=self.model_, X_test=X_test_scaled, y_test=self.y_test)
         if feature_importance is not None:
+            os.makedirs("Feature Importance", exist_ok=True)
             feature_importance.to_csv("Feature Importance/feature_importance.csv", index=False)
             print("Saved feature importance to feature_importance.csv")
 
-        self._save_model(self.model_, self.scaler, train_query, X_train.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, train_query)
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
 
     def _train_classifier(self, train_query: str, test_query: str):
-        """Trains classification models and evaluates on a separate test set."""
+        """ REWRITTEN: Trains classification models using the new granular feature engineering pipeline."""
         # Load Data
         df_train = self._load_data_from_db(train_query)
         df_test = self._load_data_from_db(test_query)
@@ -407,121 +420,46 @@ class MLModel(BaseModel):
         df_train.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
         df_test.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
 
-        if df_train.empty:
-            print("Training query returned no data. Aborting.")
-            return
-        if df_test.empty:
-            print("Test query returned no data. Aborting.")
+        if df_train.empty or df_test.empty:
+            print("Training or test query returned no data. Aborting.")
             return
 
-        # Prepare Training Data from JSON
-        X_train_raw, self.feature_names_ = self._prepare_features(df_train)
+        # Prepare features using the new modular pipeline
+        X_train, X_test = self._prepare_and_select_features(df_train, df_test)
+
+        # Save training data for inspection
+        self._save_training_dataframe(X_train, self.feature_names_, f"{self.model_name}_training_data")
         
-        # Add spread and total features to the matrix
-        spread_feature_train = pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-        total_feature_train = pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-        X_train_raw = np.hstack((X_train_raw, spread_feature_train, total_feature_train))
-        self.feature_names_.extend(['market_team1_spread', 'market_total_score'])
-        
-        # <<< START: MODIFICATION TO FORCE INCLUDE SPREAD/TOTAL >>>
-        # Get the indices of the features we just added. They will be the last two.
-        original_feature_count = X_train_raw.shape[1]
-        forced_indices = [original_feature_count - 2, original_feature_count - 1]
-
-        # Call _select_features, passing the indices to force include
-        X_train = self._select_features(X_train_raw, random_state=self.random_state, force_include_indices=forced_indices)
-        # <<< END: MODIFICATION >>>
-
-        # --- The rest of the function proceeds as before ---
-
+        # Prepare Target Variables (y)
         y_train_win = (df_train["team1_score"] > df_train["team2_score"]).astype(int)
-        # ... (y_train_spread_outcome, y_train_total_outcome definitions) ...
         y_train_spread_outcome = (df_train["team1_score"] - df_train["team2_score"]) + pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0)
         y_train_total_outcome = (df_train["team1_score"] + df_train["team2_score"]) - pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0)
-
-        # Prepare Test Data
-        X_test_raw, _ = self._prepare_features(df_test)
-        spread_feature_test = pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-        total_feature_test = pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-        X_test_raw = np.hstack((X_test_raw, spread_feature_test, total_feature_test))
-
-        if X_test_raw.shape[1] != original_feature_count:
-            raise ValueError(f"Feature count mismatch: train data has {original_feature_count} features, test data has {X_test_raw.shape[1]}.")
-        
-        X_test = X_test_raw[:, self.feature_indices_] if self.feature_indices_ is not None else X_test_raw
         
         self.y_test = df_test[["team1_score", "team2_score"]]
         y_test_win = (df_test["team1_score"] > df_test["team2_score"]).astype(int)
         y_test_spread_outcome = (df_test["team1_score"] - df_test["team2_score"]) + pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0)
         y_test_total_outcome = (df_test["team1_score"] + df_test["team2_score"]) - pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0)
         
-        self.test_odds = {
-            "team1_ml": pd.to_numeric(df_test.get("team1_moneyline"), errors='coerce').fillna(0),
-            "team2_ml": pd.to_numeric(df_test.get("team2_moneyline"), errors='coerce').fillna(0),
-            "team1_spread": pd.to_numeric(df_test.get("team1_spread"), errors='coerce').fillna(0),
-            "team2_spread": pd.to_numeric(df_test.get("team2_spread"), errors='coerce').fillna(0),
-            "team1_spread_odds": pd.to_numeric(df_test.get("team1_spread_odds"), errors='coerce').fillna(0),
-            "team2_spread_odds": pd.to_numeric(df_test.get("team2_spread_odds"), errors='coerce').fillna(0),
-            "total_score": pd.to_numeric(df_test.get("total_score"), errors='coerce').fillna(0),
-            "over_odds": pd.to_numeric(df_test.get("over_odds"), errors='coerce').fillna(0),
-            "under_odds": pd.to_numeric(df_test.get("under_odds"), errors='coerce').fillna(0)
-        }
+        self.test_odds = self._extract_test_odds(df_test)
 
         # Scale Features
         self.scaler = StandardScaler()
         X_train_scaled = self.scaler.fit_transform(X_train)
         X_test_scaled = self.scaler.transform(X_test)
 
-        # Train Models
-        # --- MODIFIED: Model Training Step ---
-        # Train Win Model
-        initial_win_model = self._get_model()
-        if self.hyperparameter_tuning:
-            print(f"\n--- Tuning WIN model ({self.model_type}) ---")
-            model_win = self._tune_hyperparameters(initial_win_model, X_train_scaled, y_train_win)
-            print(f"Best WIN model parameters: {model_win.get_params()}")
-        else:
-            model_win = initial_win_model.fit(X_train_scaled, y_train_win)
-
-        # Train Spread Model
+        # Train Individual Models (Win, Spread, Over/Under)
+        model_win = self._train_single_classifier("WIN", X_train_scaled, y_train_win)
+        
         train_spread_non_push = y_train_spread_outcome != 0
-        initial_spread_model = self._get_model()
-        if self.hyperparameter_tuning:
-            print(f"\n--- Tuning SPREAD model ({self.model_type}) ---")
-            model_spread = self._tune_hyperparameters(
-                initial_spread_model,
-                X_train_scaled[train_spread_non_push],
-                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
-            )
-            print(f"Best SPREAD model parameters: {model_spread.get_params()}")
-        else:
-            model_spread = initial_spread_model.fit(
-                X_train_scaled[train_spread_non_push], 
-                (y_train_spread_outcome[train_spread_non_push] > 0).astype(int)
-            )
+        model_spread = self._train_single_classifier("SPREAD", X_train_scaled[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
 
-        # Train Over/Under Model
         train_total_non_push = y_train_total_outcome != 0
-        initial_over_model = self._get_model()
-        if self.hyperparameter_tuning:
-            print(f"\n--- Tuning OVER/UNDER model ({self.model_type}) ---")
-            model_over = self._tune_hyperparameters(
-                initial_over_model,
-                X_train_scaled[train_total_non_push],
-                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
-            )
-            print(f"Best OVER/UNDER model parameters: {model_over.get_params()}")
-        else:
-            model_over = initial_over_model.fit(
-                X_train_scaled[train_total_non_push],
-                (y_train_total_outcome[train_total_non_push] > 0).astype(int)
-            )
-        
-        print("\n--- Hyperparameter Tuning Finished for all models ---\n")
+        model_over = self._train_single_classifier("OVER/UNDER", X_train_scaled[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
+
+        print("\n--- Model Training Finished ---\n")
         self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
-        # ----------------------------------------
         
-        # --- Evaluation and Saving (Unchanged) ---
+        # Evaluation and Saving
         self.predictions = {
             'win': self.model_['win'].predict_proba(X_test_scaled),
             'spread': self.model_['spread'].predict_proba(X_test_scaled),
@@ -531,6 +469,7 @@ class MLModel(BaseModel):
         test_evaluator.display_results()
         
         # Feature Importance
+        os.makedirs("Feature Importance", exist_ok=True)
         df_win = self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win)
         df_win.to_csv("Feature Importance/feature_importance_win.csv", index=False)
         print("\nSaved Win model importances to feature_importance_win.csv")
@@ -545,27 +484,230 @@ class MLModel(BaseModel):
         df_over.to_csv("Feature Importance/feature_importance_overunder.csv", index=False)
         print("Saved Over/Under model importances to feature_importance_overunder.csv")
 
-        self._save_model(self.model_, self.scaler, train_query, X_train.shape[1], original_feature_count)
+        self._save_model(self.model_, self.scaler, train_query)
         print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
 
+    def _train_single_classifier(self, name: str, X_train, y_train):
+        """Helper to tune or train a single classification model."""
+        initial_model = self._get_model()
+        if self.hyperparameter_tuning:
+            print(f"\n--- Tuning {name} model ({self.model_type}) ---")
+            model = self._tune_hyperparameters(initial_model, X_train, y_train)
+            print(f"Best {name} model parameters: {model.get_params()}")
+        else:
+            model = initial_model.fit(X_train, y_train)
+        return model
 
     # =================================================================================
-    # Internal Helper Methods
+    # Internal Helper Methods: Feature Engineering
     # =================================================================================
 
-    # NEW: Method to handle hyperparameter tuning
+    def _prepare_and_select_features(self, df_train: pd.DataFrame, df_test: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
+        """
+        NEW: A master pipeline for feature creation and selection.
+        This orchestrates the numerical, categorical, and market feature steps.
+        """
+        # 1. Determine which categorical features to use from instance settings
+        cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
+
+        # 2. Prepare numerical features from the JSON column
+        X_train_num, X_test_num, all_num_feature_names = self._prepare_numerical_features(df_train, df_test)
+
+        # 3. Prepare one-hot encoded categorical features
+        X_train_cat, X_test_cat, cat_feature_names = self._prepare_categorical_features(df_train, df_test, cats_to_use)
+
+        # 4. Select a subset of numerical features based on instance settings
+        X_train_num_final, X_test_num_final, final_num_names, self.trained_numerical_indices_ = self._select_numerical_features(
+            X_train_num, X_test_num, all_num_feature_names
+        )
+
+        # 5. Combine the selected numerical features with the categorical features
+        X_train_combined = np.hstack([X_train_num_final, X_train_cat])
+        X_test_combined = np.hstack([X_test_num_final, X_test_cat])
+        
+        # Store the names of the features combined so far
+        self.feature_names_ = final_num_names + cat_feature_names
+
+        # 6. Optionally, add market features
+        if self.include_market_features:
+            print("INFO: Including market spread and total score as features.")
+            spread_train = pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            total_train = pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_train_final = np.hstack((X_train_combined, spread_train, total_train))
+
+            spread_test = pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            total_test = pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_test_final = np.hstack((X_test_combined, spread_test, total_test))
+            
+            # Add the names of the market features
+            self.feature_names_ += ['market_team1_spread', 'market_total_score']
+        else:
+            X_train_final = X_train_combined
+            X_test_final = X_test_combined
+
+        print(f"INFO: Final feature count is {X_train_final.shape[1]}.")
+        return X_train_final, X_test_final
+
+    def _prepare_numerical_features(self, *dataframes: pd.DataFrame) -> tuple:
+        """
+        FIXED: Prepares numerical features from JSON, ensuring consistent column alignment.
+        """
+        if not dataframes:
+            return ()
+
+        # 1. Determine the master list of feature names from the first available valid JSON object.
+        master_feature_names = None
+        all_parsed_json = [df[self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x) for df in dataframes]
+
+        for parsed_json in all_parsed_json:
+            for js_obj in parsed_json:
+                if js_obj:
+                    temp_obj = {k: v for k, v in js_obj.items() if k not in self._DEFAULT_CATEGORICAL_FEATURES}
+                    _, discovered_names = self._flatten_json_to_list(temp_obj)
+                    if discovered_names:
+                        master_feature_names = discovered_names
+                        break
+            if master_feature_names:
+                break
+        
+        if not master_feature_names:
+            print("Warning: Could not determine numerical feature names from any dataframe. Returning empty arrays.")
+            return (np.array([[] for _ in range(len(df))]) for df in dataframes) + ([],)
+            
+        # 2. Create a mapping from feature name to its final column index.
+        name_to_index = {name: i for i, name in enumerate(master_feature_names)}
+
+        # 3. Process all dataframes, aligning each row's features to the master list.
+        results = []
+        for parsed_json in all_parsed_json:
+            feature_list = []
+            for js_obj in parsed_json:
+                # Initialize a row of zeros with the correct length.
+                row_values_ordered = [0.0] * len(master_feature_names)
+                if js_obj:
+                    temp_obj = {k: v for k, v in js_obj.items() if k not in self._DEFAULT_CATEGORICAL_FEATURES}
+                    # Get the values and names for this specific row.
+                    row_values_raw, row_names_raw = self._flatten_json_to_list(temp_obj)
+                    # Place the values in the correct positions using the name-to-index map.
+                    for name, value in zip(row_names_raw, row_values_raw):
+                        if name in name_to_index:
+                            row_values_ordered[name_to_index[name]] = value
+                feature_list.append(row_values_ordered)
+            results.append(np.array(feature_list, dtype=float))
+
+        return tuple(results) + (master_feature_names,)
+
+
+    def _prepare_categorical_features(self, df_train, df_test, cats_to_use):
+        """
+        NEW: Extracts, one-hot encodes, and returns categorical features.
+        """
+        if not cats_to_use:
+            print("INFO: No categorical features selected.")
+            empty_array_train = np.empty((len(df_train), 0))
+            empty_array_test = np.empty((len(df_test), 0))
+            return empty_array_train, empty_array_test, []
+
+        print(f"--- Encoding categorical features: {cats_to_use} ---")
+        cat_df_train = self._extract_categorical_features(df_train, features_to_extract=cats_to_use)
+        cat_df_test = self._extract_categorical_features(df_test, features_to_extract=cats_to_use)
+        
+        self.one_hot_encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
+        X_train_cat = self.one_hot_encoder.fit_transform(cat_df_train)
+        X_test_cat = self.one_hot_encoder.transform(cat_df_test)
+        
+        feature_names_cat = list(self.one_hot_encoder.get_feature_names_out(cats_to_use))
+        print(f"Created {len(feature_names_cat)} features from categorical data.")
+        return X_train_cat, X_test_cat, feature_names_cat
+
+    def _select_numerical_features(self, X_num_train, X_num_test, num_feature_names):
+        """
+        NEW: Selects a subset of numerical features based on `__init__` parameters.
+        """
+        n_features_total = X_num_train.shape[1]
+        all_indices = np.arange(n_features_total)
+        
+        indices_to_use = None
+
+        if self.numerical_feature_indices is not None:
+            print("INFO: Using specified allowlist for numerical features.")
+            invalid_indices = [i for i in self.numerical_feature_indices if not (0 <= i < n_features_total)]
+            if invalid_indices:
+                raise ValueError(f"numerical_feature_indices contains invalid values. Max index is {n_features_total - 1}, but got: {invalid_indices}")
+            indices_to_use = sorted(list(set(self.numerical_feature_indices)))
+
+        elif self.use_random_subset_of_numerical_features:
+            print("INFO: Using random subset of numerical features.")
+            n_to_select = max(1, int(n_features_total * self.subset_fraction))
+            rng = np.random.default_rng(self.random_state)
+            indices_to_use = sorted(rng.choice(all_indices, size=n_to_select, replace=False).tolist())
+        
+        else:
+            print(f"INFO: Using all {n_features_total} numerical features.")
+            final_names = num_feature_names
+            return X_num_train, X_num_test, final_names, None # Return None for indices to signify all were used
+
+        final_names = [num_feature_names[i] for i in indices_to_use]
+        print(f"Selected {len(final_names)} numerical features out of {n_features_total}.")
+        return X_num_train[:, indices_to_use], X_num_test[:, indices_to_use], final_names, indices_to_use
+
+    def _extract_categorical_features(self, df: pd.DataFrame, features_to_extract: list[str]) -> pd.DataFrame:
+        """
+        REWRITTEN: Parses the JSON column and extracts only the specified categorical features.
+        """
+        if self.column not in df.columns:
+            raise ValueError(f"Column '{self.column}' not found in the DataFrame.")
+
+        categorical_data = []
+        parsed_json = df.loc[:, self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
+
+        for js_obj in parsed_json:
+            row_data = {key: "missing" for key in features_to_extract} # Default placeholder
+            if js_obj is not None:
+                for key in features_to_extract:
+                    row_data[key] = js_obj.get(key, "missing")
+            categorical_data.append(row_data)
+
+        return pd.DataFrame(categorical_data, index=df.index, columns=features_to_extract)
+
+    def _extract_test_odds(self, df_test: pd.DataFrame) -> dict:
+        """Extracts betting odds from the test dataframe."""
+        return {
+            "team1_ml": pd.to_numeric(df_test.get("team1_moneyline"), errors='coerce').fillna(0),
+            "team2_ml": pd.to_numeric(df_test.get("team2_moneyline"), errors='coerce').fillna(0),
+            "team1_spread": pd.to_numeric(df_test.get("team1_spread"), errors='coerce').fillna(0),
+            "team2_spread": pd.to_numeric(df_test.get("team2_spread"), errors='coerce').fillna(0),
+            "team1_spread_odds": pd.to_numeric(df_test.get("team1_spread_odds"), errors='coerce').fillna(0),
+            "team2_spread_odds": pd.to_numeric(df_test.get("team2_spread_odds"), errors='coerce').fillna(0),
+            "total_score": pd.to_numeric(df_test.get("total_score"), errors='coerce').fillna(0),
+            "over_odds": pd.to_numeric(df_test.get("over_odds"), errors='coerce').fillna(0),
+            "under_odds": pd.to_numeric(df_test.get("under_odds"), errors='coerce').fillna(0)
+        }
+
+    # =================================================================================
+    # Internal Helper Methods: Model & Data I/O
+    # =================================================================================
+    
+    def _save_training_dataframe(self, X_train: np.ndarray, feature_names: list, filename: str):
+        """
+        Saves the final training data matrix to a CSV file for inspection.
+        """
+        if X_train.size == 0 or not feature_names:
+            print("INFO: Training data is empty, skipping save.")
+            return
+
+        output_dir = "training_data"
+        os.makedirs(output_dir, exist_ok=True)
+        
+        df_to_save = pd.DataFrame(X_train, columns=feature_names)
+
+        output_path = os.path.join(output_dir, f"{filename}.csv")
+        df_to_save.to_csv(output_path, index=False)
+        print(f"INFO: Saved final training data to {output_path}")
+
     def _tune_hyperparameters(self, model, X_train, y_train):
         """
-        Performs hyperparameter tuning using RandomizedSearchCV with TimeSeriesSplit
-        to respect the temporal order of the data.
-
-        Args:
-            model: The scikit-learn model instance to tune.
-            X_train: The training feature data, MUST be sorted chronologically.
-            y_train: The training target data.
-
-        Returns:
-            The best model found by the search, refit on the entire training data.
+        Performs hyperparameter tuning using RandomizedSearchCV with TimeSeriesSplit.
         """
         param_grid = self._HYPERPARAMETER_GRIDS.get(self.model_type)
 
@@ -574,151 +716,38 @@ class MLModel(BaseModel):
             model.fit(X_train, y_train)
             return model
 
-        # =========================================================================
-        # KEY CHANGE: Use TimeSeriesSplit instead of a simple integer for 'cv'
-        # =========================================================================
         time_series_cv = TimeSeriesSplit(n_splits=self.tuning_cv)
 
-        # For MultiOutputRegressor (like SVR), y_train can be 2D. RandomizedSearchCV handles this.
         search = RandomizedSearchCV(
             estimator=model,
             param_distributions=param_grid,
             n_iter=self.tuning_n_iter,
-            # Pass the TimeSeriesSplit object here
             cv=time_series_cv,
             scoring='neg_log_loss' if self.model_type in self._CLASSIFIER_TYPES else 'neg_mean_squared_error',
-            verbose=1, # Set to 2 for more details
+            verbose=1,
             random_state=self.random_state,
-            n_jobs=-1  # Use all available CPU cores
+            n_jobs=-1 
         )
         
         print(f"--- Starting Hyperparameter Tuning with TimeSeriesSplit (n_splits={self.tuning_cv}) ---")
         search.fit(X_train, y_train)
         
-        # The search object automatically refits the best model on the whole dataset
         return search.best_estimator_
-    
-    def _select_features(self, X: np.ndarray, random_state: int, force_include_indices: list[int] = None) -> np.ndarray:
-        """
-        MODIFIED: Selects features based on initialization settings, now with an option
-        to force the inclusion of specific feature indices.
-
-        Priority:
-        1. feature_allowlist: Uses the union of the allowlist and forced indices.
-        2. random_subset: Uses the union of a random subset and forced indices.
-        3. all features: Uses all features (forced indices are naturally included).
-        """
-        n_features_total = X.shape[1]
-        if force_include_indices is None:
-            force_include_indices = []
-
-        # Validate that forced indices are within the valid range.
-        invalid_forced_indices = [i for i in force_include_indices if not (0 <= i < n_features_total)]
-        if invalid_forced_indices:
-            raise ValueError(f"Forced indices contains invalid values. Max index is {n_features_total - 1}, but got: {invalid_forced_indices}")
-
-        indices_to_use = []
-
-        if self.feature_allowlist:
-            print(f"INFO: Using feature allowlist, ensuring forced indices are included.")
-            
-            # Validate that all provided allowlist indices are within the valid range.
-            invalid_indices = [i for i in self.feature_allowlist if not (0 <= i < n_features_total)]
-            if invalid_indices:
-                raise ValueError(f"Feature allowlist contains invalid indices. Max index is {n_features_total - 1}, but got: {invalid_indices}")
-
-            # Combine the user's allowlist with the forced indices
-            final_indices_set = set(self.feature_allowlist) | set(force_include_indices)
-            indices_to_use = sorted(list(final_indices_set))
-
-        elif self.use_random_subset_of_features:
-            print(f"INFO: Using random feature subset, ensuring forced indices are included.")
-            
-            # We must select enough random features to account for any overlap with forced indices.
-            n_forced = len(force_include_indices)
-            n_to_select_randomly = max(1, int(n_features_total * self.subset_fraction))
-
-            # Exclude forced indices from the pool of potential random choices
-            available_indices = np.setdiff1d(np.arange(n_features_total), force_include_indices)
-            
-            # Calculate how many more we need to pick
-            n_random_needed = max(0, n_to_select_randomly - n_forced)
-
-            rng = np.random.default_rng(random_state)
-            if n_random_needed > 0 and len(available_indices) > 0:
-                 # Ensure we don't try to pick more than are available
-                n_random_to_pick = min(n_random_needed, len(available_indices))
-                random_indices = rng.choice(available_indices, size=n_random_to_pick, replace=False)
-                final_indices_set = set(random_indices) | set(force_include_indices)
-            else:
-                # Use only the forced indices if no more are needed or available
-                final_indices_set = set(force_include_indices)
-
-            indices_to_use = sorted(list(final_indices_set))
-
-        else:
-            # Use all features. The forced indices are already included by default.
-            self.feature_indices_ = None
-            print(f"INFO: Using all {n_features_total} features.")
-            return X
-
-        # Set the final indices and names for the selected features
-        self.feature_indices_ = indices_to_use
-        self.feature_names_ = [self.feature_names_[i] for i in indices_to_use]
-        
-        print(f"INFO: Final feature count is {len(indices_to_use)}.")
-        return X[:, indices_to_use]
 
     def _load_data_from_db(self, query: str) -> pd.DataFrame:
         """Connects to the database and returns a DataFrame."""
         db_path = "sports.db"
         if not os.path.exists(db_path):
-                 raise FileNotFoundError(f"Database file not found at {db_path}")
+            raise FileNotFoundError(f"Database file not found at {db_path}")
         with sqlite3.connect(db_path) as conn:
             return pd.read_sql_query(query, conn)
-
-    def _prepare_features(self, df: pd.DataFrame) -> tuple[np.ndarray, list]:
-        """
-        Parses and flattens a JSON column into a feature matrix and a list of feature names.
-        """
-        if self.column not in df.columns:
-            raise ValueError(f"Column '{self.column}' not found in the DataFrame.")
-
-        parsed_json = df[self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
-        feature_list = []
-        feature_names = None
-
-        for idx, js_obj in enumerate(parsed_json):
-            if js_obj is None:
-                print(f"Warning: JSON object is None for DataFrame index {df.index[idx]}. Skipping.")
-                continue
-            
-            temp_obj = js_obj.copy()
-            for key in self._FEATURE_KEYS_TO_DROP: temp_obj.pop(key, None)
-
-            row_features, row_feature_names = [], []
-            
-            if feature_names is None:
-                self._flatten_json_to_list(temp_obj, row_features, row_feature_names, generate_names=True)
-                feature_names = row_feature_names
-            else:
-                self._flatten_json_to_list(temp_obj, row_features)
-            feature_list.append(row_features)
-
-        if not feature_list: return np.array([]), []
-
-        first_row_len = len(feature_list[0])
-        if not all(len(row) == first_row_len for row in feature_list):
-            raise ValueError("Inconsistent feature lengths detected across rows.")
-        
-        return np.array(feature_list, dtype=float), feature_names
 
     def _get_model(self):
         """Initializes a model instance from the model factory."""
         return self._MODELS[self.model_type]()
 
-    def _save_model(self, model, scaler, query: str, trained_input_shape: int, original_input_shape: int):
-        """Saves the model, scaler, and metadata to a versioned .joblib file."""
+    def _save_model(self, model, scaler, query: str):
+        """ REWRITTEN: Saves the model, scaler, encoder, and all feature selection metadata."""
         os.makedirs("models", exist_ok=True)
         base_path = os.path.join("models", self.model_name)
         output_path = f"{base_path}.joblib"
@@ -730,13 +759,19 @@ class MLModel(BaseModel):
             print(f"Archived existing model to {archive_path}")
 
         model_info = {
-            "model": model, "scaler": scaler, "model_type": self.model_type,
-            "trained_input_shape": trained_input_shape,
-            "original_input_shape": original_input_shape,
-            "feature_indices": self.feature_indices_, "column": self.column, "query": query,
+            "model": model, 
+            "scaler": scaler, 
+            "one_hot_encoder": self.one_hot_encoder,
+            "model_type": self.model_type,
+            "column": self.column, 
+            "query": query,
+            # NEW: Save all feature selection parameters
+            "trained_numerical_indices": self.trained_numerical_indices_,
+            "categorical_feature_names": self.categorical_feature_names,
+            "include_market_features": self.include_market_features
         }
         joblib.dump(model_info, output_path)
-        print(f"Model and scaler saved to {output_path}\n")
+        print(f"Model and all metadata saved to {output_path}\n")
 
     def _load_model(self) -> dict:
         """Loads the most recent model file matching the model_name."""
@@ -751,20 +786,32 @@ class MLModel(BaseModel):
         return joblib.load(path)
 
     @staticmethod
-    def _flatten_json_to_list(obj, out_list: list, name_list: list = None, prefix: str = '', generate_names: bool = False):
-        """Recursively flattens a JSON object/list into a single list."""
-        if isinstance(obj, dict):
-            for key in sorted(obj.keys()):
-                MLModel._flatten_json_to_list(obj[key], out_list, name_list, f"{prefix}.{key}" if prefix else key, generate_names)
-        elif isinstance(obj, list):
-            for i, v in enumerate(obj):
-                MLModel._flatten_json_to_list(v, out_list, name_list, f"{prefix}.{i}", generate_names)
-        elif isinstance(obj, bool):
-            out_list.append(1.0 if obj else 0.0)
-            if generate_names: name_list.append(prefix)
-        elif isinstance(obj, (int, float)):
-            out_list.append(float(obj))
-            if generate_names: name_list.append(prefix)
-        elif obj is None:
-            out_list.append(0.0)
-            if generate_names: name_list.append(prefix)
+    def _flatten_json_to_list(obj):
+        """
+        FIXED: Recursively flattens a JSON-like object into two lists: one for values and one for names.
+        Returns a tuple of (values, names).
+        """
+        out_list = []
+        name_list = []
+
+        def _recursive_flatten(sub_obj, prefix):
+            if isinstance(sub_obj, dict):
+                for key in sorted(sub_obj.keys()):
+                    _recursive_flatten(sub_obj[key], f"{prefix}.{key}" if prefix else key)
+            elif isinstance(sub_obj, list):
+                # For simplicity, iterate through lists. A more complex approach might aggregate.
+                for i, v in enumerate(sub_obj):
+                    _recursive_flatten(v, f"{prefix}.{i}")
+            elif isinstance(sub_obj, bool):
+                out_list.append(1.0 if sub_obj else 0.0)
+                name_list.append(prefix)
+            elif isinstance(sub_obj, (int, float)):
+                out_list.append(float(sub_obj))
+                name_list.append(prefix)
+            elif sub_obj is None:
+                out_list.append(0.0)
+                name_list.append(prefix)
+            # Note: String and other non-numeric types are skipped.
+
+        _recursive_flatten(obj, '')
+        return out_list, name_list
