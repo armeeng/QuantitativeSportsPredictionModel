@@ -433,7 +433,7 @@ class TestModel:
                 'ou': {'final_bankroll': bankrolls['ou'], 'bets_placed': bets_placed['ou'], 'total_wagered': total_wagered['ou']}
             }
     
-    def check_calibration(self, n_bins=10):
+    def check_calibration(self, n_bins=50):
         """
         Calculates the Brier score and generates calibration plots to assess
         the reliability of the model's probabilities. This is only applicable for classifiers.
