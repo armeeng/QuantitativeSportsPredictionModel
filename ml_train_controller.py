@@ -39,7 +39,7 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
 
 def main():
     num_feat = [22]
-    cat_feat = ["team1_id", "team2_id"]
+    cat_feat = ["team1_id", "team2_id", "venue_id", "season_type", "day", "month", "year", "day_of_week"]
     MODEL_TYPE   = "logistic_regression"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
     COLUMN       = "stats"    # stats or normalized_stats
     TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB' AND DATE < '2024-12-10' ORDER BY date ASC;"

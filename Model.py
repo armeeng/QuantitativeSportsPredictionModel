@@ -142,7 +142,8 @@ class MLModel(BaseModel):
                  # NEW: Granular feature selection parameters
                  numerical_feature_indices: list[int] = None,
                  categorical_feature_names: list[str] = None,
-                 include_market_features: bool = False,
+                 include_market_spread: bool = False,
+                 include_market_total: bool = False,
                  # Modified: Random selection now applies only to numerical features
                  use_random_subset_of_numerical_features: bool = False,
                  subset_fraction: float = None,
@@ -160,7 +161,8 @@ class MLModel(BaseModel):
                 If provided, only these numerical features will be used. Defaults to None (use all).
             categorical_feature_names (list[str], optional): An allowlist of names for categorical features.
                 If provided, only these categorical features will be encoded and used. Defaults to None (use all defined in _DEFAULT_CATEGORICAL_FEATURES).
-            include_market_features (bool): If True, market spread and total score are included as features for any model type.
+            include_market_spread (bool): If True, market spread is included as a feature.
+            include_market_total (bool): If True, market total score is included as a feature.
             use_random_subset_of_numerical_features (bool): If True, a random subset of numerical features is used.
             subset_fraction (float, optional): The fraction of numerical features to use if random selection is enabled.
             hyperparameter_tuning (bool): If True, run RandomizedSearchCV to find the best hyperparameters.
@@ -207,7 +209,8 @@ class MLModel(BaseModel):
         # Store feature selection parameters
         self.numerical_feature_indices = numerical_feature_indices
         self.categorical_feature_names = categorical_feature_names
-        self.include_market_features = include_market_features
+        self.include_market_spread = include_market_spread
+        self.include_market_total = include_market_total
         self.use_random_subset_of_numerical_features = use_random_subset_of_numerical_features
 
         if subset_fraction is None: self.subset_fraction = random.uniform(0.01, 1.0)
@@ -262,7 +265,12 @@ class MLModel(BaseModel):
             # Load the feature selection metadata the model was trained with
             self.trained_numerical_indices_ = info.get('trained_numerical_indices')
             self.categorical_feature_names = info.get('categorical_feature_names')
-            self.include_market_features = info.get('include_market_features', False)
+
+            # Handle backward compatibility for market feature flags
+            old_market_flag = info.get('include_market_features', False)
+            self.include_market_spread = info.get('include_market_spread', old_market_flag)
+            self.include_market_total = info.get('include_market_total', old_market_flag)
+
         except FileNotFoundError as e:
             print(f"Error: {e}")
             return []
@@ -291,13 +299,15 @@ class MLModel(BaseModel):
         # 5. Combine numerical and categorical
         X_combined = np.hstack([X_num_selected, X_cat])
         
-        # 6. Add market features if the model was trained with them
-        if self.include_market_features:
+        # 6. Conditionally add market features if the model was trained with them
+        X_final = X_combined
+        if self.include_market_spread:
             spread_feature = pd.to_numeric(df["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_final = np.hstack((X_final, spread_feature))
+
+        if self.include_market_total:
             total_feature = pd.to_numeric(df["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-            X_final = np.hstack((X_combined, spread_feature, total_feature))
-        else:
-            X_final = X_combined
+            X_final = np.hstack((X_final, total_feature))
         # --- End Prediction Feature Engineering Pipeline ---
 
         # 7. Scale and Predict
@@ -528,22 +538,28 @@ class MLModel(BaseModel):
         # Store the names of the features combined so far
         self.feature_names_ = final_num_names + cat_feature_names
 
-        # 6. Optionally, add market features
-        if self.include_market_features:
-            print("INFO: Including market spread and total score as features.")
+        # 6. Conditionally add market features
+        X_train_final, X_test_final = X_train_combined, X_test_combined
+
+        if self.include_market_spread:
+            print("INFO: Including market spread as a feature.")
             spread_train = pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-            total_train = pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-            X_train_final = np.hstack((X_train_combined, spread_train, total_train))
+            X_train_final = np.hstack((X_train_final, spread_train))
 
             spread_test = pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-            total_test = pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
-            X_test_final = np.hstack((X_test_combined, spread_test, total_test))
+            X_test_final = np.hstack((X_test_final, spread_test))
             
-            # Add the names of the market features
-            self.feature_names_ += ['market_team1_spread', 'market_total_score']
-        else:
-            X_train_final = X_train_combined
-            X_test_final = X_test_combined
+            self.feature_names_.append('market_team1_spread')
+
+        if self.include_market_total:
+            print("INFO: Including market total score as a feature.")
+            total_train = pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_train_final = np.hstack((X_train_final, total_train))
+
+            total_test = pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
+            X_test_final = np.hstack((X_test_final, total_test))
+
+            self.feature_names_.append('market_total_score')
 
         print(f"INFO: Final feature count is {X_train_final.shape[1]}.")
         return X_train_final, X_test_final
@@ -596,7 +612,6 @@ class MLModel(BaseModel):
             results.append(np.array(feature_list, dtype=float))
 
         return tuple(results) + (master_feature_names,)
-
 
     def _prepare_categorical_features(self, df_train, df_test, cats_to_use):
         """
@@ -768,7 +783,8 @@ class MLModel(BaseModel):
             # NEW: Save all feature selection parameters
             "trained_numerical_indices": self.trained_numerical_indices_,
             "categorical_feature_names": self.categorical_feature_names,
-            "include_market_features": self.include_market_features
+            "include_market_spread": self.include_market_spread,
+            "include_market_total": self.include_market_total
         }
         joblib.dump(model_info, output_path)
         print(f"Model and all metadata saved to {output_path}\n")
