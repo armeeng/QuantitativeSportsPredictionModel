@@ -21,7 +21,7 @@ GAMES_QUERY = "SELECT * FROM games WHERE sport = 'MLB';"
 STATS_COLUMN = "stats"
 # Set your desired correlation threshold. Any feature pair with a correlation
 # greater than this value will be considered for pruning.
-CORRELATION_THRESHOLD = 0.7
+CORRELATION_THRESHOLD = 0.5
 
 def find_features_to_keep(correlation_matrix: pd.DataFrame, threshold: float) -> set:
     """
