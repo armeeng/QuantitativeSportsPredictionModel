@@ -38,18 +38,59 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
     return f"{m_abbr}_{col_part}_{sport}_{suffix}"
 
 def main():
-    num_feat = [22]
-    cat_feat = ["team1_id", "team2_id", "venue_id", "season_type", "day", "month", "year", "day_of_week"]
-    MODEL_TYPE   = "logistic_regression"   # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor', 'mlp_regressor', 'knn_regressor', 'svr', 'logistic_regression', 'knn_classifier', 'svc', 'random_forest_classifier', 'xgboost_classifier', 'mlp_classifier', 'gradient_boosting_classifier', 'gaussian_nb', 'random_forest', 'xgboost', 'mlp', 'neural_network', 'svm']
-    COLUMN       = "stats"    # stats or normalized_stats
-    TRAIN_QUERY  = "SELECT * FROM games WHERE sport = 'MLB' AND DATE < '2024-12-10' ORDER BY date ASC;"
-    TEST_QUERY   = "SELECT * FROM games WHERE sport = 'MLB' AND DATE > '2024-12-10' ORDER BY date ASC;"
+    """
+    Train/test an MLB model.
+    """
 
-    # build a name like "lr_norm_NBA_all" or e.g. "rf_nonorm_MLB_date_<_2025_05_26"
+    # ── Feature definitions ────────────────────────────────
+    num_feat = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+    cat_feat = [
+        "team1_id", "team2_id", "venue_id", "season_type",
+        "day", "month", "year", "day_of_week",
+    ]
+
+    # ── Model & data configuration ─────────────────────────
+    MODEL_TYPE = "logistic_regression"          
+    # Options include:
+    # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor',
+    #  'mlp_regressor', 'knn_regressor', 'svr',
+    #  'logistic_regression', 'knn_classifier', 'svc',
+    #  'random_forest_classifier', 'xgboost_classifier',
+    #  'mlp_classifier', 'gradient_boosting_classifier',
+    #  'gaussian_nb', 'random_forest', 'xgboost',
+    #  'mlp', 'neural_network', 'svm']
+
+    COLUMN = "stats"  # 'stats' or 'normalized_stats'
+
+    TRAIN_QUERY = (
+        "SELECT * FROM games "
+        "WHERE sport = 'MLB' AND DATE < '2024-12-10' "
+        "ORDER BY date ASC;"
+    )
+    TEST_QUERY = (
+        "SELECT * FROM games "
+        "WHERE sport = 'MLB' AND DATE > '2024-12-10' "
+        "ORDER BY date ASC;"
+    )
+
+    # Build a name like 'lr_norm_NBA_all' or
+    # 'rf_nonorm_MLB_date_<_2025_05_26'
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
 
-    # ── TRAIN ─────────────────────────────────────
-    model = MLModel(MODEL_NAME, MODEL_TYPE, column=COLUMN, hyperparameter_tuning=False, tuning_n_iter=100, random_state=130, numerical_feature_indices=num_feat, categorical_feature_names=cat_feat)#feature_allowlist=indices
+    # ── TRAIN ──────────────────────────────────────────────
+    model = MLModel(
+        MODEL_NAME,
+        MODEL_TYPE,
+        column=COLUMN,
+        hyperparameter_tuning=False,
+        tuning_n_iter=100,
+        random_state=130,
+        numerical_feature_indices=num_feat,
+        categorical_feature_names=cat_feat,
+        include_market_spread=True,
+        include_market_total=True,
+    )
     model.train(TRAIN_QUERY, TEST_QUERY)
 
 if __name__ == "__main__":

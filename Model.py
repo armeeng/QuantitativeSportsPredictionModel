@@ -232,7 +232,8 @@ class MLModel(BaseModel):
         
         # Final feature names and indices used for training the model
         self.feature_names_ = None
-        self.trained_numerical_indices_ = None # The final indices of numerical features used
+        self.trained_numerical_indices_ = None
+        self.final_numerical_feature_names_ = None
 
     # =================================================================================
     # Public API: Main Methods
@@ -334,13 +335,15 @@ class MLModel(BaseModel):
 
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """
-        Calculates and returns feature importances for the final features used in the model.
+        REWRITTEN: Calculates and returns feature importances, filtering for ONLY
+        numerical features and adding a column for their original index.
         """
         if model is None: model = self.model_
         if self.feature_names_ is None:
             print("Feature names are not available. Please train the model first.")
             return None
 
+        # --- Calculate full list of importances ---
         importances = None
         if hasattr(model, 'feature_importances_'):
             importances = model.feature_importances_
@@ -354,13 +357,37 @@ class MLModel(BaseModel):
             print(f"Cannot get feature importance for model type {type(model).__name__} without test data.")
             return None
 
-        importance_df = pd.DataFrame({
+        # --- Create, Filter, and Enhance the Importance DataFrame ---
+        full_importance_df = pd.DataFrame({
             'importance': importances,
             'feature': self.feature_names_
         })
 
-        # The feature names are already final, so we just sort by importance.
-        return importance_df.sort_values(by='importance', ascending=False)
+        # Filter for only the numerical features used in the model
+        if not self.final_numerical_feature_names_:
+            print("Warning: No numerical feature names found to calculate importance for.")
+            return pd.DataFrame(columns=['feature_index', 'feature', 'importance'])
+
+        numerical_importance_df = full_importance_df[
+            full_importance_df['feature'].isin(self.final_numerical_feature_names_)
+        ].copy()
+
+        # Determine the original indices for the numerical features
+        if self.trained_numerical_indices_ is not None:
+            indices = self.trained_numerical_indices_
+        else:  # This case occurs if all numerical features were used
+            indices = list(range(len(self.final_numerical_feature_names_)))
+        
+        # Add the original index column
+        if len(numerical_importance_df) == len(indices):
+            numerical_importance_df['feature_index'] = indices
+        else:
+            print("Warning: Mismatch between number of numerical features and indices. Cannot add 'feature_index' column.")
+            numerical_importance_df['feature_index'] = pd.NA
+
+        # Select and reorder columns, then sort by importance
+        final_df = numerical_importance_df[['feature_index', 'feature', 'importance']]
+        return final_df.sort_values(by='importance', ascending=False)
 
     # =================================================================================
     # Internal Training Methods
@@ -530,13 +557,14 @@ class MLModel(BaseModel):
         X_train_num_final, X_test_num_final, final_num_names, self.trained_numerical_indices_ = self._select_numerical_features(
             X_train_num, X_test_num, all_num_feature_names
         )
+        self.final_numerical_feature_names_ = final_num_names
 
         # 5. Combine the selected numerical features with the categorical features
         X_train_combined = np.hstack([X_train_num_final, X_train_cat])
         X_test_combined = np.hstack([X_test_num_final, X_test_cat])
         
         # Store the names of the features combined so far
-        self.feature_names_ = final_num_names + cat_feature_names
+        self.feature_names_ = self.final_numerical_feature_names_ + cat_feature_names
 
         # 6. Conditionally add market features
         X_train_final, X_test_final = X_train_combined, X_test_combined
