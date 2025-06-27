@@ -43,14 +43,14 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [682, 852, 2233, 1792, 1103, 1377, 983, 195, 160, 1186, 0, 1045, 2172, 1116, 1776, 1234, 410, 1506, 220, 286, 1047, 1222, 1036, 336, 2026, 710, 1820, 338, 2038, 250, 1052, 69, 334, 34, 1653, 2146, 686, 1542, 1191, 1124, 1360, 1353, 106, 1660, 2157, 404, 110, 1500, 149, 1134]
+    num_feat = [251, 322, 350, 877, 1938]
 
     cat_feat = [
-        "team1_id", "team2_id", "venue_id"
+       
     ]
 
     # ── Model & data configuration ─────────────────────────
-    MODEL_TYPE = "logistic_regression"          
+    MODEL_TYPE = "xgboost_classifier"          
     # Options include:
     # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor',
     #  'mlp_regressor', 'knn_regressor', 'svr',
@@ -82,10 +82,10 @@ def main():
         MODEL_NAME,
         MODEL_TYPE,
         column=COLUMN,
-        hyperparameter_tuning=False,
+        hyperparameter_tuning=True,
         tuning_n_iter=100,
         random_state=130,
-        numerical_feature_indices=num_feat,
+        #numerical_feature_indices=num_feat,
         categorical_feature_names=cat_feat,
         include_market_spread=True,
         include_market_total=True,
