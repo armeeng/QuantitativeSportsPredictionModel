@@ -43,14 +43,14 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [251, 322, 350, 877, 1938]
+    num_feat = [1855, 1744, 1224, 771, 1095, 1575, 285, 234, 877, 844, 251, 322, 350, 877, 1938]
 
     cat_feat = [
-       
+        "team1_id", "team2_id"
     ]
 
     # ── Model & data configuration ─────────────────────────
-    MODEL_TYPE = "xgboost_classifier"          
+    MODEL_TYPE = "gradient_boosting_classifier"          
     # Options include:
     # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor',
     #  'mlp_regressor', 'knn_regressor', 'svr',
@@ -85,7 +85,7 @@ def main():
         hyperparameter_tuning=True,
         tuning_n_iter=100,
         random_state=130,
-        #numerical_feature_indices=num_feat,
+        numerical_feature_indices=num_feat,
         categorical_feature_names=cat_feat,
         include_market_spread=True,
         include_market_total=True,
