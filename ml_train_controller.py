@@ -43,14 +43,14 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [1855, 1744, 1224, 771, 1095, 1575, 285, 234, 877, 844, 251, 322, 350, 877, 1938]
+    num_feat = [844, 251, 322, 350, 877]
 
     cat_feat = [
-        "team1_id", "team2_id"
+        "venue_id"
     ]
 
     # ── Model & data configuration ─────────────────────────
-    MODEL_TYPE = "gradient_boosting_classifier"          
+    MODEL_TYPE = "logistic_regression"          
     # Options include:
     # ['linear_regression', 'random_forest_regressor', 'xgboost_regressor',
     #  'mlp_regressor', 'knn_regressor', 'svr',
@@ -89,6 +89,7 @@ def main():
         categorical_feature_names=cat_feat,
         include_market_spread=True,
         include_market_total=True,
+        feature_engineering_mode='differential'
     )
     model.train(TRAIN_QUERY, TEST_QUERY)
 

@@ -68,7 +68,7 @@ def main():
         print(f"FATAL: Error loading data: {e}")
         return
 
-    dummy_model = MLModel(model_name="dummy", column=STATS_COLUMN)
+    dummy_model = MLModel(model_name="dummy", column=STATS_COLUMN, feature_engineering_mode='differential')
     
     # Extract ALL numerical and categorical features separately
     X_num, all_numerical_names = dummy_model._prepare_numerical_features(df)

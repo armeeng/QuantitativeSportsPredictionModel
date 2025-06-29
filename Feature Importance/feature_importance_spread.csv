@@ -1,15 +1,6 @@
 feature_index,feature,importance
-877,team1_stats.predictive-by-other.Hi,0.07766423101265828
-1224,team2_stats.consistency-by-other.Rating,0.06438181960102356
-844,team1_stats.opponent-win-pct-all-games.Away,0.06228872069391991
-1095,team1_stats.win-pct-all-games.Away,0.06134000301263079
-1855,team2_stats.opponent-stolen-base-pct.2023,0.060417895789830624
-251,team1_stats.home-by-other.Last,0.052987023733940826
-1744,team2_stats.opponent-left-on-base-per-game.Away,0.048794099289872585
-234,team1_stats.hits-per-game.Rank,0.04450283858590535
-285,team1_stats.in-division-sos-by-other.Last,0.03695088299313164
-350,team1_stats.non-division-by-other.Last,0.03684504734977574
-771,team1_stats.opponent-strikeout-pct.Rank,0.033321775623712586
-1938,team2_stats.opponent-walks-per-game.2022,0.028368874742304456
-1575,team2_stats.opponent-caught-stealing-per-game.2023,0.01809641121250932
-322,team1_stats.last-5-games-by-other.Hi,0.0040290972082602855
+877,diff_predictive-by-other.Rating,0.26475716129898186
+322,diff_last-5-games-by-other.Rating,0.12648149924496
+251,diff_home-by-other.v 1-5,0.03278720609767769
+844,diff_opponent-win-pct-all-games.Rank,0.019965905120513692
+350,diff_non-division-sos-by-other.Hi,0.010742007623400242

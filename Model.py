@@ -139,39 +139,36 @@ class MLModel(BaseModel):
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats",
-                 # NEW: Granular feature selection parameters
+                 # NEW: Parameter to control how numerical features are created
+                 feature_engineering_mode: str = 'flatten',
+                 # Granular feature selection parameters
                  numerical_feature_indices: list[int] = None,
                  categorical_feature_names: list[str] = None,
                  include_market_spread: bool = False,
                  include_market_total: bool = False,
-                 # Modified: Random selection now applies only to numerical features
+                 # Random subset selection
                  use_random_subset_of_numerical_features: bool = False,
                  subset_fraction: float = None,
                  # Hyperparameter tuning and reproducibility
                  hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
                  random_state: int = 42):
         """
-        REWRITTEN: `__init__` now accepts granular controls for feature selection.
+        REWRITTEN: `__init__` now accepts a `feature_engineering_mode` parameter.
 
         Args:
-            model_name (str): A unique name for saving and loading the model.
-            model_type (str): The type of algorithm to use (e.g., 'random_forest_regressor').
-            column (str): The DataFrame column containing the JSON features.
-            numerical_feature_indices (list[int], optional): An allowlist of indices for numerical features.
-                If provided, only these numerical features will be used. Defaults to None (use all).
-            categorical_feature_names (list[str], optional): An allowlist of names for categorical features.
-                If provided, only these categorical features will be encoded and used. Defaults to None (use all defined in _DEFAULT_CATEGORICAL_FEATURES).
-            include_market_spread (bool): If True, market spread is included as a feature.
-            include_market_total (bool): If True, market total score is included as a feature.
-            use_random_subset_of_numerical_features (bool): If True, a random subset of numerical features is used.
-            subset_fraction (float, optional): The fraction of numerical features to use if random selection is enabled.
-            hyperparameter_tuning (bool): If True, run RandomizedSearchCV to find the best hyperparameters.
-            tuning_n_iter (int): The number of parameter settings that are sampled during tuning.
-            tuning_cv (int): The number of folds to use for cross-validation during tuning.
-            random_state (int): The seed for all random operations, ensuring reproducibility.
+            feature_engineering_mode (str): How to process numerical features.
+                'flatten': (Default) Flattens all numerical stats into one vector.
+                'differential': Creates features from team2_stats - team1_stats and appends other numericals.
+            ... (other args)
         """
         super().__init__(model_name, column=column)
         self.random_state = random_state
+
+        # NEW: Validate and store the feature engineering mode
+        valid_modes = ['flatten', 'differential']
+        if feature_engineering_mode not in valid_modes:
+            raise ValueError(f"Invalid feature_engineering_mode. Must be one of {valid_modes}")
+        self.feature_engineering_mode = feature_engineering_mode
 
         self._MODELS = {
             # Regressors
@@ -266,6 +263,8 @@ class MLModel(BaseModel):
             # Load the feature selection metadata the model was trained with
             self.trained_numerical_indices_ = info.get('trained_numerical_indices')
             self.categorical_feature_names = info.get('categorical_feature_names')
+            # NEW: Load the feature engineering mode
+            self.feature_engineering_mode = info.get('feature_engineering_mode', 'flatten') # Default to flatten for old models
 
             # Handle backward compatibility for market feature flags
             old_market_flag = info.get('include_market_features', False)
@@ -287,7 +286,7 @@ class MLModel(BaseModel):
         # 1. Determine which categorical features to use (from loaded model info)
         cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
 
-        # 2. Prepare numerical features (extracts all from JSON)
+        # 2. Prepare numerical features based on the saved mode
         X_num, _ = self._prepare_numerical_features(df)
 
         # 3. Select the specific numerical features the model was trained on
@@ -547,7 +546,8 @@ class MLModel(BaseModel):
         # 1. Determine which categorical features to use from instance settings
         cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
 
-        # 2. Prepare numerical features from the JSON column
+        # 2. Prepare numerical features from the JSON column based on the chosen mode
+        print(f"INFO: Using '{self.feature_engineering_mode}' mode for numerical features.")
         X_train_num, X_test_num, all_num_feature_names = self._prepare_numerical_features(df_train, df_test)
 
         # 3. Prepare one-hot encoded categorical features
@@ -594,12 +594,20 @@ class MLModel(BaseModel):
 
     def _prepare_numerical_features(self, *dataframes: pd.DataFrame) -> tuple:
         """
-        FIXED: Prepares numerical features from JSON, ensuring consistent column alignment.
+        MODIFIED: Routes to the correct feature engineering logic based on self.feature_engineering_mode.
         """
-        if not dataframes:
-            return ()
+        if self.feature_engineering_mode == 'differential':
+            return self._prepare_differential_features(*dataframes)
+        else: # Default to 'flatten'
+            return self._prepare_flattened_features(*dataframes)
 
-        # 1. Determine the master list of feature names from the first available valid JSON object.
+    def _prepare_flattened_features(self, *dataframes: pd.DataFrame) -> tuple:
+        """
+        Original logic to flatten all numerical features from the JSON blob.
+        """
+        if not dataframes: return ()
+
+        # Determine master feature names from the first available valid JSON object
         master_feature_names = None
         all_parsed_json = [df[self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x) for df in dataframes]
 
@@ -611,28 +619,22 @@ class MLModel(BaseModel):
                     if discovered_names:
                         master_feature_names = discovered_names
                         break
-            if master_feature_names:
-                break
+            if master_feature_names: break
         
         if not master_feature_names:
             print("Warning: Could not determine numerical feature names from any dataframe. Returning empty arrays.")
             return (np.array([[] for _ in range(len(df))]) for df in dataframes) + ([],)
             
-        # 2. Create a mapping from feature name to its final column index.
         name_to_index = {name: i for i, name in enumerate(master_feature_names)}
 
-        # 3. Process all dataframes, aligning each row's features to the master list.
         results = []
         for parsed_json in all_parsed_json:
             feature_list = []
             for js_obj in parsed_json:
-                # Initialize a row of zeros with the correct length.
                 row_values_ordered = [0.0] * len(master_feature_names)
                 if js_obj:
                     temp_obj = {k: v for k, v in js_obj.items() if k not in self._DEFAULT_CATEGORICAL_FEATURES}
-                    # Get the values and names for this specific row.
                     row_values_raw, row_names_raw = self._flatten_json_to_list(temp_obj)
-                    # Place the values in the correct positions using the name-to-index map.
                     for name, value in zip(row_names_raw, row_values_raw):
                         if name in name_to_index:
                             row_values_ordered[name_to_index[name]] = value
@@ -640,6 +642,71 @@ class MLModel(BaseModel):
             results.append(np.array(feature_list, dtype=float))
 
         return tuple(results) + (master_feature_names,)
+
+    def _prepare_differential_features(self, *dataframes: pd.DataFrame) -> tuple:
+        """
+        NEW: Creates features by calculating team2_stats - team1_stats and appending other numericals.
+        """
+        if not dataframes: return ()
+
+        # Determine feature names from the first valid JSON object
+        diff_names, other_names = None, None
+        all_parsed_json = [df[self.column].apply(lambda x: json.loads(x) if isinstance(x, str) else x) for df in dataframes]
+        
+        for parsed_json in all_parsed_json:
+            for js_obj in parsed_json:
+                if js_obj and 'team1_stats' in js_obj:
+                    # Get differential names from team1_stats
+                    _, stat_names = self._flatten_json_to_list(js_obj['team1_stats'])
+                    diff_names = [f"diff_{name}" for name in stat_names]
+
+                    # Get names of other numerical features
+                    other_obj = {k: v for k, v in js_obj.items() if k not in self._DEFAULT_CATEGORICAL_FEATURES and k not in ['team1_stats', 'team2_stats']}
+                    _, other_names = self._flatten_json_to_list(other_obj)
+                    if diff_names: break
+            if diff_names: break
+
+        if not diff_names:
+            print("Warning: Could not find 'team1_stats' to create differential features. Falling back to flatten mode.")
+            return self._prepare_flattened_features(*dataframes)
+
+        master_feature_names = diff_names + other_names
+        
+        # Process all dataframes
+        results = []
+        for parsed_json in all_parsed_json:
+            feature_list = []
+            for js_obj in parsed_json:
+                # Initialize with zeros
+                t1_vals, t2_vals, other_vals = [0.0] * len(diff_names), [0.0] * len(diff_names), [0.0] * len(other_names)
+                
+                if js_obj:
+                    # Get team stats
+                    if 'team1_stats' in js_obj:
+                        t1_vals, _ = self._flatten_json_to_list(js_obj['team1_stats'])
+                    if 'team2_stats' in js_obj:
+                        t2_vals, _ = self._flatten_json_to_list(js_obj['team2_stats'])
+                    
+                    # Get other numerical stats
+                    other_obj = {k: v for k, v in js_obj.items() if k not in self._DEFAULT_CATEGORICAL_FEATURES and k not in ['team1_stats', 'team2_stats']}
+                    other_vals, _ = self._flatten_json_to_list(other_obj)
+
+                # Ensure lists have correct length before operations
+                t1_vals = (t1_vals + [0.0] * len(diff_names))[:len(diff_names)]
+                t2_vals = (t2_vals + [0.0] * len(diff_names))[:len(diff_names)]
+                other_vals = (other_vals + [0.0] * len(other_names))[:len(other_names)]
+
+                # Calculate differential features
+                diff_features = np.array(t2_vals) - np.array(t1_vals)
+                
+                # Combine into a single row
+                full_row = np.concatenate([diff_features, np.array(other_vals)])
+                feature_list.append(full_row)
+            
+            results.append(np.array(feature_list, dtype=float))
+
+        return tuple(results) + (master_feature_names,)
+
 
     def _prepare_categorical_features(self, df_train, df_test, cats_to_use):
         """
@@ -808,7 +875,8 @@ class MLModel(BaseModel):
             "model_type": self.model_type,
             "column": self.column, 
             "query": query,
-            # NEW: Save all feature selection parameters
+            # NEW: Save all feature selection and engineering parameters
+            "feature_engineering_mode": self.feature_engineering_mode,
             "trained_numerical_indices": self.trained_numerical_indices_,
             "categorical_feature_names": self.categorical_feature_names,
             "include_market_spread": self.include_market_spread,
