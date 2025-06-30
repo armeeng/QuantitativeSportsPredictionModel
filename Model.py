@@ -440,7 +440,7 @@ class MLModel(BaseModel):
         # Feature Importance
         feature_importance = self.get_feature_importance(model=self.model_, X_test=X_test_scaled, y_test=self.y_test)
         if feature_importance is not None:
-            os.makedirs("Feature Importance", exist_ok=True)
+            os.makedirs("Feature_Importance", exist_ok=True)
             feature_importance.to_csv("Feature Importance/feature_importance.csv", index=False)
             print("Saved feature importance to feature_importance.csv")
 

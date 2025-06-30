@@ -4,4 +4,4 @@ models/
 __pycache__/
 .DS_Store
 training_data/
-Feature\ Importance/
+Feature_Importance/

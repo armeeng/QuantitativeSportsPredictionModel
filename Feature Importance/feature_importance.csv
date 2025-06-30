@@ -1,7 +1,0 @@
-feature_index,feature,importance
-160,diff_extra-inning-runs-per-game.Last 1,0.09414157418849638
-1101,diff_win-pct-close-games.Last 3,0.046108704245218624
-1018,diff_team-left-on-base-per-game.Home,0.042736856991605565
-464,diff_opponent-caught-stealing-per-game.Last 1,0.03099958120646329
-317,diff_last-4-innings-runs-per-game.Rank,0.02296913901433345
-250,diff_home-by-other.Rating,0.02259004405608759
