@@ -20,8 +20,12 @@ from Model import MLModel
 
 # --- Configuration ---
 DB_PATH = os.path.join(parent_dir, "sports.db")
-GAMES_QUERY = "SELECT * FROM games WHERE team1_score IS NOT NULL AND team2_score IS NOT NULL"
-STATS_COLUMN = "normalized_stats"
+GAMES_QUERY = (
+        "SELECT * FROM games "
+        "WHERE sport = 'MLB' AND DATE < '2024-12-10' "
+        "ORDER BY date ASC;"
+    )
+STATS_COLUMN = "stats"
 CORRELATION_THRESHOLD = 0.9
 
 # --- Pipeline Configuration ---

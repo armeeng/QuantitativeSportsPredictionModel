@@ -43,7 +43,7 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = []
+    num_feat = [292]
 
     cat_feat = [
     ]
