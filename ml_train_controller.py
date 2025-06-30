@@ -43,10 +43,10 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [160, 250, 317, 464, 1018, 1101]
+    num_feat = [918, 848, 1099, 257, 917, 874, 396, 1065, 802, 123]
 
     cat_feat = [
-        "team1_id", "team2_id"
+        "venue_id"
     ]
 
     # ── Model & data configuration ─────────────────────────
