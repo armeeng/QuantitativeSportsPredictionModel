@@ -1,49 +1,10 @@
-#!/usr/bin/env python3
-import re
-from Model import MLModel
-from TestModel import TestModel
-
-def build_model_name(model_type: str, column: str, query: str) -> str:
-    # 1) model abbreviation
-    abbrs = {
-        'linear_regression': 'lr',
-        'random_forest':     'rf',
-        'xgboost':           'xgb',
-        'neural_network':    'nn'
-        #'mlp':               'nn',
-        #'mlp_regressor':     'nn',
-    }
-    m_abbr = abbrs.get(model_type, model_type[:2])
-
-    # 2) column part
-    col_part = 'norm' if column == 'normalized_stats' else 'nonorm'
-
-    # 3) sport
-    m = re.search(r"sport\s*=\s*'([^']+)'", query, re.IGNORECASE)
-    sport = m.group(1).upper() if m else 'ALL'
-
-    # 4) suffix: “all” if only sport is in the WHERE clause, else slug of the rest
-    where = query.split('WHERE',1)[1]
-    # normalize whitespace & strip trailing ;
-    cond = where.strip().rstrip(';').strip()
-    # check if it’s exactly just the sport clause
-    if re.fullmatch(rf"sport\s*=\s*'{sport}'", cond, re.IGNORECASE):
-        suffix = 'all'
-    else:
-        # remove sport=... then slugify remaining
-        rest = re.sub(rf"sport\s*=\s*'{sport}'\s*(AND\s*)?", '', cond, flags=re.IGNORECASE)
-        # slugify: letters+digits and other things only, underscores
-        suffix = re.sub(r'[^0-9A-Za-z<>=]+', '_', rest).strip('_').lower()
-
-    return f"{m_abbr}_{col_part}_{sport}_{suffix}"
-
 def main():
     """
     Train/test an MLB model.
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = []
+    num_feat = [884, 877, 967, 505, 791, 122, 1010, 398, 1017, 883, 100, 324, 776, 15, 895, 154, 685, 396, 876, 601, 349, 496, 613, 379, 205, 1066, 153, 94, 739, 211, 697, 1030, 29, 1081, 419, 413, 969, 452, 990, 1064, 431, 588, 241, 155, 584, 498, 345, 71, 209, 785, 701, 581, 979, 816, 813, 371, 31, 594, 873, 412, 437, 421, 404, 326, 10, 728, 375, 89, 485, 556, 203, 257, 23, 361, 631, 130, 999, 110, 34, 731, 101, 545, 267, 399, 8, 963, 630, 508, 1041, 497, 676, 780, 27, 934, 473, 952, 91, 142, 746, 237, 580, 6, 479, 687, 574, 140, 563, 289, 1029, 573, 773, 547, 356, 9, 255, 137, 636, 152, 948, 1004, 570, 30, 582, 604, 391, 372, 38, 587, 127, 537, 1005, 519, 874, 743, 930, 222, 213, 981, 487, 318, 603, 233, 882, 974, 50, 1009, 1079, 1031, 795, 811]
 
     cat_feat = [
     ]
@@ -91,6 +52,3 @@ def main():
         feature_engineering_mode='differential'
     )
     model.train(TRAIN_QUERY, TEST_QUERY)
-
-if __name__ == "__main__":
-    main()

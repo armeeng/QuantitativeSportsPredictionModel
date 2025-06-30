@@ -80,10 +80,10 @@ def extract_important_indices(file_path, num_features, match_stats=False):
 if __name__ == "__main__":
     # --- Configuration for Feature Extraction ---
     # Set the path to your CSV file
-    csv_file_path = 'Feature Importance/feature_importance_spread.csv' 
+    csv_file_path = 'Feature_Importance/feature_importance_overunder.csv' 
     
     # Set the number of top features you want to extract
-    num_features_to_extract = 10
+    num_features_to_extract = 150
     
     # Set to True if you want to ensure consistency between team1 and team2 stats
     should_match_stats = False
