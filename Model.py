@@ -505,19 +505,19 @@ class MLModel(BaseModel):
         test_evaluator.display_results()
         
         # Feature Importance
-        os.makedirs("Feature Importance", exist_ok=True)
+        os.makedirs("Feature_Importance", exist_ok=True)
         df_win = self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win)
-        df_win.to_csv("Feature Importance/feature_importance_win.csv", index=False)
+        df_win.to_csv("Feature_Importance/feature_importance_win.csv", index=False)
         print("\nSaved Win model importances to feature_importance_win.csv")
 
         mask = y_test_spread_outcome != 0
         df_spread = self.get_feature_importance(model=model_spread, X_test=X_test_scaled[mask], y_test=(y_test_spread_outcome[mask] > 0).astype(int))
-        df_spread.to_csv("Feature Importance/feature_importance_spread.csv", index=False)
+        df_spread.to_csv("Feature_Importance/feature_importance_spread.csv", index=False)
         print("Saved Spread model importances to feature_importance_spread.csv")
 
         mask = y_test_total_outcome != 0
         df_over = self.get_feature_importance(model=model_over, X_test=X_test_scaled[mask], y_test=(y_test_total_outcome[mask] > 0).astype(int))
-        df_over.to_csv("Feature Importance/feature_importance_overunder.csv", index=False)
+        df_over.to_csv("Feature_Importance/feature_importance_overunder.csv", index=False)
         print("Saved Over/Under model importances to feature_importance_overunder.csv")
 
         self._save_model(self.model_, self.scaler, train_query)
