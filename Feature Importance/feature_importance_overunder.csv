@@ -1,0 +1,14 @@
+feature_index,feature,importance
+802,diff_opponent-total-bases-per-game.Rank,0.10229406984030781
+2,diff_1st-inning-runs-per-game.Away,0.07268735082072805
+874,diff_predictive-by-other.Last,0.044231905983170026
+918,diff_sacrifice-hits-per-game.Away,0.035489616798859494
+123,diff_doubles-per-game.Away,0.0342294502922112
+1099,diff_win-pct-close-games.Home,0.027564739632157116
+1,diff_1st-inning-runs-per-game.2023,0.025306426639389805
+917,diff_sacrifice-hits-per-game.2023,0.019479458583948915
+257,diff_home-run-pct.Home,0.016779624702785656
+396,diff_opponent-4th-inning-runs-per-game.Rank,0.015744970433353194
+1065,diff_walk-pct.Last 1,0.010913231500704782
+0,diff_1st-inning-runs-per-game.2022,0.0024910783360785806
+848,diff_opponent-win-pct-close-games.Home,0.0

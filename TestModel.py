@@ -9,7 +9,7 @@ class TestModel:
     A simple class to display the results from an MLModel's test set.
     This version includes corrections to properly handle missing or invalid
     betting odds and adds accuracy calculations, along with Kelly Criterion betting simulation.
-    NEW: Adds a Monte Carlo simulation to assess the risk and distribution of outcomes.
+    NEW: Adds two simulation methods: a probabilistic Monte Carlo and a more realistic Bootstrap simulation.
     """
     def __init__(self, predictions, y_test, test_odds):
         """
@@ -110,7 +110,6 @@ class TestModel:
             predicted_total = pred_t1_score + pred_t2_score
             pred_is_over = predicted_total > total_line
         
-        # FIX: Ensure all outcomes are NumPy arrays to prevent indexing errors.
         self._outcomes = {
             'actual_winner_is_t1': np.array(actual_winner_is_t1),
             'actual_spread_is_t1_cover': np.array(actual_spread_is_t1_cover),
@@ -240,63 +239,99 @@ class TestModel:
                         bets_placed[bet_type] += 1
         return {k: {'final_bankroll': v, 'bets_placed': bets_placed[k], 'total_wagered': total_wagered[k]} for k, v in bankrolls.items()}
 
-    def run_monte_carlo_simulation(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
+    def run_probabilistic_monte_carlo(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
+        """Runs a Monte Carlo simulation based on the model's probabilities."""
         if not isinstance(self.predictions, dict):
             print("\nMonte Carlo simulation is only available for classifier models.")
-            return None
-
-        print(f"\n--- Running Monte Carlo Simulation ({n_simulations} trials) ---")
-        
-        # 1. Pre-calculate all potential bets
+            return
+        print(f"\n--- Running Probabilistic Monte Carlo Simulation ({n_simulations} trials) ---")
         probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
         decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
         o = self._get_outcomes()
-
         potential_bets = {'moneyline': [], 'spread': [], 'ou': []}
         for i in range(len(self.y_test)):
             for bet_type, sides in {'moneyline': ('team1_ml', 'team2_ml', 'win', None), 
                                     'spread': ('team1_spread_odds', 'team2_spread_odds', 'spread', 'spread_pushes'),
                                     'ou': ('over_odds', 'under_odds', 'over', 'ou_pushes')}.items():
-                # FIX: Use the numpy arrays from _get_outcomes for indexing
                 if sides[3] and o[sides[3]][i]: continue
-                
                 odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
                 if np.isnan(odds1) or np.isnan(odds2): continue
-                
                 prob1 = probs[sides[2]][i]
                 kelly1, kelly2 = self._calculate_kelly_fraction(prob1, odds1), self._calculate_kelly_fraction(1 - prob1, odds2)
-                
                 if kelly1 > kelly2 and kelly1 > 0:
-                    fraction = min(kelly1, max_fraction)
-                    potential_bets[bet_type].append({'prob': prob1, 'odds': odds1, 'fraction': fraction})
+                    potential_bets[bet_type].append({'prob': prob1, 'odds': odds1, 'fraction': min(kelly1, max_fraction)})
                 elif kelly2 > kelly1 and kelly2 > 0:
-                    fraction = min(kelly2, max_fraction)
-                    potential_bets[bet_type].append({'prob': 1 - prob1, 'odds': odds2, 'fraction': fraction})
+                    potential_bets[bet_type].append({'prob': 1 - prob1, 'odds': odds2, 'fraction': min(kelly2, max_fraction)})
         
-        # 2. Run simulations
-        final_bankrolls = {'moneyline': [], 'spread': [], 'ou': []}
-        for bet_type, bets in potential_bets.items():
+        final_bankrolls = self._execute_simulation_loops(potential_bets, n_simulations, initial_bankroll)
+        self._analyze_and_plot_simulation("Probabilistic Monte Carlo", final_bankrolls, initial_bankroll, potential_bets)
+
+    def run_bootstrap_simulation(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
+        """Runs a Monte Carlo simulation by bootstrapping from historical +EV bet outcomes."""
+        if not isinstance(self.predictions, dict):
+            print("\nBootstrap simulation is only available for classifier models.")
+            return
+        print(f"\n--- Running Bootstrap Simulation ({n_simulations} trials) ---")
+        probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
+        decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
+        o = self._get_outcomes()
+        historical_bet_outcomes = {'moneyline': [], 'spread': [], 'ou': []}
+        for i in range(len(self.y_test)):
+            for bet_type, sides in {'moneyline': ('team1_ml', 'team2_ml', 'win', 'actual_winner_is_t1', None), 
+                                    'spread': ('team1_spread_odds', 'team2_spread_odds', 'spread', 'actual_spread_is_t1_cover', 'spread_pushes'),
+                                    'ou': ('over_odds', 'under_odds', 'over', 'actual_is_over', 'ou_pushes')}.items():
+                if sides[4] and o[sides[4]][i]: continue
+                odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
+                if np.isnan(odds1) or np.isnan(odds2): continue
+                prob1 = probs[sides[2]][i]
+                kelly1, kelly2 = self._calculate_kelly_fraction(prob1, odds1), self._calculate_kelly_fraction(1 - prob1, odds2)
+                bet_on_side1 = kelly1 > kelly2
+                has_edge = (bet_on_side1 and kelly1 > 0) or (not bet_on_side1 and kelly2 > 0)
+                if has_edge:
+                    fraction = min(kelly1 if bet_on_side1 else kelly2, max_fraction)
+                    odds = odds1 if bet_on_side1 else odds2
+                    won = (bet_on_side1 == o[sides[3]][i])
+                    pnl_multiplier = (odds - 1) if won else -1.0
+                    historical_bet_outcomes[bet_type].append({'fraction': fraction, 'pnl_multiplier': pnl_multiplier})
+        
+        final_bankrolls = self._execute_simulation_loops(historical_bet_outcomes, n_simulations, initial_bankroll, bootstrap=True)
+        self._analyze_and_plot_simulation("Bootstrap Simulation", final_bankrolls, initial_bankroll, historical_bet_outcomes)
+
+    def _execute_simulation_loops(self, bets_data, n_simulations, initial_bankroll, bootstrap=False):
+        """Helper to run the core simulation loop for either method."""
+        final_bankrolls = {}
+        for bet_type, bets in bets_data.items():
+            sim_results = []
             if not bets:
-                final_bankrolls[bet_type] = [initial_bankroll] * n_simulations
-                continue
-            for _ in range(n_simulations):
-                bankroll = initial_bankroll
-                for bet in bets:
-                    bet_amount = bankroll * bet['fraction']
-                    simulated_win = np.random.rand() < bet['prob']
-                    if simulated_win:
-                        bankroll += bet_amount * (bet['odds'] - 1)
+                sim_results = [initial_bankroll] * n_simulations
+            else:
+                for _ in range(n_simulations):
+                    bankroll = initial_bankroll
+                    if bootstrap:
+                        # Resample from historical outcomes
+                        num_bets = len(bets)
+                        simulated_indices = np.random.choice(range(num_bets), size=num_bets, replace=True)
+                        for index in simulated_indices:
+                            bet = bets[index]
+                            bet_amount = bankroll * bet['fraction']
+                            bankroll += bet_amount * bet['pnl_multiplier']
                     else:
-                        bankroll -= bet_amount
-                final_bankrolls[bet_type].append(bankroll)
-        
-        # 3. Analyze and print results
-        print("\n--- Monte Carlo Kelly Simulation Results ---")
+                        # Use model probabilities
+                        for bet in bets:
+                            bet_amount = bankroll * bet['fraction']
+                            simulated_win = np.random.rand() < bet['prob']
+                            bankroll += bet_amount * (bet['odds'] - 1) if simulated_win else -bet_amount
+                    sim_results.append(bankroll)
+            final_bankrolls[bet_type] = sim_results
+        return final_bankrolls
+
+    def _analyze_and_plot_simulation(self, title, final_bankrolls, initial_bankroll, bets_data):
+        """Helper to analyze and plot results for any simulation type."""
+        print(f"\n--- {title} Results ---")
         for bet_type, results in final_bankrolls.items():
-            if len(potential_bets[bet_type]) == 0:
+            if not bets_data[bet_type]:
                 print(f"\n{bet_type.title()}: No +EV bets found to simulate.")
                 continue
-            
             results = np.array(results)
             print(f"\n{bet_type.title()} Betting Strategy:")
             print(f"  - Median Final Bankroll:      ${np.median(results):,.2f}")
@@ -305,13 +340,11 @@ class TestModel:
             print(f"  - 95th Percentile Outcome:    ${np.percentile(results, 95):,.2f}")
             print(f"  - Probability of Profit:      {np.mean(results > initial_bankroll) * 100:.2f}%")
         
-        self._plot_monte_carlo_results(final_bankrolls, initial_bankroll)
-        return final_bankrolls
-
-    def _plot_monte_carlo_results(self, final_bankrolls, initial_bankroll):
+        self._plot_simulation_results(title, final_bankrolls, initial_bankroll)
+        
+    def _plot_simulation_results(self, title, final_bankrolls, initial_bankroll):
         fig, axes = plt.subplots(1, 3, figsize=(21, 6))
-        fig.suptitle('Monte Carlo Simulation of Final Bankrolls', fontsize=16)
-
+        fig.suptitle(f'{title} of Final Bankrolls', fontsize=16)
         for i, (bet_type, results) in enumerate(final_bankrolls.items()):
             ax = axes[i]
             results = np.array(results)
@@ -323,7 +356,6 @@ class TestModel:
             ax.set_ylabel('Frequency')
             ax.legend()
             ax.grid(True, linestyle='--', alpha=0.6)
-
         plt.tight_layout(rect=[0, 0, 1, 0.96])
         plt.show()
 
@@ -392,6 +424,7 @@ class TestModel:
             print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Profit: ${kelly_ou['final_bankroll'] - initial_bankroll:.2f})")
             
             self.check_calibration()
-            self.run_monte_carlo_simulation(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
+            self.run_probabilistic_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
+            self.run_bootstrap_simulation(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
 
         print("\n------------------------------------")
