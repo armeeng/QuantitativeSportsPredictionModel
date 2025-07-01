@@ -19,6 +19,8 @@ from sklearn.svm import SVR, SVC
 from sklearn.multioutput import MultiOutputRegressor
 from sklearn.inspection import permutation_importance
 from scipy.stats import randint, uniform
+## NEW: Import CalibratedClassifierCV for model calibration
+from sklearn.calibration import CalibratedClassifierCV
 
 
 from TestModel import TestModel
@@ -139,27 +141,30 @@ class MLModel(BaseModel):
 
     def __init__(self, model_name: str, model_type: str = 'linear_regression',
                  column: str = "normalized_stats",
-                 # NEW: Parameter to control how numerical features are created
                  feature_engineering_mode: str = 'flatten',
-                 # Granular feature selection parameters
                  numerical_feature_indices: list[int] = None,
                  categorical_feature_names: list[str] = None,
                  include_market_spread: bool = False,
                  include_market_total: bool = False,
-                 # Random subset selection
                  use_random_subset_of_numerical_features: bool = False,
                  subset_fraction: float = None,
-                 # Hyperparameter tuning and reproducibility
                  hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
+                 ## NEW: Parameters for controlling model calibration
+                 calibrate_model: bool = False,
+                 calibration_method: str = 'isotonic', # 'isotonic' or 'sigmoid'
+                 calibration_split_size: float = 0.2, # Fraction of training data for calibration
                  random_state: int = 42):
         """
-        REWRITTEN: `__init__` now accepts a `feature_engineering_mode` parameter.
+        ## MODIFIED: `__init__` now accepts parameters to enable and configure model calibration.
 
         Args:
-            feature_engineering_mode (str): How to process numerical features.
-                'flatten': (Default) Flattens all numerical stats into one vector.
-                'differential': Creates features from team2_stats - team1_stats and appends other numericals.
             ... (other args)
+            calibrate_model (bool): If True, calibrates classifier probabilities after training.
+            calibration_method (str): The method to use for calibration.
+                'isotonic': A non-parametric method (Isotonic Regression). Good for large datasets.
+                'sigmoid': A parametric method (Platt Scaling). Good for smaller datasets.
+            calibration_split_size (float): The fraction of the training data to hold out
+                for the calibration step.
         """
         super().__init__(model_name, column=column)
         self.random_state = random_state
@@ -218,7 +223,18 @@ class MLModel(BaseModel):
         self.hyperparameter_tuning = hyperparameter_tuning
         self.tuning_n_iter = tuning_n_iter
         self.tuning_cv = tuning_cv
-
+        
+        ## NEW: Store calibration parameters
+        self.calibrate_model = calibrate_model
+        if self.calibrate_model:
+            valid_calib_methods = ['isotonic', 'sigmoid']
+            if calibration_method not in valid_calib_methods:
+                raise ValueError(f"Invalid calibration_method. Must be one of {valid_calib_methods}")
+            if not (0 < calibration_split_size < 1):
+                raise ValueError("calibration_split_size must be between 0 and 1.")
+        self.calibration_method = calibration_method
+        self.calibration_split_size = calibration_split_size
+        
         # Instance attributes to be populated during training
         self.predictions = None
         self.y_test = None
@@ -247,6 +263,8 @@ class MLModel(BaseModel):
         if self.model_type in self._CLASSIFIER_TYPES:
             self._train_classifier(train_query, test_query)
         else:
+            if self.calibrate_model:
+                print("WARNING: Calibration is only implemented for classifier models. Ignoring `calibrate_model=True` for regressor.")
             self._train_regressor(train_query, test_query)
 
     def predict(self, query: str) -> list:
@@ -338,6 +356,10 @@ class MLModel(BaseModel):
         numerical features and adding a column for their original index.
         """
         if model is None: model = self.model_
+        ## NEW: If model is a calibrated classifier, get the base estimator
+        if isinstance(model, CalibratedClassifierCV):
+            model = model.base_estimator
+
         if self.feature_names_ is None:
             print("Feature names are not available. Please train the model first.")
             return None
@@ -448,94 +470,160 @@ class MLModel(BaseModel):
         print(f"Trained {self.model_name} ({self.model_type}) on {len(X_train)} train / {len(X_test)} test games.")
 
     def _train_classifier(self, train_query: str, test_query: str):
-        """ REWRITTEN: Trains classification models using the new granular feature engineering pipeline."""
-        # Load Data
-        df_train = self._load_data_from_db(train_query)
-        df_test = self._load_data_from_db(test_query)
+            """ ## MODIFIED: Trains classification models, with an optional calibration step."""
+            # Load Data
+            df_train = self._load_data_from_db(train_query)
+            df_test = self._load_data_from_db(test_query)
 
-        df_train.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
-        df_test.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
+            df_train.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
+            df_test.dropna(subset=["team1_score", "team2_score", "team1_spread", "total_score"], inplace=True)
 
-        if df_train.empty or df_test.empty:
-            print("Training or test query returned no data. Aborting.")
-            return
+            if df_train.empty or df_test.empty:
+                print("Training or test query returned no data. Aborting.")
+                return
 
-        # Prepare features using the new modular pipeline
-        X_train, X_test = self._prepare_and_select_features(df_train, df_test)
+            # Prepare features using the new modular pipeline
+            X_train_full, X_test = self._prepare_and_select_features(df_train, df_test)
 
-        # Save training data for inspection
-        self._save_training_dataframe(X_train, self.feature_names_, f"{self.model_name}_training_data")
-        
-        # Prepare Target Variables (y)
-        y_train_win = (df_train["team1_score"] > df_train["team2_score"]).astype(int)
-        y_train_spread_outcome = (df_train["team1_score"] - df_train["team2_score"]) + pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0)
-        y_train_total_outcome = (df_train["team1_score"] + df_train["team2_score"]) - pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0)
-        
-        self.y_test = df_test[["team1_score", "team2_score"]]
-        y_test_win = (df_test["team1_score"] > df_test["team2_score"]).astype(int)
-        y_test_spread_outcome = (df_test["team1_score"] - df_test["team2_score"]) + pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0)
-        y_test_total_outcome = (df_test["team1_score"] + df_test["team2_score"]) - pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0)
-        
-        self.test_odds = self._extract_test_odds(df_test)
+            # Save training data for inspection
+            self._save_training_dataframe(X_train_full, self.feature_names_, f"{self.model_name}_training_data")
+            
+            # Prepare Target Variables (y)
+            y_train_win_full = (df_train["team1_score"] > df_train["team2_score"]).astype(int)
+            y_train_spread_outcome = (df_train["team1_score"] - df_train["team2_score"]) + pd.to_numeric(df_train["team1_spread"], errors='coerce').fillna(0)
+            y_train_total_outcome = (df_train["team1_score"] + df_train["team2_score"]) - pd.to_numeric(df_train["total_score"], errors='coerce').fillna(0)
+            
+            self.y_test = df_test[["team1_score", "team2_score"]]
+            y_test_win = (df_test["team1_score"] > df_test["team2_score"]).astype(int)
+            y_test_spread_outcome = (df_test["team1_score"] - df_test["team2_score"]) + pd.to_numeric(df_test["team1_spread"], errors='coerce').fillna(0)
+            y_test_total_outcome = (df_test["team1_score"] + df_test["team2_score"]) - pd.to_numeric(df_test["total_score"], errors='coerce').fillna(0)
+            
+            self.test_odds = self._extract_test_odds(df_test)
+            
+            # Split data for calibration if enabled
+            if self.calibrate_model:
+                print(f"--- Holding out {self.calibration_split_size:.0%} of training data for calibration ---")
+                indices = np.arange(X_train_full.shape[0])
+                train_indices, calib_indices, y_train_win, y_calib_win = train_test_split(
+                    indices, y_train_win_full, test_size=self.calibration_split_size,
+                    random_state=self.random_state, stratify=y_train_win_full
+                )
+                X_train, X_calib = X_train_full[train_indices], X_train_full[calib_indices]
+            else:
+                X_train, y_train_win = X_train_full, y_train_win_full
+                X_calib, y_calib_win = None, None # No calibration data
+                # ## FIX: When not calibrating, train_indices is needed for slicing later
+                train_indices = slice(None) 
 
-        # Scale Features
-        self.scaler = StandardScaler()
-        X_train_scaled = self.scaler.fit_transform(X_train)
-        X_test_scaled = self.scaler.transform(X_test)
+            # Scale Features: Fit scaler ONLY on the main training data
+            self.scaler = StandardScaler()
+            X_train_scaled = self.scaler.fit_transform(X_train)
+            X_test_scaled = self.scaler.transform(X_test)
+            if self.calibrate_model:
+                X_calib_scaled = self.scaler.transform(X_calib)
 
-        # Train Individual Models (Win, Spread, Over/Under)
-        model_win = self._train_single_classifier("WIN", X_train_scaled, y_train_win)
-        
-        train_spread_non_push = y_train_spread_outcome != 0
-        model_spread = self._train_single_classifier("SPREAD", X_train_scaled[train_spread_non_push], (y_train_spread_outcome[train_spread_non_push] > 0).astype(int))
+            # --- Train Individual Models (Win, Spread, Over/Under) ---
+            
+            # 1. WIN Model
+            X_calib_win_scaled = X_calib_scaled if self.calibrate_model else None
+            model_win = self._train_single_classifier(
+                "WIN", X_train_scaled, y_train_win, X_calib_win_scaled, y_calib_win
+            )
 
-        train_total_non_push = y_train_total_outcome != 0
-        model_over = self._train_single_classifier("OVER/UNDER", X_train_scaled[train_total_non_push], (y_train_total_outcome[train_total_non_push] > 0).astype(int))
+            # 2. SPREAD Model
+            # ## FIX: Use .iloc to access rows by position, not by label.
+            train_spread_non_push_mask = y_train_spread_outcome.iloc[train_indices] != 0
+            y_train_spread = (y_train_spread_outcome.iloc[train_indices][train_spread_non_push_mask] > 0).astype(int)
+            
+            X_calib_spread_scaled, y_calib_spread = None, None
+            if self.calibrate_model:
+                # ## FIX: Use .iloc here as well.
+                calib_spread_non_push_mask = y_train_spread_outcome.iloc[calib_indices] != 0
+                y_calib_spread = (y_train_spread_outcome.iloc[calib_indices][calib_spread_non_push_mask] > 0).astype(int)
+                X_calib_spread_scaled = X_calib_scaled[calib_spread_non_push_mask]
+                
+            model_spread = self._train_single_classifier(
+                "SPREAD", X_train_scaled[train_spread_non_push_mask], y_train_spread,
+                X_calib_spread_scaled, y_calib_spread
+            )
 
-        print("\n--- Model Training Finished ---\n")
-        self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
-        
-        # Evaluation and Saving
-        self.predictions = {
-            'win': self.model_['win'].predict_proba(X_test_scaled),
-            'spread': self.model_['spread'].predict_proba(X_test_scaled),
-            'over': self.model_['over'].predict_proba(X_test_scaled)
-        }
-        test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
-        test_evaluator.display_results()
-        
-        # Feature Importance
-        os.makedirs("Feature_Importance", exist_ok=True)
-        df_win = self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win)
-        df_win.to_csv("Feature_Importance/feature_importance_win.csv", index=False)
-        print("\nSaved Win model importances to feature_importance_win.csv")
+            # 3. OVER/UNDER Model
+            # ## FIX: Use .iloc here as well.
+            train_total_non_push_mask = y_train_total_outcome.iloc[train_indices] != 0
+            y_train_over = (y_train_total_outcome.iloc[train_indices][train_total_non_push_mask] > 0).astype(int)
 
-        mask = y_test_spread_outcome != 0
-        df_spread = self.get_feature_importance(model=model_spread, X_test=X_test_scaled[mask], y_test=(y_test_spread_outcome[mask] > 0).astype(int))
-        df_spread.to_csv("Feature_Importance/feature_importance_spread.csv", index=False)
-        print("Saved Spread model importances to feature_importance_spread.csv")
+            X_calib_over_scaled, y_calib_over = None, None
+            if self.calibrate_model:
+                # ## FIX: Use .iloc here as well.
+                calib_total_non_push_mask = y_train_total_outcome.iloc[calib_indices] != 0
+                y_calib_over = (y_train_total_outcome.iloc[calib_indices][calib_total_non_push_mask] > 0).astype(int)
+                X_calib_over_scaled = X_calib_scaled[calib_total_non_push_mask]
+                
+            model_over = self._train_single_classifier(
+                "OVER/UNDER", X_train_scaled[train_total_non_push_mask], y_train_over,
+                X_calib_over_scaled, y_calib_over
+            )
 
-        mask = y_test_total_outcome != 0
-        df_over = self.get_feature_importance(model=model_over, X_test=X_test_scaled[mask], y_test=(y_test_total_outcome[mask] > 0).astype(int))
-        df_over.to_csv("Feature_Importance/feature_importance_overunder.csv", index=False)
-        print("Saved Over/Under model importances to feature_importance_overunder.csv")
+            print("\n--- Model Training Finished ---\n")
+            self.model_ = {'win': model_win, 'spread': model_spread, 'over': model_over}
+            
+            # Evaluation and Saving
+            self.predictions = {
+                'win': self.model_['win'].predict_proba(X_test_scaled),
+                'spread': self.model_['spread'].predict_proba(X_test_scaled),
+                'over': self.model_['over'].predict_proba(X_test_scaled)
+            }
+            test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
+            test_evaluator.display_results()
+            
+            # Feature Importance
+            os.makedirs("Feature_Importance", exist_ok=True)
+            df_win = self.get_feature_importance(model=model_win, X_test=X_test_scaled, y_test=y_test_win)
+            df_win.to_csv("Feature_Importance/feature_importance_win.csv", index=False)
+            print("\nSaved Win model importances to feature_importance_win.csv")
 
-        self._save_model(self.model_, self.scaler, train_query)
-        print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train)} train / {len(X_test)} test games.")
+            mask = y_test_spread_outcome != 0
+            df_spread = self.get_feature_importance(model=model_spread, X_test=X_test_scaled[mask], y_test=(y_test_spread_outcome[mask] > 0).astype(int))
+            df_spread.to_csv("Feature_Importance/feature_importance_spread.csv", index=False)
+            print("Saved Spread model importances to feature_importance_spread.csv")
 
-    def _train_single_classifier(self, name: str, X_train, y_train):
-        """Helper to tune or train a single classification model."""
+            mask = y_test_total_outcome != 0
+            df_over = self.get_feature_importance(model=model_over, X_test=X_test_scaled[mask], y_test=(y_test_total_outcome[mask] > 0).astype(int))
+            df_over.to_csv("Feature_Importance/feature_importance_overunder.csv", index=False)
+            print("Saved Over/Under model importances to feature_importance_overunder.csv")
+
+            self._save_model(self.model_, self.scaler, train_query)
+            print(f"Trained {self.model_name} ({self.model_type}) with {len(X_train_full)} train / {len(X_test)} test games.")
+
+    def _train_single_classifier(self, name: str, X_train, y_train, X_calib=None, y_calib=None):
+        """## MODIFIED: Helper to tune/train a single classification model and optionally calibrate it."""
         initial_model = self._get_model()
+        
+        # Train or tune the base model
         if self.hyperparameter_tuning:
             print(f"\n--- Tuning {name} model ({self.model_type}) ---")
-            model = self._tune_hyperparameters(initial_model, X_train, y_train)
-            print(f"Best {name} model parameters: {model.get_params()}")
+            base_model = self._tune_hyperparameters(initial_model, X_train, y_train)
+            print(f"Best {name} model parameters: {base_model.get_params()}")
         else:
-            model = initial_model.fit(X_train, y_train)
-        return model
+            base_model = initial_model
+            base_model.fit(X_train, y_train)
+
+        # Calibrate the model if calibration data is provided
+        if self.calibrate_model and X_calib is not None and y_calib is not None:
+            if len(X_calib) > 0:
+                print(f"--- Calibrating {name} model using '{self.calibration_method}' method on {len(X_calib)} samples ---")
+                # `cv='prefit'` tells CalibratedClassifierCV that the provided model is already trained.
+                # It will then only train the calibrator (Isotonic or Sigmoid) on the hold-out data.
+                calibrated_model = CalibratedClassifierCV(base_model, method=self.calibration_method, cv='prefit')
+                calibrated_model.fit(X_calib, y_calib)
+                return calibrated_model
+            else:
+                print(f"WARNING: Skipping calibration for {name} model as there are no calibration samples.")
+
+        return base_model
 
     # =================================================================================
-    # Internal Helper Methods: Feature Engineering
+    # Internal Helper Methods: Feature Engineering (No changes here)
     # =================================================================================
 
     def _prepare_and_select_features(self, df_train: pd.DataFrame, df_test: pd.DataFrame) -> tuple[np.ndarray, np.ndarray]:
@@ -857,7 +945,7 @@ class MLModel(BaseModel):
         return self._MODELS[self.model_type]()
 
     def _save_model(self, model, scaler, query: str):
-        """ REWRITTEN: Saves the model, scaler, encoder, and all feature selection metadata."""
+        """ ## MODIFIED: Saves the model, scaler, encoder, and all feature/calibration metadata."""
         os.makedirs("models", exist_ok=True)
         base_path = os.path.join("models", self.model_name)
         output_path = f"{base_path}.joblib"
@@ -875,12 +963,16 @@ class MLModel(BaseModel):
             "model_type": self.model_type,
             "column": self.column, 
             "query": query,
-            # NEW: Save all feature selection and engineering parameters
+            # Feature engineering parameters
             "feature_engineering_mode": self.feature_engineering_mode,
             "trained_numerical_indices": self.trained_numerical_indices_,
             "categorical_feature_names": self.categorical_feature_names,
             "include_market_spread": self.include_market_spread,
-            "include_market_total": self.include_market_total
+            "include_market_total": self.include_market_total,
+            ## NEW: Save calibration settings
+            "calibrate_model": self.calibrate_model,
+            "calibration_method": self.calibration_method,
+            "calibration_split_size": self.calibration_split_size
         }
         joblib.dump(model_info, output_path)
         print(f"Model and all metadata saved to {output_path}\n")

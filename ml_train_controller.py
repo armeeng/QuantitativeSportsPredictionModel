@@ -89,7 +89,10 @@ def main():
         categorical_feature_names=cat_feat,
         include_market_spread=True,
         include_market_total=True,
-        feature_engineering_mode='differential' # flatten or differential
+        feature_engineering_mode='differential', # flatten or differential
+        calibrate_model=False,
+        calibration_method='sigmoid',
+        calibration_split_size=0.2
     )
     model.train(TRAIN_QUERY, TEST_QUERY)
 
