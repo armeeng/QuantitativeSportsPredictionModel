@@ -44,6 +44,7 @@ def main():
 
     # ── Feature definitions ────────────────────────────────
     num_feat = [292]
+    #num_feat = [296, 1406]
 
     cat_feat = [
     ]
@@ -88,7 +89,7 @@ def main():
         categorical_feature_names=cat_feat,
         include_market_spread=True,
         include_market_total=True,
-        feature_engineering_mode='differential'
+        feature_engineering_mode='differential' # flatten or differential
     )
     model.train(TRAIN_QUERY, TEST_QUERY)
 
