@@ -1,8 +1,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.metrics import brier_score_loss
+from sklearn.metrics import brier_score_loss, log_loss
 from sklearn.calibration import CalibrationDisplay
+import scipy.stats as stats
 
 class TestModel:
     """
@@ -142,8 +143,15 @@ class TestModel:
             'correct_ou_preds': correct_ou_preds, 'num_ou_outcomes': num_ou_outcomes,
         }
 
-    def calculate_pnl_of_all_games(self, bet_amount=1.0):
+    # NEW: Helper method to get PnL vectors for the "All Flat Bets" strategy
+    def get_pnl_vectors_for_all_flat_bets(self, bet_amount=1.0):
+        """
+        Generates the PnL vector for the strategy of placing a flat bet on every
+        available game based on the model's prediction.
+        """
         o = self._get_outcomes()
+
+        # --- Moneyline ---
         bet_on_t1_win = o['pred_winner_is_t1']
         ml_odds = np.where(bet_on_t1_win, self.test_odds['team1_ml'], self.test_odds['team2_ml'])
         ml_odds_numeric = pd.to_numeric(ml_odds, errors='coerce')
@@ -151,7 +159,8 @@ class TestModel:
         ml_bet_won = (bet_on_t1_win == o['actual_winner_is_t1'])
         ml_profits = self._calculate_profit(ml_odds_numeric, bet_amount)
         ml_pnl_per_game = np.where(ml_bet_won, ml_profits, -bet_amount)
-        moneyline_pnl = np.sum(ml_pnl_per_game[valid_ml_bets])
+
+        # --- Spread ---
         bet_on_t1_cover = o['pred_spread_is_t1_cover']
         spread_odds = np.where(bet_on_t1_cover, self.test_odds['team1_spread_odds'], self.test_odds['team2_spread_odds'])
         spread_odds_numeric = pd.to_numeric(spread_odds, errors='coerce')
@@ -159,7 +168,8 @@ class TestModel:
         spread_bet_won = (bet_on_t1_cover == o['actual_spread_is_t1_cover'])
         spread_profits = self._calculate_profit(spread_odds_numeric, bet_amount)
         spread_pnl_per_game = np.where(spread_bet_won, spread_profits, -bet_amount)
-        spread_pnl = np.sum(spread_pnl_per_game[valid_spread_bets])
+
+        # --- Over/Under ---
         bet_on_over = o['pred_is_over']
         ou_odds = np.where(bet_on_over, self.test_odds['over_odds'], self.test_odds['under_odds'])
         ou_odds_numeric = pd.to_numeric(ou_odds, errors='coerce')
@@ -167,52 +177,107 @@ class TestModel:
         ou_bet_won = (bet_on_over == o['actual_is_over'])
         ou_profits = self._calculate_profit(ou_odds_numeric, bet_amount)
         ou_pnl_per_game = np.where(ou_bet_won, ou_profits, -bet_amount)
-        ou_pnl = np.sum(ou_pnl_per_game[valid_ou_bets])
+        
         return {
-            'moneyline_pnl': moneyline_pnl, 'spread_pnl': spread_pnl, 'ou_pnl': ou_pnl,
-            'moneyline_bets_placed': np.sum(valid_ml_bets),
-            'spread_bets_placed': np.sum(valid_spread_bets),
-            'ou_bets_placed': np.sum(valid_ou_bets),
+            'moneyline': ml_pnl_per_game[valid_ml_bets],
+            'spread': spread_pnl_per_game[valid_spread_bets],
+            'ou': ou_pnl_per_game[valid_ou_bets],
         }
 
-    def calculate_pnl_of_game_above_ev_threshold(self, ev_threshold=0, bet_amount=1.0):
-        if not isinstance(self.predictions, dict):
-            nan_result = {'pnl': np.nan, 'count': 0}
-            return {'moneyline': nan_result, 'spread': nan_result, 'ou': nan_result}
-        o = self._get_outcomes()
-        def is_valid(odds_series):
-            return pd.notna(pd.to_numeric(odds_series, errors='coerce')) & (pd.to_numeric(odds_series, errors='coerce') != 0)
-        validity = {
-            't1_ml': is_valid(self.test_odds['team1_ml']), 't2_ml': is_valid(self.test_odds['team2_ml']),
-            't1_spread': is_valid(self.test_odds['team1_spread_odds']), 't2_spread': is_valid(self.test_odds['team2_spread_odds']),
-            'over': is_valid(self.test_odds['over_odds']), 'under': is_valid(self.test_odds['under_odds']),
+    def calculate_pnl_of_all_games(self, bet_amount=1.0):
+        pnl_vectors = self.get_pnl_vectors_for_all_flat_bets(bet_amount)
+        return {
+            'moneyline_pnl': np.sum(pnl_vectors['moneyline']), 'spread_pnl': np.sum(pnl_vectors['spread']), 'ou_pnl': np.sum(pnl_vectors['ou']),
+            'moneyline_bets_placed': len(pnl_vectors['moneyline']),
+            'spread_bets_placed': len(pnl_vectors['spread']),
+            'ou_bets_placed': len(pnl_vectors['ou']),
         }
+
+    def get_pnl_vectors_for_ev_bets(self, ev_threshold=0, bet_amount=1.0):
+        """
+        A helper method to get the list of PnL for each individual +EV bet.
+        This is needed for the p-value calculation.
+        """
+        if not isinstance(self.predictions, dict):
+            return {'moneyline': np.array([]), 'spread': np.array([]), 'ou': np.array([])}
+
+        o = self._get_outcomes()
         profits = {key: self._calculate_profit(self.test_odds[val_key], bet_amount)
                    for key, val_key in [('t1_ml', 'team1_ml'), ('t2_ml', 'team2_ml'), ('t1_spread', 'team1_spread_odds'), 
                                         ('t2_spread', 'team2_spread_odds'), ('over', 'over_odds'), ('under', 'under_odds')]}
+
         prob_t1_win, prob_t1_cover, prob_over = self.predictions['win'][:, 1], self.predictions['spread'][:, 1], self.predictions['over'][:, 1]
+        
         ev = {
             't1_win': (prob_t1_win * profits['t1_ml']) - ((1 - prob_t1_win) * bet_amount), 't2_win': ((1 - prob_t1_win) * profits['t2_ml']) - (prob_t1_win * bet_amount),
             't1_cover': (prob_t1_cover * profits['t1_spread']) - ((1 - prob_t1_cover) * bet_amount), 't2_cover': ((1 - prob_t1_cover) * profits['t2_spread']) - (prob_t1_cover * bet_amount),
             'over': (prob_over * profits['over']) - ((1 - prob_over) * bet_amount), 'under': ((1 - prob_over) * profits['under']) - (prob_over * bet_amount)
         }
-        for k, v_key in [('t1_win', 't1_ml'), ('t2_win', 't2_ml'), ('t1_cover', 't1_spread'), ('t2_cover', 't2_spread'), ('over', 'over'), ('under', 'under')]:
-            ev[k][~validity[v_key]] = -np.inf
+
         bet_on_t1_ml = ev['t1_win'] > ev['t2_win']
         place_ml_bet = np.where(bet_on_t1_ml, ev['t1_win'], ev['t2_win']) > ev_threshold
-        ml_pnl = np.sum(np.where(bet_on_t1_ml == o['actual_winner_is_t1'], np.where(bet_on_t1_ml, profits['t1_ml'], profits['t2_ml']), -bet_amount)[place_ml_bet])
+        winnings_ml = np.where(bet_on_t1_ml, profits['t1_ml'], profits['t2_ml'])
+        pnl_vector_ml = np.where(bet_on_t1_ml == o['actual_winner_is_t1'], winnings_ml, -bet_amount)
+        
         bet_on_t1_spread = ev['t1_cover'] > ev['t2_cover']
         place_spread_bet = (np.where(bet_on_t1_spread, ev['t1_cover'], ev['t2_cover']) > ev_threshold) & (~o['spread_pushes'])
-        spread_pnl = np.sum(np.where(bet_on_t1_spread == o['actual_spread_is_t1_cover'], np.where(bet_on_t1_spread, profits['t1_spread'], profits['t2_spread']), -bet_amount)[place_spread_bet])
+        winnings_spread = np.where(bet_on_t1_spread, profits['t1_spread'], profits['t2_spread'])
+        pnl_vector_spread = np.where(bet_on_t1_spread == o['actual_spread_is_t1_cover'], winnings_spread, -bet_amount)
+
         bet_on_over = ev['over'] > ev['under']
         place_ou_bet = (np.where(bet_on_over, ev['over'], ev['under']) > ev_threshold) & (~o['ou_pushes'])
-        ou_pnl = np.sum(np.where(bet_on_over == o['actual_is_over'], np.where(bet_on_over, profits['over'], profits['under']), -bet_amount)[place_ou_bet])
+        winnings_ou = np.where(bet_on_over, profits['over'], profits['under'])
+        pnl_vector_ou = np.where(bet_on_over == o['actual_is_over'], winnings_ou, -bet_amount)
+
         return {
-            'moneyline': {'pnl': ml_pnl, 'count': np.sum(place_ml_bet)},
-            'spread': {'pnl': spread_pnl, 'count': np.sum(place_spread_bet)},
-            'ou': {'pnl': ou_pnl, 'count': np.sum(place_ou_bet)}
+            'moneyline': pnl_vector_ml[place_ml_bet],
+            'spread': pnl_vector_spread[place_spread_bet],
+            'ou': pnl_vector_ou[place_ou_bet]
         }
 
+    # MODIFIED: This method now tests multiple strategies
+    def calculate_p_values(self):
+        """
+        Calculates the p-value for different betting strategies to determine
+        if their profitability is statistically significant.
+        """
+        print("\n--- Statistical Significance of Betting Strategies (P-values) ---")
+        print("    (H₀: Strategy has no skill, avg profit = 0. Hₐ: Strategy has skill, avg profit > 0)")
+
+        # Strategy 1: Betting only on +EV opportunities
+        if isinstance(self.predictions, dict):
+            print("\n  Strategy 1: Betting only on +EV Opportunities")
+            pnl_vectors_ev = self.get_pnl_vectors_for_ev_bets()
+            for bet_type, pnl_vector in pnl_vectors_ev.items():
+                if len(pnl_vector) < 20:
+                    print(f"    - {bet_type.title():<11}: P-value: N/A (Insufficient bets: {len(pnl_vector)})")
+                    continue
+                t_statistic, p_value = stats.ttest_1samp(a=pnl_vector, popmean=0, alternative='greater')
+                significance = "(Statistically Significant)" if p_value < 0.05 else "(Not Statistically Significant)"
+                print(f"    - {bet_type.title():<11}: P-value: {p_value:.4f} {significance}")
+        
+        # Strategy 2: Placing a flat bet on every available game
+        print("\n  Strategy 2: Flat betting on all games (based on model's pick)")
+        pnl_vectors_all = self.get_pnl_vectors_for_all_flat_bets()
+        for bet_type, pnl_vector in pnl_vectors_all.items():
+            if len(pnl_vector) < 20:
+                print(f"    - {bet_type.title():<11}: P-value: N/A (Insufficient bets: {len(pnl_vector)})")
+                continue
+            t_statistic, p_value = stats.ttest_1samp(a=pnl_vector, popmean=0, alternative='greater')
+            significance = "(Statistically Significant)" if p_value < 0.05 else "(Not Statistically Significant)"
+            print(f"    - {bet_type.title():<11}: P-value: {p_value:.4f} {significance}")
+
+        print("\nNote: A p-value test is not applicable for Kelly betting due to path-dependence.")
+
+
+    def calculate_pnl_of_game_above_ev_threshold(self, ev_threshold=0, bet_amount=1.0):
+        pnl_vectors = self.get_pnl_vectors_for_ev_bets(ev_threshold, bet_amount)
+        return {
+            'moneyline': {'pnl': np.sum(pnl_vectors['moneyline']), 'count': len(pnl_vectors['moneyline'])},
+            'spread': {'pnl': np.sum(pnl_vectors['spread']), 'count': len(pnl_vectors['spread'])},
+            'ou': {'pnl': np.sum(pnl_vectors['ou']), 'count': len(pnl_vectors['ou'])}
+        }
+        
     def simulate_kelly_betting(self, initial_bankroll=1000, max_fraction=0.01):
         if not isinstance(self.predictions, dict): return {k: {'final_bankroll': np.nan, 'bets_placed': 0, 'total_wagered': np.nan} for k in ['moneyline', 'spread', 'ou']}
         o, bankrolls, bets_placed, total_wagered = self._get_outcomes(), {'moneyline': initial_bankroll, 'spread': initial_bankroll, 'ou': initial_bankroll}, {'moneyline': 0, 'spread': 0, 'ou': 0}, {'moneyline': 0.0, 'spread': 0.0, 'ou': 0.0}
@@ -244,8 +309,8 @@ class TestModel:
         if not isinstance(self.predictions, dict):
             print("\nMonte Carlo simulation is only available for classifier models.")
             return
-        print(f"\n--- Running Probabilistic Monte Carlo Simulation ({n_simulations} trials) ---")
-        probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
+        print(f"\n--- Running Probabilistic Monte Carlo Simulation (Model Probs) ---")
+        model_probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
         decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
         o = self._get_outcomes()
         potential_bets = {'moneyline': [], 'spread': [], 'ou': []}
@@ -256,23 +321,71 @@ class TestModel:
                 if sides[3] and o[sides[3]][i]: continue
                 odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
                 if np.isnan(odds1) or np.isnan(odds2): continue
-                prob1 = probs[sides[2]][i]
+                
+                prob1 = model_probs[sides[2]][i]
                 kelly1, kelly2 = self._calculate_kelly_fraction(prob1, odds1), self._calculate_kelly_fraction(1 - prob1, odds2)
+                
                 if kelly1 > kelly2 and kelly1 > 0:
                     potential_bets[bet_type].append({'prob': prob1, 'odds': odds1, 'fraction': min(kelly1, max_fraction)})
                 elif kelly2 > kelly1 and kelly2 > 0:
                     potential_bets[bet_type].append({'prob': 1 - prob1, 'odds': odds2, 'fraction': min(kelly2, max_fraction)})
         
         final_bankrolls = self._execute_simulation_loops(potential_bets, n_simulations, initial_bankroll)
-        self._analyze_and_plot_simulation("Probabilistic Monte Carlo", final_bankrolls, initial_bankroll, potential_bets)
+        self._analyze_and_plot_simulation("Probabilistic Monte Carlo (Model Probs)", final_bankrolls, initial_bankroll, potential_bets)
+
+    def run_market_monte_carlo(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
+        """
+        Runs a Monte Carlo simulation where the model decides the bet, but the outcome
+        is simulated using the more realistic vig-free market probabilities.
+        """
+        if not isinstance(self.predictions, dict):
+            print("\nMarket Monte Carlo simulation is only available for classifier models.")
+            return
+        print(f"\n--- Running Probabilistic Monte Carlo Simulation (Market Probs) ---")
+
+        model_probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
+        decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
+        o = self._get_outcomes()
+
+        market_probs = {
+            'win': self._get_vig_free_probs(self.test_odds['team1_ml'], self.test_odds['team2_ml']),
+            'spread': self._get_vig_free_probs(self.test_odds['team1_spread_odds'], self.test_odds['team2_spread_odds']),
+            'over': self._get_vig_free_probs(self.test_odds['over_odds'], self.test_odds['under_odds'])
+        }
+
+        potential_bets = {'moneyline': [], 'spread': [], 'ou': []}
+        for i in range(len(self.y_test)):
+            for bet_type, sides in {'moneyline': ('team1_ml', 'team2_ml', 'win', None), 
+                                    'spread': ('team1_spread_odds', 'team2_spread_odds', 'spread', 'spread_pushes'),
+                                    'ou': ('over_odds', 'under_odds', 'over', 'ou_pushes')}.items():
+                
+                if sides[3] and o[sides[3]][i]: continue
+                
+                odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
+                market_prob1 = market_probs[sides[2]][i]
+                
+                if np.isnan(odds1) or np.isnan(odds2) or np.isnan(market_prob1): continue
+
+                model_prob1 = model_probs[sides[2]][i]
+                kelly1 = self._calculate_kelly_fraction(model_prob1, odds1)
+                kelly2 = self._calculate_kelly_fraction(1 - model_prob1, odds2)
+                
+                if kelly1 > kelly2 and kelly1 > 0:
+                    potential_bets[bet_type].append({'prob': market_prob1, 'odds': odds1, 'fraction': min(kelly1, max_fraction)})
+                elif kelly2 > kelly1 and kelly2 > 0:
+                    potential_bets[bet_type].append({'prob': 1 - market_prob1, 'odds': odds2, 'fraction': min(kelly2, max_fraction)})
+        
+        final_bankrolls = self._execute_simulation_loops(potential_bets, n_simulations, initial_bankroll)
+        self._analyze_and_plot_simulation("Probabilistic Monte Carlo (Market Probs)", final_bankrolls, initial_bankroll, potential_bets)
+
 
     def run_bootstrap_simulation(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
         """Runs a Monte Carlo simulation by bootstrapping from historical +EV bet outcomes."""
         if not isinstance(self.predictions, dict):
-            print("\nBootstrap simulation is only available for classifier models.")
+            print("\nBootstrap Simulation is only available for classifier models.")
             return
         print(f"\n--- Running Bootstrap Simulation ({n_simulations} trials) ---")
-        probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
+        model_probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
         decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
         o = self._get_outcomes()
         historical_bet_outcomes = {'moneyline': [], 'spread': [], 'ou': []}
@@ -283,7 +396,7 @@ class TestModel:
                 if sides[4] and o[sides[4]][i]: continue
                 odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
                 if np.isnan(odds1) or np.isnan(odds2): continue
-                prob1 = probs[sides[2]][i]
+                prob1 = model_probs[sides[2]][i]
                 kelly1, kelly2 = self._calculate_kelly_fraction(prob1, odds1), self._calculate_kelly_fraction(1 - prob1, odds2)
                 bet_on_side1 = kelly1 > kelly2
                 has_edge = (bet_on_side1 and kelly1 > 0) or (not bet_on_side1 and kelly2 > 0)
@@ -308,7 +421,6 @@ class TestModel:
                 for _ in range(n_simulations):
                     bankroll = initial_bankroll
                     if bootstrap:
-                        # Resample from historical outcomes
                         num_bets = len(bets)
                         simulated_indices = np.random.choice(range(num_bets), size=num_bets, replace=True)
                         for index in simulated_indices:
@@ -316,7 +428,6 @@ class TestModel:
                             bet_amount = bankroll * bet['fraction']
                             bankroll += bet_amount * bet['pnl_multiplier']
                     else:
-                        # Use model probabilities
                         for bet in bets:
                             bet_amount = bankroll * bet['fraction']
                             simulated_win = np.random.rand() < bet['prob']
@@ -375,19 +486,32 @@ class TestModel:
             print(f"\n--- {bet_type} Calibration ---")
             y_true, model_prob = data['y_true'][data['mask']], data['model_prob'][data['mask']]
             brier_model = brier_score_loss(y_true, model_prob)
+            ll_model = log_loss(y_true, model_prob)
+            
             baseline_brier = np.mean(y_true) * (1 - np.mean(y_true)) if np.mean(y_true) > 0 else 0.25
             bss_model = 1 - (brier_model / baseline_brier) if baseline_brier > 0 else 0
+
             print(f"  Model Brier Score:      {brier_model:.4f} (BSS: {bss_model:.3f})")
+            print(f"  Model Log Loss:         {ll_model:.4f}")
+
             CalibrationDisplay.from_predictions(y_true, model_prob, n_bins=n_bins, ax=ax, name='Model')
             market_prob = self._get_vig_free_probs(data['market_odds1'], data['market_odds2'])
             valid_market_mask = ~np.isnan(market_prob) & data['mask']
+            
             if np.any(valid_market_mask):
                 y_true_market, market_prob_valid = data['y_true'][valid_market_mask], market_prob[valid_market_mask]
                 brier_market = brier_score_loss(y_true_market, market_prob_valid)
+                ll_market = log_loss(y_true_market, market_prob_valid)
                 bss_market = 1 - (brier_market / baseline_brier) if baseline_brier > 0 else 0
+                
                 print(f"  Market Brier Score:     {brier_market:.4f} (BSS: {bss_market:.3f})")
+                print(f"  Market Log Loss:        {ll_market:.4f}")
+
                 CalibrationDisplay.from_predictions(y_true_market, market_prob_valid, n_bins=n_bins, ax=ax, name='Market (Vig-Free)')
-            else: print("  Market Brier Score:     N/A (Missing or invalid odds)")
+            else: 
+                print("  Market Brier Score:     N/A (Missing or invalid odds)")
+                print("  Market Log Loss:        N/A (Missing or invalid odds)")
+
             ax.set_title(f'{bet_type} Calibration')
             ax.grid(True, linestyle='--', alpha=0.6)
             ax.legend()
@@ -416,6 +540,8 @@ class TestModel:
             print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/acc['total_games']:.1%})")
             print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/acc['total_games']:.1%})")
 
+            self.calculate_p_values()
+
             kelly_results = self.simulate_kelly_betting(initial_bankroll=initial_bankroll)
             kelly_ml, kelly_spread, kelly_ou = kelly_results['moneyline'], kelly_results['spread'], kelly_results['ou']
             print(f"\nKelly Criterion Simulation (Historical Backtest):")
@@ -425,6 +551,7 @@ class TestModel:
             
             self.check_calibration()
             self.run_probabilistic_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
+            self.run_market_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
             self.run_bootstrap_simulation(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
 
         print("\n------------------------------------")
