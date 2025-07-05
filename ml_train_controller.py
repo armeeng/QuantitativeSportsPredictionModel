@@ -44,6 +44,7 @@ def main():
 
     # ── Feature definitions ────────────────────────────────
     num_feat = [77, 246, 292, 318, 873, 874, 875, 876, 942, 963, 1036, 1038, 1041, 1046, 1051, 1053, 1056]
+    num_feat = [77, 292]
     cat_feat = [
     ]
 
@@ -80,12 +81,12 @@ def main():
         MODEL_NAME,
         MODEL_TYPE,
         column=COLUMN,
-        hyperparameter_tuning=True,
+        hyperparameter_tuning=False,
         tuning_n_iter=100,
         random_state=130,
         numerical_feature_indices=num_feat,
         categorical_feature_names=cat_feat,
-        include_market_spread=True,
+        include_market_spread=False,
         include_market_total=True,
         feature_engineering_mode='differential', # flatten or differential
         calibrate_model=False,

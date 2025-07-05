@@ -468,7 +468,7 @@ class TestModel:
             ax.legend()
             ax.grid(True, linestyle='--', alpha=0.6)
         plt.tight_layout(rect=[0, 0, 1, 0.96])
-        plt.show()
+        #plt.show()
 
     def check_calibration(self, n_bins=10):
         if not isinstance(self.predictions, dict): return
@@ -516,7 +516,7 @@ class TestModel:
             ax.grid(True, linestyle='--', alpha=0.6)
             ax.legend()
         plt.tight_layout(rect=[0, 0, 1, 0.96])
-        plt.show()
+        #plt.show()
 
     def display_results(self, initial_bankroll=1000, n_simulations=1000):
         """Displays the calculated accuracies and PnL."""

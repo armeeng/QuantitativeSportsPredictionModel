@@ -5,7 +5,7 @@ from Model import MLModel
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "lo_norm_MLB_all"
+    MODEL_NAME    = "MLB_MONEYLINE"
     PREDICT_QUERY = "SELECT * FROM games WHERE sport = 'MLB' AND date = '2025-05-25';"
 
     # ── PREDICT ────────────────────────────────────
