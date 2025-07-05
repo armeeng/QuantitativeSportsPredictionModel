@@ -267,24 +267,32 @@ class MLModel(BaseModel):
                 print("WARNING: Calibration is only implemented for classifier models. Ignoring `calibrate_model=True` for regressor.")
             self._train_regressor(train_query, test_query)
 
-    def predict(self, query: str) -> tuple:
+    def predict(self, query: str, mode: str = 'prediction') -> tuple:
         """
-        MODIFIED: This version now returns predictions and, if available, the
-        true outcomes (y_test) and betting odds for the queried data.
+        MODIFIED: This version now uses an explicit 'mode' parameter to determine its behavior.
 
-        It checks for the presence of 'team1_score' and 'team2_score' in the
-        data returned by the query. If they exist, y_test and test_odds are
-        generated. Otherwise, they are returned as None.
+        Args:
+            query (str): The SQL query to fetch the data.
+            mode (str): The operational mode. Must be either 'prediction' or 'evaluation'.
+                - 'prediction' (default): Does not require outcome columns. Formats the
+                returned predictions as a list of dictionaries for database insertion.
+                - 'evaluation': Requires 'team1_score' and 'team2_score' columns. Drops
+                rows with missing scores and returns raw predictions and outcomes for
+                use with the TestModel class.
 
         Returns:
-            tuple: A tuple containing (predictions, y_test, test_odds).
-                - predictions: A dict for classifiers or a NumPy array for regressors.
-                - y_test: A NumPy array of scores, or None if not available.
-                - test_odds: A dictionary of odds, or None if not available.
+            tuple: A tuple containing (predictions, y_test, test_odds). The format of the
+                'predictions' object depends on the selected mode.
         """
+        # --- 1. Validate Mode and Load Model ---
+        valid_modes = ['prediction', 'evaluation']
+        if mode not in valid_modes:
+            raise ValueError(f"Invalid mode specified: '{mode}'. Must be one of {valid_modes}")
+
         try:
             info = self._load_model()
             model = info['model']
+            # ... (rest of the model loading logic is unchanged)
             self.scaler = info.get('scaler')
             self.one_hot_encoder = info.get('one_hot_encoder')
             self.column = info['column']
@@ -297,7 +305,6 @@ class MLModel(BaseModel):
 
         except FileNotFoundError as e:
             print(f"Error: {e}")
-            # Return a tuple that can be safely unpacked
             return (None, None, None)
 
         df = self._load_data_from_db(query)
@@ -305,7 +312,23 @@ class MLModel(BaseModel):
             print("Query returned no data to predict on.")
             return (None, None, None)
 
-        # --- Feature Engineering Pipeline (Unchanged) ---
+        # --- 2. NEW: Clean Data Based on Mode ---
+        if mode == 'evaluation':
+            # In evaluation mode, we must have score columns. Fail fast if they're missing.
+            required_cols = {'team1_score', 'team2_score'}
+            if not required_cols.issubset(df.columns):
+                raise ValueError("Evaluation mode requires 'team1_score' and 'team2_score' columns in the query result.")
+            
+            original_rows = len(df)
+            df.dropna(subset=['team1_score', 'team2_score'], inplace=True)
+            if len(df) < original_rows:
+                print(f"INFO: Dropped {original_rows - len(df)} rows with missing scores.")
+            
+            if df.empty:
+                print("No valid rows remaining after dropping missing scores.")
+                return (None, None, None)
+
+        # --- 3. Feature Engineering & Scaling (Unchanged) ---
         cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
         X_num, _ = self._prepare_numerical_features(df)
         X_num_selected = X_num[:, self.trained_numerical_indices_] if self.trained_numerical_indices_ is not None else X_num
@@ -320,38 +343,55 @@ class MLModel(BaseModel):
             total_feature = pd.to_numeric(df["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
             X_final = np.hstack((X_final, total_feature))
         
-        # --- Scaling (Unchanged) ---
         if self.scaler:
             X_scaled = self.scaler.transform(X_final)
         else:
             print("Warning: No scaler found. Predicting on unscaled data.")
             X_scaled = X_final
 
-        # --- NEW: Extract true outcomes and odds if available ---
-        y_true = None
-        odds = None
-        # Check if the columns required for evaluation exist in the dataframe
-        if 'team1_score' in df.columns and 'team2_score' in df.columns:
-            # These columns are present, so we can generate the ground truth and odds
-            print("INFO: Outcome columns found in data. Extracting y_test and test_odds.")
-            y_true = df[['team1_score', 'team2_score']].to_numpy()
-            odds = self._extract_test_odds(df)
-        else:
-            print("INFO: Outcome columns not found. Returning None for y_test and test_odds.")
-            
-        # --- Prediction and Return Format (MODIFIED) ---
+        # --- 4. Generate Predictions ---
         if isinstance(model, dict):  # Classifier
-            predictions_dict = {
+            raw_predictions = {
                 'win': model['win'].predict_proba(X_scaled),
                 'spread': model['spread'].predict_proba(X_scaled),
                 'over': model['over'].predict_proba(X_scaled)
             }
-            # Return all three items as a tuple
-            return predictions_dict, y_true, odds
         else:  # Regressor
-            predictions_array = model.predict(X_scaled)
-            # Return all three items as a tuple
-            return predictions_array, y_true, odds
+            raw_predictions = model.predict(X_scaled)
+
+        # --- 5. Return Data Based on Mode ---
+        if mode == 'evaluation':
+            print("INFO: Evaluation mode selected. Returning raw predictions for TestModel.")
+            y_true = df[['team1_score', 'team2_score']].to_numpy()
+            odds = self._extract_test_odds(df)
+            return raw_predictions, y_true, odds
+        else:  # mode == 'prediction'
+            print("INFO: Prediction mode selected. Formatting predictions for database insertion.")
+            now = datetime.now(timezone.utc).isoformat()
+            
+            if isinstance(raw_predictions, dict): # Classifier
+                prob_win = raw_predictions['win'][:, 1]
+                prob_cover = raw_predictions['spread'][:, 1]
+                prob_over = raw_predictions['over'][:, 1]
+                db_formatted_predictions = [
+                    {
+                        "model_name": self.model_name, "game_id": gid, "team1_id": t1, "team2_id": t2,
+                        "team1_win_prob": pw, "team1_cover_prob": pc, "over_prob": po,
+                        "prediction_timestamp": now
+                    } for gid, t1, t2, pw, pc, po in zip(
+                        df["game_id"], df["team1_id"], df["team2_id"], prob_win, prob_cover, prob_over)
+                ]
+            else: # Regressor
+                db_formatted_predictions = [
+                    {
+                        "model_name": self.model_name, "game_id": gid, "team1_id": t1, "team2_id": t2,
+                        "pred_team1_score": p1, "pred_team2_score": p2,
+                        "prediction_timestamp": now
+                    } for gid, t1, t2, (p1, p2) in zip(
+                        df["game_id"], df["team1_id"], df["team2_id"], raw_predictions)
+                ]
+                
+            return db_formatted_predictions, None, None
 
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """

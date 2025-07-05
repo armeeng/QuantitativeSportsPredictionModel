@@ -24655,3 +24655,190 @@
 2025-07-04 20:12:57 INFO     root: Updated final scores for 0 games. Skipped 0 games.
 2025-07-04 20:12:57 INFO     root: Preprocessing MLB on 2022-07-22
 2025-07-04 20:14:14 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/ranking/season-sos-by-other?date=2022-07-22, sleeping 4 minutes before retry
+2025-07-05 00:57:20 INFO     root: Preprocessing NFL on 2025-07-05
+2025-07-05 00:57:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:57:20 INFO     root: Postprocessing NFL on 2025-07-05
+2025-07-05 00:57:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:57:20 INFO     root: Preprocessing NBA on 2025-07-05
+2025-07-05 00:57:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:57:20 INFO     root: Postprocessing NBA on 2025-07-05
+2025-07-05 00:57:20 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:57:20 INFO     root: Preprocessing CFB on 2025-07-05
+2025-07-05 00:57:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:57:21 INFO     root: Postprocessing CFB on 2025-07-05
+2025-07-05 00:57:21 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:57:21 INFO     root: Preprocessing CBB on 2025-07-05
+2025-07-05 00:57:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:57:21 INFO     root: Postprocessing CBB on 2025-07-05
+2025-07-05 00:57:21 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:57:21 INFO     root: Preprocessing MLB on 2025-07-05
+2025-07-05 00:58:34 ERROR    root: Team 'Tampa Bay' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Minnesota' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Tampa Bay or Minnesota, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'St. Louis' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Chi Cubs' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for St. Louis or Chi Cubs, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'LA Angels' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Toronto' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for LA Angels or Toronto, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Boston' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Washington' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Boston or Washington, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Cincinnati' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Philadelphia' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Cincinnati or Philadelphia, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Baltimore' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Baltimore or Atlanta, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Milwaukee' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Miami' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Milwaukee or Miami, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'NY Yankees' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'NY Mets' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for NY Yankees or NY Mets, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Kansas City' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Kansas City or Arizona, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Detroit' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Cleveland' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Detroit or Cleveland, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Houston' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'LA Dodgers' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Houston or LA Dodgers, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Chi Sox' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Colorado' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Chi Sox or Colorado, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Texas' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'San Diego' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Texas or San Diego, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'SF Giants' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Sacramento' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for SF Giants or Sacramento, skipping
+2025-07-05 00:58:34 ERROR    root: Team 'Pittsburgh' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Team 'Seattle' not found in stats for 'opponent-sacrifice-hits-per-game'
+2025-07-05 00:58:34 ERROR    root: Could not fetch stats for Pittsburgh or Seattle, skipping
+2025-07-05 00:58:34 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 15 games.
+2025-07-05 00:58:34 INFO     root: Postprocessing MLB on 2025-07-05
+2025-07-05 00:58:35 INFO     root: Updated final scores for 0 games. Skipped 15 games.
+2025-07-05 00:58:35 INFO     root: Preprocessing NFL on 2025-07-04
+2025-07-05 00:58:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:58:35 INFO     root: Postprocessing NFL on 2025-07-04
+2025-07-05 00:58:35 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:58:35 INFO     root: Preprocessing NBA on 2025-07-04
+2025-07-05 00:58:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:58:35 INFO     root: Postprocessing NBA on 2025-07-04
+2025-07-05 00:58:36 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:58:36 INFO     root: Preprocessing CFB on 2025-07-04
+2025-07-05 00:58:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:58:36 INFO     root: Postprocessing CFB on 2025-07-04
+2025-07-05 00:58:36 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:58:36 INFO     root: Preprocessing CBB on 2025-07-04
+2025-07-05 00:58:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 00:58:37 INFO     root: Postprocessing CBB on 2025-07-04
+2025-07-05 00:58:37 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 00:58:37 INFO     root: Preprocessing MLB on 2025-07-04
+2025-07-05 01:00:11 INFO     root: Preprocessing MLB on 2025-07-05
+2025-07-05 01:01:04 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/opponent-walks-per-9?date=2025-07-05, sleeping 4 minutes before retry
+2025-07-05 01:06:00 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-05 01:06:00 INFO     root: Postprocessing MLB on 2025-07-05
+2025-07-05 01:06:00 INFO     root: Updated final scores for 0 games. Skipped 15 games.
+2025-07-05 01:06:00 INFO     root: Preprocessing MLB on 2025-07-04
+2025-07-05 01:07:16 INFO     root: Postprocessing MLB on 2025-07-05
+2025-07-05 01:07:16 INFO     root: Updated final scores for 0 games. Skipped 15 games.
+2025-07-05 01:07:16 INFO     root: Preprocessing MLB on 2025-07-04
+2025-07-05 01:09:03 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-05 01:09:03 INFO     root: Postprocessing MLB on 2025-07-04
+2025-07-05 01:09:03 INFO     root: Updated final scores for 15 games. Skipped 0 games.
+2025-07-05 01:09:03 INFO     root: Preprocessing NFL on 2025-07-03
+2025-07-05 01:09:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:09:03 INFO     root: Postprocessing NFL on 2025-07-03
+2025-07-05 01:09:03 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:09:03 INFO     root: Preprocessing NBA on 2025-07-03
+2025-07-05 01:09:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:09:03 INFO     root: Postprocessing NBA on 2025-07-03
+2025-07-05 01:09:04 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:09:04 INFO     root: Preprocessing CFB on 2025-07-03
+2025-07-05 01:09:04 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:09:04 INFO     root: Postprocessing CFB on 2025-07-03
+2025-07-05 01:09:04 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:09:04 INFO     root: Preprocessing CBB on 2025-07-03
+2025-07-05 01:09:04 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:09:04 INFO     root: Postprocessing CBB on 2025-07-03
+2025-07-05 01:09:05 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:09:05 INFO     root: Preprocessing MLB on 2025-07-03
+2025-07-05 01:09:06 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-07-03, sleeping 4 minutes before retry
+2025-07-05 01:14:38 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-07-05 01:14:38 INFO     root: Postprocessing MLB on 2025-07-03
+2025-07-05 01:14:39 INFO     root: Updated final scores for 10 games. Skipped 0 games.
+2025-07-05 01:14:39 INFO     root: Preprocessing NFL on 2025-07-02
+2025-07-05 01:14:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:14:39 INFO     root: Postprocessing NFL on 2025-07-02
+2025-07-05 01:14:39 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:14:39 INFO     root: Preprocessing NBA on 2025-07-02
+2025-07-05 01:14:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:14:40 INFO     root: Postprocessing NBA on 2025-07-02
+2025-07-05 01:14:40 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:14:40 INFO     root: Preprocessing CFB on 2025-07-02
+2025-07-05 01:14:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:14:41 INFO     root: Postprocessing CFB on 2025-07-02
+2025-07-05 01:14:41 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:14:41 INFO     root: Preprocessing CBB on 2025-07-02
+2025-07-05 01:14:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:14:41 INFO     root: Postprocessing CBB on 2025-07-02
+2025-07-05 01:14:42 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:14:42 INFO     root: Preprocessing MLB on 2025-07-02
+2025-07-05 01:16:42 INFO     root: populate_pregame_data: inserted/updated 19 rows, skipped 0 games.
+2025-07-05 01:16:42 INFO     root: Postprocessing MLB on 2025-07-02
+2025-07-05 01:16:42 INFO     root: Updated final scores for 19 games. Skipped 0 games.
+2025-07-05 01:16:42 INFO     root: Preprocessing NFL on 2025-07-01
+2025-07-05 01:16:42 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:16:42 INFO     root: Postprocessing NFL on 2025-07-01
+2025-07-05 01:16:43 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Preprocessing NBA on 2025-07-01
+2025-07-05 01:16:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Postprocessing NBA on 2025-07-01
+2025-07-05 01:16:43 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Preprocessing CFB on 2025-07-01
+2025-07-05 01:16:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Postprocessing CFB on 2025-07-01
+2025-07-05 01:16:43 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Preprocessing CBB on 2025-07-01
+2025-07-05 01:16:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-05 01:16:43 INFO     root: Postprocessing CBB on 2025-07-01
+2025-07-05 01:16:44 INFO     root: Updated final scores for 0 games. Skipped 0 games.
+2025-07-05 01:16:44 INFO     root: Preprocessing MLB on 2025-07-01
+2025-07-05 01:16:45 WARNING  root: 403 Forbidden at https://www.teamrankings.com/mlb/stat/runs-per-game?date=2025-07-01, sleeping 4 minutes before retry
+2025-07-05 01:22:42 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-05 01:22:42 INFO     root: Postprocessing MLB on 2025-07-01
+2025-07-05 01:22:42 INFO     root: Updated final scores for 12 games. Skipped 3 games.
+2025-07-05 01:22:42 INFO     root: Postprocessing MLB on 2025-06-30
+2025-07-05 01:22:43 INFO     root: Updated final scores for 8 games. Skipped 0 games.
+2025-07-05 01:22:43 INFO     root: Postprocessing MLB on 2025-06-18
+2025-07-05 01:22:44 INFO     root: Updated final scores for 12 games. Skipped 3 games.
+2025-07-05 01:22:44 INFO     root: Postprocessing MLB on 2025-06-04
+2025-07-05 01:22:44 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:44 INFO     root: Postprocessing MLB on 2025-05-28
+2025-07-05 01:22:45 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:45 INFO     root: Postprocessing MLB on 2025-05-23
+2025-07-05 01:22:45 INFO     root: Updated final scores for 15 games. Skipped 1 games.
+2025-07-05 01:22:45 INFO     root: Postprocessing MLB on 2025-05-22
+2025-07-05 01:22:45 INFO     root: Updated final scores for 8 games. Skipped 1 games.
+2025-07-05 01:22:45 INFO     root: Postprocessing MLB on 2025-05-21
+2025-07-05 01:22:46 INFO     root: Updated final scores for 15 games. Skipped 1 games.
+2025-07-05 01:22:46 INFO     root: Postprocessing MLB on 2025-05-20
+2025-07-05 01:22:46 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:46 INFO     root: Postprocessing MLB on 2025-05-13
+2025-07-05 01:22:46 INFO     root: Updated final scores for 13 games. Skipped 2 games.
+2025-07-05 01:22:46 INFO     root: Postprocessing MLB on 2025-05-06
+2025-07-05 01:22:47 INFO     root: Updated final scores for 15 games. Skipped 1 games.
+2025-07-05 01:22:47 INFO     root: Postprocessing MLB on 2025-05-05
+2025-07-05 01:22:47 INFO     root: Updated final scores for 9 games. Skipped 1 games.
+2025-07-05 01:22:47 INFO     root: Postprocessing MLB on 2025-05-03
+2025-07-05 01:22:47 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:47 INFO     root: Postprocessing MLB on 2025-04-29
+2025-07-05 01:22:48 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:48 INFO     root: Postprocessing MLB on 2025-04-26
+2025-07-05 01:22:48 INFO     root: Updated final scores for 16 games. Skipped 1 games.
+2025-07-05 01:22:48 INFO     root: Postprocessing MLB on 2025-04-25
+2025-07-05 01:22:48 INFO     root: Updated final scores for 13 games. Skipped 2 games.
+2025-07-05 01:22:49 INFO     root: Postprocessing MLB on 2025-04-23
+2025-07-05 01:22:49 INFO     root: Updated final scores for 14 games. Skipped 1 games.
+2025-07-05 01:22:49 INFO     root: Postprocessing MLB on 2025-04-18

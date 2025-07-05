@@ -11,6 +11,8 @@ from sqlalchemy import (
     Enum,
     ForeignKey,
     Boolean,
+    DateTime,
+    func,
     text
 )
 from sqlalchemy.ext.declarative import declarative_base
@@ -95,13 +97,20 @@ class Game(Base):
 class Prediction(Base):
     __tablename__ = 'predictions'
 
-    id                    = Column(Integer, primary_key=True, autoincrement=True)
-    game_id               = Column(String, ForeignKey('games.game_id'), nullable=False)
-    date                  = Column(Date,   nullable=False)
-    sport                 = Column(Enum(SportEnum), nullable=False)
-    team1_predicted       = Column(Integer, nullable=False)
-    team2_predicted       = Column(Integer, nullable=False)
-    model_name            = Column(String,  nullable=False)
+    id                    = Column(Integer, primary_key=True)
+    game_id               = Column(String, ForeignKey('games.game_id'), nullable=False, index=True)
+    model_name            = Column(String,  nullable=False, index=True)
+    
+    # The actual prediction payload, stored as flexible JSON
+    prediction_data       = Column(JSON, nullable=False)
+    
+    # Timestamp for when the prediction was generated
+    created_at            = Column(DateTime, server_default=func.now())
+
+    # You can still keep these for easier querying if you like, but they aren't strictly necessary
+    # if the data is in the JSON blob.
+    # date                  = Column(Date,   nullable=False)
+    # sport                 = Column(Enum(SportEnum), nullable=False)
 
 class ProcessStatus(Base):
     """
