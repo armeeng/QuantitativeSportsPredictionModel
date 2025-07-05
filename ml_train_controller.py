@@ -44,8 +44,6 @@ def main():
 
     # ── Feature definitions ────────────────────────────────
     num_feat = [77, 246, 292, 318, 873, 874, 875, 876, 942, 963, 1036, 1038, 1041, 1046, 1051, 1053, 1056]
-    #num_feat = [292, 1053, 246]
-
     cat_feat = [
     ]
 
@@ -90,7 +88,7 @@ def main():
         include_market_spread=True,
         include_market_total=True,
         feature_engineering_mode='differential', # flatten or differential
-        calibrate_model=True,
+        calibrate_model=False,
         calibration_method='sigmoid',
         calibration_split_size=0.2
     )
