@@ -267,10 +267,20 @@ class MLModel(BaseModel):
                 print("WARNING: Calibration is only implemented for classifier models. Ignoring `calibrate_model=True` for regressor.")
             self._train_regressor(train_query, test_query)
 
-    def predict(self, query: str) -> list:
+    def predict(self, query: str) -> tuple:
         """
-        REWRITTEN: Loads the latest model and metadata, then processes new data using the
-        exact same feature engineering pipeline from training to generate predictions.
+        MODIFIED: This version now returns predictions and, if available, the
+        true outcomes (y_test) and betting odds for the queried data.
+
+        It checks for the presence of 'team1_score' and 'team2_score' in the
+        data returned by the query. If they exist, y_test and test_odds are
+        generated. Otherwise, they are returned as None.
+
+        Returns:
+            tuple: A tuple containing (predictions, y_test, test_odds).
+                - predictions: A dict for classifiers or a NumPy array for regressors.
+                - y_test: A NumPy array of scores, or None if not available.
+                - test_odds: A dictionary of odds, or None if not available.
         """
         try:
             info = self._load_model()
@@ -278,77 +288,70 @@ class MLModel(BaseModel):
             self.scaler = info.get('scaler')
             self.one_hot_encoder = info.get('one_hot_encoder')
             self.column = info['column']
-            # Load the feature selection metadata the model was trained with
             self.trained_numerical_indices_ = info.get('trained_numerical_indices')
             self.categorical_feature_names = info.get('categorical_feature_names')
-            # NEW: Load the feature engineering mode
-            self.feature_engineering_mode = info.get('feature_engineering_mode', 'flatten') # Default to flatten for old models
-
-            # Handle backward compatibility for market feature flags
+            self.feature_engineering_mode = info.get('feature_engineering_mode', 'flatten')
             old_market_flag = info.get('include_market_features', False)
             self.include_market_spread = info.get('include_market_spread', old_market_flag)
             self.include_market_total = info.get('include_market_total', old_market_flag)
 
         except FileNotFoundError as e:
             print(f"Error: {e}")
-            return []
+            # Return a tuple that can be safely unpacked
+            return (None, None, None)
 
         df = self._load_data_from_db(query)
         if df.empty:
             print("Query returned no data to predict on.")
-            return []
+            return (None, None, None)
 
-        # --- Start Prediction Feature Engineering Pipeline ---
-        # This pipeline mirrors the training process exactly.
-        
-        # 1. Determine which categorical features to use (from loaded model info)
+        # --- Feature Engineering Pipeline (Unchanged) ---
         cats_to_use = self.categorical_feature_names if self.categorical_feature_names is not None else self._DEFAULT_CATEGORICAL_FEATURES
-
-        # 2. Prepare numerical features based on the saved mode
         X_num, _ = self._prepare_numerical_features(df)
-
-        # 3. Select the specific numerical features the model was trained on
         X_num_selected = X_num[:, self.trained_numerical_indices_] if self.trained_numerical_indices_ is not None else X_num
-        
-        # 4. Prepare categorical features
         cat_df = self._extract_categorical_features(df, features_to_extract=cats_to_use)
         X_cat = self.one_hot_encoder.transform(cat_df) if self.one_hot_encoder and cat_df.shape[1] > 0 else np.array([[] for _ in range(len(df))])
-
-        # 5. Combine numerical and categorical
         X_combined = np.hstack([X_num_selected, X_cat])
-        
-        # 6. Conditionally add market features if the model was trained with them
         X_final = X_combined
         if self.include_market_spread:
             spread_feature = pd.to_numeric(df["team1_spread"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
             X_final = np.hstack((X_final, spread_feature))
-
         if self.include_market_total:
             total_feature = pd.to_numeric(df["total_score"], errors='coerce').fillna(0).to_numpy().reshape(-1, 1)
             X_final = np.hstack((X_final, total_feature))
-        # --- End Prediction Feature Engineering Pipeline ---
-
-        # 7. Scale and Predict
+        
+        # --- Scaling (Unchanged) ---
         if self.scaler:
             X_scaled = self.scaler.transform(X_final)
         else:
             print("Warning: No scaler found. Predicting on unscaled data.")
             X_scaled = X_final
 
+        # --- NEW: Extract true outcomes and odds if available ---
+        y_true = None
+        odds = None
+        # Check if the columns required for evaluation exist in the dataframe
+        if 'team1_score' in df.columns and 'team2_score' in df.columns:
+            # These columns are present, so we can generate the ground truth and odds
+            print("INFO: Outcome columns found in data. Extracting y_test and test_odds.")
+            y_true = df[['team1_score', 'team2_score']].to_numpy()
+            odds = self._extract_test_odds(df)
+        else:
+            print("INFO: Outcome columns not found. Returning None for y_test and test_odds.")
+            
+        # --- Prediction and Return Format (MODIFIED) ---
         if isinstance(model, dict):  # Classifier
-            prob_win = model['win'].predict_proba(X_scaled)[:, 1]
-            prob_cover = model['spread'].predict_proba(X_scaled)[:, 1]
-            prob_over = model['over'].predict_proba(X_scaled)[:, 1]
-            return [
-                {"game_id": gid, "team1_id": t1, "team2_id": t2, "team1_win_prob": pw, "team1_cover_prob": pc, "over_prob": po}
-                for gid, t1, t2, pw, pc, po in zip(df["game_id"], df["team1_id"], df["team2_id"], prob_win, prob_cover, prob_over)
-            ]
+            predictions_dict = {
+                'win': model['win'].predict_proba(X_scaled),
+                'spread': model['spread'].predict_proba(X_scaled),
+                'over': model['over'].predict_proba(X_scaled)
+            }
+            # Return all three items as a tuple
+            return predictions_dict, y_true, odds
         else:  # Regressor
-            predictions = model.predict(X_scaled)
-            return [
-                {"game_id": gid, "team1_id": t1, "team2_id": t2, "pred_team1": p1, "pred_team2": p2}
-                for gid, t1, t2, (p1, p2) in zip(df["game_id"], df["team1_id"], df["team2_id"], predictions)
-            ]
+            predictions_array = model.predict(X_scaled)
+            # Return all three items as a tuple
+            return predictions_array, y_true, odds
 
     def get_feature_importance(self, model=None, X_test=None, y_test=None, n_top_features=20):
         """
