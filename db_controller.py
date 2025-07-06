@@ -55,7 +55,7 @@ def main(
             if not rec.postprocessed:
                 logging.info(f"Postprocessing {sport.value} on {current}")
                 pg = Pregame(current, sport.value)
-                skipped = pg.update_final_scores()
+                skipped = pg.update_final_scores_and_closing_odds()
                 if skipped == 0:
                     rec.postprocessed = True
                     session.merge(rec)

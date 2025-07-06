@@ -1689,70 +1689,143 @@ class Pregame:
 
         return output
 
-    def update_final_scores(self):
+    def _fetch_scores_from_scoreboard(self) -> dict:
         """
-        Scrape ESPN's scoreboard for self.date/self.sport, and update
-        team1_score/team2_score in the games table for each completed game.
+        MODIFIED: This helper now uses the reliable scoreboard API to fetch all
+        scores for the given date at once.
+
+        Returns:
+            A dictionary mapping game_id to its score, e.g.:
+            {'4012345': {'team1_score': 10, 'team2_score': 3}, ...}
         """
-        # 1) Build ESPN API URL
+        scores_map = {}
         try:
+            # 1) Build ESPN scoreboard API URL (from your original working code)
             category, league = self._ESPN_MAP[self.sport]
-        except KeyError:
-            raise ValueError(f"Unsupported sport code: {self.sport!r}")
-
-        url = (
-            f"https://site.api.espn.com/apis/site/v2/"
-            f"sports/{category}/{league}/scoreboard"
-        )
-        date_str = self.date.strftime("%Y%m%d")
-
-        # 2) Fetch scoreboard
-        resp = requests.get(url, params={"dates": date_str})
-        resp.raise_for_status()
-        data = resp.json()
-
-        # 3) Loop through events
-        updated = 0
-        skip = 0
-        for event in data.get("events", []):
-            comp = event["competitions"][0]
-            status = comp.get("status", {}).get("type", {})
-            # only update if game is completed
-            if not status.get("completed", False):
-                skip += 1
-                continue
-
-            # map away=team1, home=team2
-            teams = {c["homeAway"]: c for c in comp["competitors"]}
-            away = teams.get("away")
-            home = teams.get("home")
-
-            # parse scores (may come as strings)
-            try:
-                team1_score = int(away.get("score", 0))
-                team2_score = int(home.get("score", 0))
-            except (TypeError, ValueError):
-                logging.error(f"Invalid score for game {event['id']}: "
-                              f"{away.get('score')} vs {home.get('score')}")
-                continue
-
-            # 4) Update DB
-            cur = self.conn.execute(
-                "UPDATE games "
-                "SET team1_score = ?, team2_score = ? "
-                "WHERE game_id = ?",
-                (team1_score, team2_score, event["id"])
+            url = (
+                f"https://site.api.espn.com/apis/site/v2/"
+                f"sports/{category}/{league}/scoreboard"
             )
-            if cur.rowcount == 0:
-                skip += 1
-                logging.warning(f"No local game found for ESPN ID {event['id']}")
-            else:
-                updated += 1
+            date_str = self.date.strftime("%Y%m%d")
 
-        # 5) Commit once at the end
-        self.conn.commit()
-        logging.info(f"Updated final scores for {updated} games. Skipped {skip} games.")
-        return skip
+            # 2) Fetch scoreboard data
+            resp = requests.get(url, params={"dates": date_str}, timeout=10)
+            resp.raise_for_status()
+            data = resp.json()
+
+            # 3) Loop through events and extract scores
+            for event in data.get("events", []):
+                game_id = event.get("id")
+                if not game_id:
+                    continue
+
+                comp = event["competitions"][0]
+                status = comp.get("status", {}).get("type", {})
+                
+                # Only process if game is completed
+                if not status.get("completed", False):
+                    continue
+
+                # Map away=team1, home=team2
+                teams = {c["homeAway"]: c for c in comp["competitors"]}
+                away = teams.get("away")
+                home = teams.get("home")
+
+                if not away or not home:
+                    continue
+                
+                try:
+                    team1_score = int(away.get("score", 0))
+                    team2_score = int(home.get("score", 0))
+                    scores_map[game_id] = {
+                        'team1_score': team1_score,
+                        'team2_score': team2_score
+                    }
+                except (TypeError, ValueError):
+                    logging.error(f"Invalid score format for game {game_id}")
+                    continue
+            
+            return scores_map
+
+        except Exception as e:
+            logging.error(f"Failed to fetch or parse scoreboard for {self.sport} on {self.date}: {e}")
+            return {} # Return empty dict on failure
+
+    def update_final_scores_and_closing_odds(self) -> int:
+        """
+        Finds all games for the given date, fetches their final scores from the
+        scoreboard, re-fetches the closing line odds, and updates the database.
+        """
+        # 1. Fetch all scores for the day in a single API call
+        # This part is unchanged
+        daily_scores = self._fetch_scores_from_scoreboard()
+
+        if not daily_scores:
+            logging.warning("Scoreboard was empty or could not be fetched. No scores to update.")
+        
+        cursor = self.conn.cursor()
+        query = "SELECT game_id FROM games WHERE date = ? AND sport = ?"
+        game_ids = [row[0] for row in cursor.execute(query, (self.date.isoformat(), self.sport))]
+
+        if not game_ids:
+            logging.info(f"No games found in DB for {self.sport} on {self.date} to post-process.")
+            return 0
+
+        # --- MODIFICATION START ---
+        # Initialize counters for both skipped and successful updates
+        skipped_count = 0
+        updated_count = 0
+        # --- MODIFICATION END ---
+
+        for game_id in game_ids:
+            # The logging and sleep are unchanged
+            time.sleep(1) 
+
+            final_scores = daily_scores.get(str(game_id))
+            closing_odds = self.get_betting_odds(game_id)
+
+            if not final_scores:
+                skipped_count += 1
+                continue
+            
+            # The update_data dictionary is unchanged
+            update_data = {
+                'team1_score': final_scores['team1_score'], 'team2_score': final_scores['team2_score'],
+                'team1_moneyline': closing_odds.get('team1_moneyline'), 'team2_moneyline': closing_odds.get('team2_moneyline'),
+                'team1_spread': closing_odds.get('team1_spread'), 'team2_spread': closing_odds.get('team2_spread'),
+                'team1_spread_odds': closing_odds.get('team1_spread_odds'), 'team2_spread_odds': closing_odds.get('team2_spread_odds'),
+                'total_score': closing_odds.get('total_score'), 'over_odds': closing_odds.get('over_odds'),
+                'under_odds': closing_odds.get('under_odds'), 'game_id': game_id
+            }
+
+            # The SQL UPDATE statement is unchanged
+            sql_update = """
+                UPDATE games SET
+                    team1_score = :team1_score, team2_score = :team2_score,
+                    team1_moneyline = :team1_moneyline, team2_moneyline = :team2_moneyline,
+                    team1_spread = :team1_spread, team2_spread = :team2_spread,
+                    team1_spread_odds = :team1_spread_odds, team2_spread_odds = :team2_spread_odds,
+                    total_score = :total_score, over_odds = :over_odds, under_odds = :under_odds
+                WHERE game_id = :game_id
+            """
+            try:
+                cursor.execute(sql_update, update_data)
+                self.conn.commit()
+                # --- MODIFICATION START ---
+                # Increment the success counter after a successful commit
+                updated_count += 1
+                # --- MODIFICATION END ---
+            except Exception as e:
+                logging.error(f"Database update failed for game {game_id}: {e}")
+                self.conn.rollback()
+                skipped_count += 1
+        
+        # --- MODIFICATION START ---
+        # Add the final summary log message before returning
+        logging.info(f"Updated scores and odds for {updated_count} games. Skipped {skipped_count} games.")
+        # --- MODIFICATION END ---
+        
+        return skipped_count
 
     def __enter__(self):
         # Called at the start of a with‐block
