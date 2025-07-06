@@ -1761,7 +1761,6 @@ class Pregame:
             logging.error(f"Failed to fetch or parse scoreboard for {self.sport} on {self.date}: {e}")
             return {}
 
-
     def update_final_scores_and_closing_odds(self) -> int:
         """
         MODIFIED: Finds all games for the given date, fetches their latest scores
@@ -1842,6 +1841,7 @@ class Pregame:
         logging.info(f"Updated scores and odds for {updated_count} games. Skipped {skipped_count} games.")
         
         return skipped_count
+    
     def __enter__(self):
         # Called at the start of a with‐block
         return self
