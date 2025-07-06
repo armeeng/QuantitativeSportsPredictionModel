@@ -148,19 +148,18 @@ if 'selected_sport' in locals() and 'selected_model' in locals():
                 # --- Game Header (MODIFIED to show scores) ---
                 col1, col2, col3 = st.columns([2.5, 1, 2.5])
                 with col1:
-                    st.image(game['team2_logo'], width=60)
-                    st.subheader(f"{game['team2_name']} (Away)")
-                    # NEW: Display score if it exists
-                    if pd.notna(game['team2_score']):
-                        st.title(f"{int(game['team2_score'])}")
-                with col2:
-                    st.markdown("<h3 style='text-align: center; color: grey;'>VS</h3>", unsafe_allow_html=True)
-                with col3:
                     st.image(game['team1_logo'], width=60)
-                    st.subheader(f"{game['team1_name']} (Home)")
-                    # NEW: Display score if it exists
+                    st.subheader(f"{game['team1_name']} (Away)")
                     if pd.notna(game['team1_score']):
                         st.title(f"{int(game['team1_score'])}")
+                with col2:
+                    st.markdown("<h3 style='text-align: center; color: grey;'>VS</h3>", unsafe_allow_html=True)
+                # Right column is now team2 (Home)
+                with col3:
+                    st.image(game['team2_logo'], width=60)
+                    st.subheader(f"{game['team2_name']} (Home)")
+                    if pd.notna(game['team2_score']):
+                        st.title(f"{int(game['team2_score'])}")
                 st.divider()
 
                 # --- Moneyline ---

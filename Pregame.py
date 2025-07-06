@@ -1776,7 +1776,7 @@ class Pregame:
         updated_count = 0
 
         for game_id in game_ids:
-            time.sleep(1)
+            time.sleep(1) # be respectful to the API
 
             game_data = daily_scores.get(str(game_id))
             closing_odds = self.get_betting_odds(game_id)
