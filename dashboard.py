@@ -5,74 +5,67 @@ from sqlalchemy import create_engine
 from datetime import date
 import os
 import json
+import time
+import sys
+
+# --- Path Correction & Model Imports --------------------------------------------------
+# This allows the script to find your Pregame.py file
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
+try:
+    # NEW: Import the Pregame class to access its update methods
+    from Pregame import Pregame
+except ImportError as e:
+    st.error(f"FATAL: Could not import Pregame class. Ensure Pregame.py is accessible.")
+    st.stop()
+
 
 # --- Configuration -------------------------------------------------------------------
 APP_TITLE = "Sports Predictions Dashboard"
 st.set_page_config(page_title=APP_TITLE, layout="wide")
 
 # --- Database Connection Setup -------------------------------------------------------
-# Assumes the script is in a subdirectory and the db is in the parent directory
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.dirname(current_dir)
 DATABASE_URL = f"sqlite:///sports.db"
 engine = create_engine(DATABASE_URL)
 
-# --- Helper Functions (from your TestModel class) ------------------------------------
-
+# --- Helper Functions (Unchanged) ----------------------------------------------------
 def american_to_decimal(odds: float) -> float:
-    """Converts American odds to decimal odds."""
     if pd.isna(odds) or odds == 0: return None
-    if odds > 0:
-        return (odds / 100) + 1
-    else:
-        return (100 / abs(odds)) + 1
+    if odds > 0: return (odds / 100) + 1
+    else: return (100 / abs(odds)) + 1
 
 def american_to_prob(odds: float) -> float:
-    """Converts American odds to an implied probability."""
-    if pd.isna(odds):
-        return None
-    if odds > 0:
-        return 100 / (odds + 100)
-    else:
-        return abs(odds) / (abs(odds) + 100)
+    if pd.isna(odds): return None
+    if odds > 0: return 100 / (odds + 100)
+    else: return abs(odds) / (abs(odds) + 100)
 
 def calculate_ev(prob_win: float, odds: float) -> float:
-    """Calculates the Expected Value of a bet."""
     if pd.isna(prob_win) or pd.isna(odds): return 0
-    
     decimal_odds = american_to_decimal(odds)
     if decimal_odds is None: return 0
-
-    profit_if_win = decimal_odds - 1
-    loss_if_loss = 1
-    prob_loss = 1 - prob_win
-
-    return (prob_win * profit_if_win) - (prob_loss * loss_if_loss)
+    return (prob_win * (decimal_odds - 1)) - ((1 - prob_win) * 1)
 
 def calculate_kelly_fraction(prob_win: float, decimal_odds: float) -> float:
-    """Calculates the Kelly Criterion fraction of bankroll to bet."""
     if pd.isna(prob_win) or pd.isna(decimal_odds) or decimal_odds <= 1: return 0
-    
-    p = prob_win
-    q = 1 - p
-    b = decimal_odds - 1 # Net odds
-    
-    # If edge is not positive, fraction is 0
+    p, q, b = prob_win, 1 - prob_win, decimal_odds - 1
     if (p * b - q) <= 0: return 0
-    
     return (p * b - q) / b
 
 # --- Data Loading -------------------------------------------------------------------
-
 @st.cache_data(ttl=600)
 def load_data(selected_date: date, selected_sport: str, selected_model: str) -> pd.DataFrame:
     """Queries the database to get all games and their latest predictions for a given day."""
+    # MODIFIED: Added team1_score and team2_score to the query
     query = """
     SELECT
         g.game_id, g.date, g.sport, g.team1_id, g.team1_name, g.team1_logo,
         g.team2_id, g.team2_name, g.team2_logo, g.team1_moneyline, g.team2_moneyline,
         g.team1_spread, g.team1_spread_odds, g.team2_spread_odds, g.total_score,
-        g.over_odds, g.under_odds, p.model_name, p.prediction_data
+        g.over_odds, g.under_odds, g.team1_score, g.team2_score, -- <-- NEWLY ADDED
+        p.model_name, p.prediction_data
     FROM games g
     JOIN predictions p ON g.game_id = p.game_id
     WHERE
@@ -80,8 +73,7 @@ def load_data(selected_date: date, selected_sport: str, selected_model: str) -> 
         AND g.sport = :selected_sport
         AND p.model_name = :selected_model
         AND p.created_at = (
-            SELECT MAX(created_at)
-            FROM predictions p2
+            SELECT MAX(created_at) FROM predictions p2
             WHERE p2.game_id = p.game_id AND p2.model_name = p.model_name
         )
     """
@@ -109,19 +101,15 @@ def get_filter_options():
     return sports['sport'].tolist(), models['model_name'].tolist()
 
 # --- UI Layout -----------------------------------------------------------------------
-
 st.title(f"🏈 ⚾️ {APP_TITLE} 🏀 🏒")
 
-# --- User Inputs for Betting Strategy (MODIFIED) ---
 st.markdown("### Betting Strategy Configuration")
 c1, c2 = st.columns(2)
 bankroll = c1.number_input("Enter your bankroll ($)", min_value=0.0, value=1000.0, step=100.0)
-# This is now a CAP, not a multiplier, to match TestModel's logic. Default is 1.0%
 max_bet_percent = c2.number_input("Max Bet as % of Bankroll (The 'Safety Net')", min_value=0.1, max_value=100.0, value=1.0, step=0.1,
                                   help="Sets the MAXIMUM percentage of your bankroll to risk on any single bet, mirroring the 'max_fraction' in the backtest.")
 max_bet_fraction = max_bet_percent / 100.0
 
-# --- Sidebar for Game Filters ---
 with st.sidebar:
     st.header("Filters")
     available_sports, available_models = get_filter_options()
@@ -132,7 +120,23 @@ with st.sidebar:
         selected_date = st.date_input("Select Date", date.today())
         selected_model = st.selectbox("Select Model", available_models)
 
-# --- Main Content Area ---
+        # --- NEW: Refresh Button ---
+        st.divider()
+        if st.button("🔄 Refresh Scores & Odds", use_container_width=True):
+            with st.spinner(f"Updating data for {selected_sport} on {selected_date}..."):
+                try:
+                    # Instantiate Pregame and run the update
+                    pg = Pregame(date=selected_date, sport=selected_sport)
+                    pg.update_final_scores_and_closing_odds()
+                    # IMPORTANT: Clear the cache to force data to be reloaded from the DB
+                    st.cache_data.clear()
+                    st.success("Data refreshed successfully!")
+                    time.sleep(1) # a short pause to let user see the message
+                    st.rerun() # Rerun the script to display the new data
+                except Exception as e:
+                    st.error(f"An error occurred during refresh: {e}")
+
+
 if 'selected_sport' in locals() and 'selected_model' in locals():
     df = load_data(selected_date, selected_sport, selected_model)
     if df.empty:
@@ -141,16 +145,22 @@ if 'selected_sport' in locals() and 'selected_model' in locals():
         st.success(f"Found {len(df)} games for **{selected_sport}** on **{selected_date.strftime('%Y-%m-%d')}**")
         for index, game in df.iterrows():
             with st.container(border=True):
-                # Game Header
+                # --- Game Header (MODIFIED to show scores) ---
                 col1, col2, col3 = st.columns([2.5, 1, 2.5])
                 with col1:
                     st.image(game['team2_logo'], width=60)
                     st.subheader(f"{game['team2_name']} (Away)")
+                    # NEW: Display score if it exists
+                    if pd.notna(game['team2_score']):
+                        st.title(f"{int(game['team2_score'])}")
                 with col2:
                     st.markdown("<h3 style='text-align: center; color: grey;'>VS</h3>", unsafe_allow_html=True)
                 with col3:
                     st.image(game['team1_logo'], width=60)
                     st.subheader(f"{game['team1_name']} (Home)")
+                    # NEW: Display score if it exists
+                    if pd.notna(game['team1_score']):
+                        st.title(f"{int(game['team1_score'])}")
                 st.divider()
 
                 # --- Moneyline ---

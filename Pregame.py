@@ -1691,16 +1691,15 @@ class Pregame:
 
     def _fetch_scores_from_scoreboard(self) -> dict:
         """
-        MODIFIED: This helper now uses the reliable scoreboard API to fetch all
-        scores for the given date at once.
+        MODIFIED: This helper now fetches score and completion status for ALL games
+        on the scoreboard for a given date, not just completed ones.
 
         Returns:
-            A dictionary mapping game_id to its score, e.g.:
-            {'4012345': {'team1_score': 10, 'team2_score': 3}, ...}
+            A dictionary mapping game_id to its score and status, e.g.:
+            {'4012345': {'team1_score': 10, 'team2_score': 3, 'completed': True}, ...}
         """
         scores_map = {}
         try:
-            # 1) Build ESPN scoreboard API URL (from your original working code)
             category, league = self._ESPN_MAP[self.sport]
             url = (
                 f"https://site.api.espn.com/apis/site/v2/"
@@ -1708,12 +1707,10 @@ class Pregame:
             )
             date_str = self.date.strftime("%Y%m%d")
 
-            # 2) Fetch scoreboard data
             resp = requests.get(url, params={"dates": date_str}, timeout=10)
             resp.raise_for_status()
             data = resp.json()
 
-            # 3) Loop through events and extract scores
             for event in data.get("events", []):
                 game_id = event.get("id")
                 if not game_id:
@@ -1722,11 +1719,11 @@ class Pregame:
                 comp = event["competitions"][0]
                 status = comp.get("status", {}).get("type", {})
                 
-                # Only process if game is completed
-                if not status.get("completed", False):
-                    continue
+                # --- LOGIC CHANGE ---
+                # We no longer skip incomplete games here. Instead, we capture
+                # the completion status to be handled by the calling function.
+                is_completed = status.get("completed", False)
 
-                # Map away=team1, home=team2
                 teams = {c["homeAway"]: c for c in comp["competitors"]}
                 away = teams.get("away")
                 home = teams.get("home")
@@ -1737,11 +1734,15 @@ class Pregame:
                 try:
                     team1_score = int(away.get("score", 0))
                     team2_score = int(home.get("score", 0))
+                    
+                    # Add the 'completed' status to the dictionary
                     scores_map[game_id] = {
                         'team1_score': team1_score,
-                        'team2_score': team2_score
+                        'team2_score': team2_score,
+                        'completed': is_completed 
                     }
                 except (TypeError, ValueError):
+                    # This part is unchanged, it correctly handles malformed scores
                     logging.error(f"Invalid score format for game {game_id}")
                     continue
             
@@ -1749,15 +1750,15 @@ class Pregame:
 
         except Exception as e:
             logging.error(f"Failed to fetch or parse scoreboard for {self.sport} on {self.date}: {e}")
-            return {} # Return empty dict on failure
+            return {}
+
 
     def update_final_scores_and_closing_odds(self) -> int:
         """
-        Finds all games for the given date, fetches their final scores from the
-        scoreboard, re-fetches the closing line odds, and updates the database.
+        MODIFIED: Finds all games for the given date, fetches their latest scores
+        and closing odds, and updates the database. It now updates all games,
+        but only counts non-completed games towards the 'skipped_count'.
         """
-        # 1. Fetch all scores for the day in a single API call
-        # This part is unchanged
         daily_scores = self._fetch_scores_from_scoreboard()
 
         if not daily_scores:
@@ -1771,34 +1772,43 @@ class Pregame:
             logging.info(f"No games found in DB for {self.sport} on {self.date} to post-process.")
             return 0
 
-        # --- MODIFICATION START ---
-        # Initialize counters for both skipped and successful updates
         skipped_count = 0
         updated_count = 0
-        # --- MODIFICATION END ---
 
         for game_id in game_ids:
-            # The logging and sleep are unchanged
-            time.sleep(1) 
+            time.sleep(1)
 
-            final_scores = daily_scores.get(str(game_id))
+            game_data = daily_scores.get(str(game_id))
             closing_odds = self.get_betting_odds(game_id)
 
-            if not final_scores:
+            # --- LOGIC CHANGE ---
+            # A game is only truly skipped if it's not on the scoreboard at all.
+            if not game_data:
+                logging.warning(f"Game {game_id} from DB not found on scoreboard. Skipping.")
                 skipped_count += 1
                 continue
             
-            # The update_data dictionary is unchanged
+            # Check completion status. If not complete, increment skip counter
+            # but CONTINUE to the update step.
+            if not game_data.get('completed', False):
+                skipped_count += 1
+            
+            # Prepare data for database update using the latest scores
             update_data = {
-                'team1_score': final_scores['team1_score'], 'team2_score': final_scores['team2_score'],
-                'team1_moneyline': closing_odds.get('team1_moneyline'), 'team2_moneyline': closing_odds.get('team2_moneyline'),
-                'team1_spread': closing_odds.get('team1_spread'), 'team2_spread': closing_odds.get('team2_spread'),
-                'team1_spread_odds': closing_odds.get('team1_spread_odds'), 'team2_spread_odds': closing_odds.get('team2_spread_odds'),
-                'total_score': closing_odds.get('total_score'), 'over_odds': closing_odds.get('over_odds'),
-                'under_odds': closing_odds.get('under_odds'), 'game_id': game_id
+                'team1_score': game_data['team1_score'],
+                'team2_score': game_data['team2_score'],
+                'team1_moneyline': closing_odds.get('team1_moneyline'),
+                'team2_moneyline': closing_odds.get('team2_moneyline'),
+                'team1_spread': closing_odds.get('team1_spread'),
+                'team2_spread': closing_odds.get('team2_spread'),
+                'team1_spread_odds': closing_odds.get('team1_spread_odds'),
+                'team2_spread_odds': closing_odds.get('team2_spread_odds'),
+                'total_score': closing_odds.get('total_score'),
+                'over_odds': closing_odds.get('over_odds'),
+                'under_odds': closing_odds.get('under_odds'),
+                'game_id': game_id
             }
 
-            # The SQL UPDATE statement is unchanged
             sql_update = """
                 UPDATE games SET
                     team1_score = :team1_score, team2_score = :team2_score,
@@ -1811,22 +1821,18 @@ class Pregame:
             try:
                 cursor.execute(sql_update, update_data)
                 self.conn.commit()
-                # --- MODIFICATION START ---
-                # Increment the success counter after a successful commit
                 updated_count += 1
-                # --- MODIFICATION END ---
             except Exception as e:
                 logging.error(f"Database update failed for game {game_id}: {e}")
                 self.conn.rollback()
-                skipped_count += 1
+                # If the DB update fails, it's effectively a skip
+                if game_data.get('completed', False):
+                    skipped_count += 1
         
-        # --- MODIFICATION START ---
-        # Add the final summary log message before returning
+        # This final logging statement is unchanged and now works as intended
         logging.info(f"Updated scores and odds for {updated_count} games. Skipped {skipped_count} games.")
-        # --- MODIFICATION END ---
         
         return skipped_count
-
     def __enter__(self):
         # Called at the start of a with‐block
         return self
