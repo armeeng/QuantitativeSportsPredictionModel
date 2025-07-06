@@ -1707,7 +1707,16 @@ class Pregame:
             )
             date_str = self.date.strftime("%Y%m%d")
 
-            resp = requests.get(url, params={"dates": date_str}, timeout=10)
+            # <<< MODIFIED SECTION START >>>
+            # Create params dict and add extra params for CBB, just like in
+            # the get_games_for_date function.
+            params = {"dates": date_str}
+            if self.sport == "CBB":
+                params.update({"groups": 50, "limit": 500})
+
+            resp = requests.get(url, params=params, timeout=10)
+            # <<< MODIFIED SECTION END >>>
+            
             resp.raise_for_status()
             data = resp.json()
 
