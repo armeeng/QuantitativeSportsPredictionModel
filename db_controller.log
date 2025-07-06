@@ -27786,3 +27786,28 @@
 2025-07-06 12:54:53 INFO     root: No games found in DB for NFL on 2022-03-23 to post-process.
 2025-07-06 12:54:53 INFO     root: Preprocessing NBA on 2022-03-23
 2025-07-06 12:55:25 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/personal-fouls-per-game?date=2022-03-23, sleeping 4 minutes before retry
+2025-07-06 13:08:34 INFO     root: Preprocessing NFL on 2025-07-06
+2025-07-06 13:08:34 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-06 13:08:34 INFO     root: Postprocessing NFL on 2025-07-06
+2025-07-06 13:08:34 WARNING  root: Scoreboard was empty or could not be fetched. No scores to update.
+2025-07-06 13:08:37 INFO     root: No games found in DB for NFL on 2025-07-06 to post-process.
+2025-07-06 13:08:37 INFO     root: Preprocessing NBA on 2025-07-06
+2025-07-06 13:08:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-06 13:08:37 INFO     root: Postprocessing NBA on 2025-07-06
+2025-07-06 13:08:37 WARNING  root: Scoreboard was empty or could not be fetched. No scores to update.
+2025-07-06 13:08:40 INFO     root: No games found in DB for NBA on 2025-07-06 to post-process.
+2025-07-06 13:08:40 INFO     root: Preprocessing CFB on 2025-07-06
+2025-07-06 13:08:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-06 13:08:41 INFO     root: Postprocessing CFB on 2025-07-06
+2025-07-06 13:08:41 WARNING  root: Scoreboard was empty or could not be fetched. No scores to update.
+2025-07-06 13:08:43 INFO     root: No games found in DB for CFB on 2025-07-06 to post-process.
+2025-07-06 13:08:43 INFO     root: Preprocessing CBB on 2025-07-06
+2025-07-06 13:08:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-06 13:08:44 INFO     root: Postprocessing CBB on 2025-07-06
+2025-07-06 13:08:44 WARNING  root: Scoreboard was empty or could not be fetched. No scores to update.
+2025-07-06 13:08:44 INFO     root: No games found in DB for CBB on 2025-07-06 to post-process.
+2025-07-06 13:08:44 INFO     root: Preprocessing MLB on 2025-07-06
+2025-07-06 13:10:29 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-06 13:10:29 INFO     root: Postprocessing MLB on 2025-07-06
+2025-07-06 13:10:55 INFO     root: Updated scores and odds for 15 games. Skipped 15 games.
+2025-07-06 13:10:55 INFO     root: Postprocessing MLB on 2025-07-05
