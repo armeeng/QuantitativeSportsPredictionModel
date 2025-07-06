@@ -1763,14 +1763,13 @@ class Pregame:
 
     def update_final_scores_and_closing_odds(self) -> int:
         """
-        MODIFIED: Finds all games for the given date, fetches their latest scores
-        and closing odds, and updates the database. It now updates all games,
-        but only counts non-completed games towards the 'skipped_count'.
+        MODIFIED: Finds all games for the given date. It ALWAYS updates the
+        closing line odds. It ONLY updates the score if the game is complete.
         """
         daily_scores = self._fetch_scores_from_scoreboard()
 
         if not daily_scores:
-            logging.warning("Scoreboard was empty or could not be fetched. No scores to update.")
+            logging.warning("Scoreboard was empty or could not be fetched. No games to process.")
         
         cursor = self.conn.cursor()
         query = "SELECT game_id FROM games WHERE date = ? AND sport = ?"
@@ -1784,61 +1783,87 @@ class Pregame:
         updated_count = 0
 
         for game_id in game_ids:
-            time.sleep(1) # be respectful to the API
+            time.sleep(1) # Be respectful to the API
 
-            game_data = daily_scores.get(str(game_id))
+            game_data_from_api = daily_scores.get(str(game_id))
             closing_odds = self.get_betting_odds(game_id)
-
-            # --- LOGIC CHANGE ---
-            # A game is only truly skipped if it's not on the scoreboard at all.
-            if not game_data:
-                logging.warning(f"Game {game_id} from DB not found on scoreboard. Skipping.")
+            
+            if not game_data_from_api:
+                logging.warning(f"Game {game_id} from DB not found on scoreboard. Skipping all updates for this game.")
+                # This game doesn't even have a status, so we can't update anything reliably.
                 skipped_count += 1
                 continue
-            
-            # Check completion status. If not complete, increment skip counter
-            # but CONTINUE to the update step.
-            if not game_data.get('completed', False):
-                skipped_count += 1
-            
-            # Prepare data for database update using the latest scores
-            update_data = {
-                'team1_score': game_data['team1_score'],
-                'team2_score': game_data['team2_score'],
-                'team1_moneyline': closing_odds.get('team1_moneyline'),
-                'team2_moneyline': closing_odds.get('team2_moneyline'),
-                'team1_spread': closing_odds.get('team1_spread'),
-                'team2_spread': closing_odds.get('team2_spread'),
-                'team1_spread_odds': closing_odds.get('team1_spread_odds'),
-                'team2_spread_odds': closing_odds.get('team2_spread_odds'),
-                'total_score': closing_odds.get('total_score'),
-                'over_odds': closing_odds.get('over_odds'),
-                'under_odds': closing_odds.get('under_odds'),
-                'game_id': game_id
-            }
 
-            sql_update = """
-                UPDATE games SET
-                    team1_score = :team1_score, team2_score = :team2_score,
-                    team1_moneyline = :team1_moneyline, team2_moneyline = :team2_moneyline,
-                    team1_spread = :team1_spread, team2_spread = :team2_spread,
-                    team1_spread_odds = :team1_spread_odds, team2_spread_odds = :team2_spread_odds,
-                    total_score = :total_score, over_odds = :over_odds, under_odds = :under_odds
-                WHERE game_id = :game_id
-            """
+            # --- NEW CONDITIONAL LOGIC ---
+            if game_data_from_api.get('completed', False):
+                # --- Case 1: Game is complete. Update scores AND odds. ---
+                update_data = {
+                    'team1_score': game_data_from_api['team1_score'],
+                    'team2_score': game_data_from_api['team2_score'],
+                    'team1_moneyline': closing_odds.get('team1_moneyline'),
+                    'team2_moneyline': closing_odds.get('team2_moneyline'),
+                    'team1_spread': closing_odds.get('team1_spread'),
+                    'team2_spread': closing_odds.get('team2_spread'),
+                    'team1_spread_odds': closing_odds.get('team1_spread_odds'),
+                    'team2_spread_odds': closing_odds.get('team2_spread_odds'),
+                    'total_score': closing_odds.get('total_score'),
+                    'over_odds': closing_odds.get('over_odds'),
+                    'under_odds': closing_odds.get('under_odds'),
+                    'game_id': game_id
+                }
+                sql_update = """
+                    UPDATE games SET
+                        team1_score = :team1_score, team2_score = :team2_score,
+                        team1_moneyline = :team1_moneyline, team2_moneyline = :team2_moneyline,
+                        team1_spread = :team1_spread, team2_spread = :team2_spread,
+                        team1_spread_odds = :team1_spread_odds, team2_spread_odds = :team2_spread_odds,
+                        total_score = :total_score, over_odds = :over_odds, under_odds = :under_odds
+                    WHERE game_id = :game_id
+                """
+            else:
+                # --- Case 2: Game is not complete. Update ONLY the odds. ---
+                skipped_count += 1 # Increment skip counter because score is not final.
+                update_data = {
+                    'team1_moneyline': closing_odds.get('team1_moneyline'),
+                    'team2_moneyline': closing_odds.get('team2_moneyline'),
+                    'team1_spread': closing_odds.get('team1_spread'),
+                    'team2_spread': closing_odds.get('team2_spread'),
+                    'team1_spread_odds': closing_odds.get('team1_spread_odds'),
+                    'team2_spread_odds': closing_odds.get('team2_spread_odds'),
+                    'total_score': closing_odds.get('total_score'),
+                    'over_odds': closing_odds.get('over_odds'),
+                    'under_odds': closing_odds.get('under_odds'),
+                    'game_id': game_id
+                }
+                # This SQL statement notably omits team1_score and team2_score
+                sql_update = """
+                    UPDATE games SET
+                        team1_moneyline = :team1_moneyline, team2_moneyline = :team2_moneyline,
+                        team1_spread = :team1_spread, team2_spread = :team2_spread,
+                        team1_spread_odds = :team1_spread_odds, team2_spread_odds = :team2_spread_odds,
+                        total_score = :total_score, over_odds = :over_odds, under_odds = :under_odds
+                    WHERE game_id = :game_id
+                """
+            
+            # Execute the appropriate update statement
             try:
-                cursor.execute(sql_update, update_data)
-                self.conn.commit()
-                updated_count += 1
+                # Check if there's anything to update
+                if closing_odds:
+                    cursor.execute(sql_update, update_data)
+                    self.conn.commit()
+                    updated_count += 1
+                else:
+                    logging.warning(f"No closing odds found for game {game_id}. Nothing to update.")
+
             except Exception as e:
                 logging.error(f"Database update failed for game {game_id}: {e}")
                 self.conn.rollback()
-                # If the DB update fails, it's effectively a skip
-                if game_data.get('completed', False):
+                # If a completed game fails to update, it's effectively a skip.
+                if game_data_from_api.get('completed', False):
                     skipped_count += 1
         
-        # This final logging statement is unchanged and now works as intended
-        logging.info(f"Updated scores and odds for {updated_count} games. Skipped {skipped_count} games.")
+        # The log message now has a clearer meaning.
+        logging.info(f"Successfully processed {len(game_ids)} games. Odds updated for {updated_count}. Score updates skipped for {skipped_count} games.")
         
         return skipped_count
     

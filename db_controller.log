@@ -27811,3 +27811,21 @@
 2025-07-06 13:10:29 INFO     root: Postprocessing MLB on 2025-07-06
 2025-07-06 13:10:55 INFO     root: Updated scores and odds for 15 games. Skipped 15 games.
 2025-07-06 13:10:55 INFO     root: Postprocessing MLB on 2025-07-05
+2025-07-06 13:59:16 INFO     root: Preprocessing MLB on 2025-07-06
+2025-07-06 14:01:03 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-06 14:01:03 INFO     root: Postprocessing MLB on 2025-07-06
+2025-07-06 14:01:32 INFO     root: Updated scores and odds for 15 games. Skipped 15 games.
+2025-07-06 14:01:32 INFO     root: Preprocessing MLB on 2025-07-05
+2025-07-06 14:03:17 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-06 14:03:17 INFO     root: Postprocessing MLB on 2025-07-05
+2025-07-06 14:03:46 INFO     root: Updated scores and odds for 15 games. Skipped 0 games.
+2025-07-06 14:03:46 INFO     root: Postprocessing MLB on 2025-07-01
+2025-07-06 14:04:11 INFO     root: Updated scores and odds for 15 games. Skipped 3 games.
+2025-07-06 14:04:11 INFO     root: Postprocessing MLB on 2025-06-18
+2025-07-06 14:09:11 INFO     root: Preprocessing MLB on 2025-07-06
+2025-07-06 14:10:57 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-06 14:10:57 INFO     root: Postprocessing MLB on 2025-07-06
+2025-07-06 14:11:23 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 14 games.
+2025-07-06 14:11:23 INFO     root: Postprocessing MLB on 2025-07-01
+2025-07-06 14:11:50 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 3 games.
+2025-07-06 14:11:50 INFO     root: Postprocessing MLB on 2025-06-18
