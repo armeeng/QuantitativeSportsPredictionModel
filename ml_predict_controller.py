@@ -40,7 +40,7 @@ def main():
     # These games should NOT have scores in your database yet.
     PREDICT_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND date = '2025-07-06' "
+        "WHERE sport = 'MLB' AND date = '2025-07-07' "
         "ORDER BY date ASC;"
     )
 
