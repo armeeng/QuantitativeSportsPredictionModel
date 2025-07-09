@@ -6,3 +6,4 @@ __pycache__/
 training_data/
 Feature_Importance/
 Feature_Importance_copy/
+.venv/

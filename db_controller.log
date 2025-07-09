@@ -27883,3 +27883,40 @@
 2025-07-08 12:02:55 INFO     root: Postprocessing MLB on 2025-07-07
 2025-07-08 12:03:09 INFO     root: Successfully processed 10 games. Odds updated for 10. Score updates skipped for 0 games.
 2025-07-08 12:03:09 INFO     root: Postprocessing MLB on 2025-07-01
+2025-07-09 14:39:46 INFO     root: Preprocessing NFL on 2025-07-09
+2025-07-09 14:39:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-09 14:39:46 INFO     root: Postprocessing NFL on 2025-07-09
+2025-07-09 14:39:46 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-07-09 14:39:48 INFO     root: No games found in DB for NFL on 2025-07-09 to post-process.
+2025-07-09 14:39:48 INFO     root: Preprocessing NBA on 2025-07-09
+2025-07-09 14:39:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-09 14:39:49 INFO     root: Postprocessing NBA on 2025-07-09
+2025-07-09 14:39:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-07-09 14:39:49 INFO     root: No games found in DB for NBA on 2025-07-09 to post-process.
+2025-07-09 14:39:49 INFO     root: Preprocessing CFB on 2025-07-09
+2025-07-09 14:39:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-09 14:39:49 INFO     root: Postprocessing CFB on 2025-07-09
+2025-07-09 14:39:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-07-09 14:39:49 INFO     root: No games found in DB for CFB on 2025-07-09 to post-process.
+2025-07-09 14:39:49 INFO     root: Preprocessing CBB on 2025-07-09
+2025-07-09 14:39:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-07-09 14:39:49 INFO     root: Postprocessing CBB on 2025-07-09
+2025-07-09 14:39:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-07-09 14:39:50 INFO     root: No games found in DB for CBB on 2025-07-09 to post-process.
+2025-07-09 14:39:50 INFO     root: Preprocessing MLB on 2025-07-09
+2025-07-09 14:40:55 INFO     root: populate_pregame_data: inserted/updated 15 rows, skipped 0 games.
+2025-07-09 14:40:55 INFO     root: Postprocessing MLB on 2025-07-09
+2025-07-09 14:41:18 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 15 games.
+2025-07-09 14:41:18 INFO     root: Postprocessing MLB on 2025-07-08
+2025-07-09 14:41:40 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 0 games.
+2025-07-09 14:41:40 INFO     root: Postprocessing MLB on 2025-07-01
+2025-07-09 14:42:01 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 3 games.
+2025-07-09 14:42:01 INFO     root: Postprocessing MLB on 2025-06-18
+2025-07-09 14:42:22 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 3 games.
+2025-07-09 14:42:22 INFO     root: Postprocessing MLB on 2025-06-04
+2025-07-09 14:42:45 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 1 games.
+2025-07-09 14:42:45 INFO     root: Postprocessing MLB on 2025-05-28
+2025-07-09 14:43:07 INFO     root: Successfully processed 15 games. Odds updated for 15. Score updates skipped for 1 games.
+2025-07-09 14:43:07 INFO     root: Postprocessing MLB on 2025-05-23
+2025-07-09 14:43:30 INFO     root: Successfully processed 16 games. Odds updated for 16. Score updates skipped for 1 games.
+2025-07-09 14:43:30 INFO     root: Postprocessing MLB on 2025-05-22

@@ -40,7 +40,7 @@ def main():
     # These games should NOT have scores in your database yet.
     PREDICT_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND date = '2025-07-08' "
+        "WHERE sport = 'MLB' AND date = '2025-07-09' "
         "ORDER BY date ASC;"
     )
 
@@ -60,15 +60,20 @@ def main():
         test_evaluator = TestModel(predictions=predictions, y_test=y_test, test_odds=test_odds)
         test_evaluator.display_results()
     elif predictions is not None and len(predictions) > 0:
-        # This is the main logic block for inserting new predictions.
+        # This is the main logic block for inserting or updating predictions.
         print(f"Generated {len(predictions)} new predictions.")
-        
+
         # Create a new database session
         db_session = SessionLocal()
-        
+
         try:
-            new_prediction_objects = []
             for pred_data in predictions:
+                # Check for an existing prediction
+                existing_pred = db_session.query(Prediction).filter_by(
+                    game_id=pred_data['game_id'],
+                    model_name=pred_data['model_name']
+                ).first()
+
                 # Prepare the main prediction data payload for the JSON column
                 prediction_payload = {
                     'team1_win_prob': pred_data.get('team1_win_prob'),
@@ -77,24 +82,27 @@ def main():
                     'pred_team1_score': pred_data.get('pred_team1_score'),
                     'pred_team2_score': pred_data.get('pred_team2_score'),
                 }
-                
-                # Create a new Prediction object for the database
-                new_pred_obj = Prediction(
-                    game_id=pred_data['game_id'],
-                    model_name=pred_data['model_name'],
-                    prediction_data=prediction_payload
-                )
-                new_prediction_objects.append(new_pred_obj)
-            
-            # Add all new prediction objects to the session at once
-            db_session.add_all(new_prediction_objects)
-            
-            # Commit the transaction to save them to the database
+
+                if existing_pred:
+                    # If prediction exists, update its data
+                    print(f"Updating prediction for game_id: {pred_data['game_id']}")
+                    existing_pred.prediction_data = prediction_payload
+                else:
+                    # If prediction does not exist, create a new one
+                    print(f"Creating new prediction for game_id: {pred_data['game_id']}")
+                    new_pred_obj = Prediction(
+                        game_id=pred_data['game_id'],
+                        model_name=pred_data['model_name'],
+                        prediction_data=prediction_payload
+                    )
+                    db_session.add(new_pred_obj)
+
+            # Commit the transaction to save all changes (updates and inserts)
             db_session.commit()
-            print(f"Successfully saved {len(new_prediction_objects)} predictions to the database.")
+            print(f"Successfully saved/updated {len(predictions)} predictions in the database.")
 
         except Exception as e:
-            print(f"An error occurred during database insertion: {e}")
+            print(f"An error occurred during database operation: {e}")
             db_session.rollback() # Roll back the transaction on error
         finally:
             db_session.close() # Always close the session
