@@ -385,7 +385,7 @@ class Pregame:
 
         return games
     
-    def _parse_stat_value(self, text: str) -> float:
+    def _parse_stat_value(self, text: str, url: str) -> float:
         """
         Turn a table cell into a single float:
          - "--"           → 0.0
@@ -427,7 +427,7 @@ class Pregame:
         try:
             return float(text)
         except ValueError:
-            logging.error(f"Unrecognized stat value: {text}")
+            logging.error(f"Unrecognized stat value: {text} from: {url}")
             return 0.0
 
     def get_team_stats(self, team_name: str):
@@ -1400,7 +1400,7 @@ class Pregame:
                         )
                         row[h] = text
                     # numeric parse for normalization
-                    nums = {h: self._parse_stat_value(row[h]) for h in headers if h != "Team"}
+                    nums = {h: self._parse_stat_value(row[h], dated_url) for h in headers if h != "Team"}
                     numeric_rows.append(nums)
                     raw_rows[row["Team"]] = row
 
@@ -1419,9 +1419,9 @@ class Pregame:
                 slug = url.rstrip("/").split("/")[-1]
                 self._stats_cache[slug] = {}
                 for team, raw in raw_rows.items():
-                    raw_stats = {h: self._parse_stat_value(raw[h]) for h in headers if h != "Team"}
+                    raw_stats = {h: self._parse_stat_value(raw[h], dated_url) for h in headers if h != "Team"}
                     norm_stats = {}
-                    for h, val in {h: self._parse_stat_value(raw[h]) for h in headers if h != "Team"}.items():
+                    for h, val in {h: self._parse_stat_value(raw[h], dated_url) for h in headers if h != "Team"}.items():
                         lo, hi = min_max[h]
                         norm_stats[h] = (val - lo) / (hi - lo) if hi > lo else 0.0
                     self._stats_cache[slug][team] = {

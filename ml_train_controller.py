@@ -63,13 +63,12 @@ def main():
 
     TRAIN_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE < '2024-12-10' "
+        "WHERE sport = 'MLB' AND DATE < '2023-12-10' "
         "ORDER BY date ASC;"
     )
     TEST_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE > '2024-12-10' "
-        "ORDER BY date ASC;"
+        "WHERE sport = 'MLB' AND DATE between '2023-12-10' and '2024-05-10';"
     )
 
     # Build a name like 'lr_norm_NBA_all' or
