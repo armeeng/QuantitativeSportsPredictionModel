@@ -528,26 +528,69 @@ class TestModel:
 
         pnl = self.calculate_pnl_of_all_games()
         print(f"\nProfit & Loss (flat $1 bets on all available odds):")
-        print(f"  - Moneyline PnL:      ${pnl['moneyline_pnl']:.2f} from {pnl['moneyline_bets_placed']} bets")
-        print(f"  - Spread PnL:         ${pnl['spread_pnl']:.2f} from {pnl['spread_bets_placed']} bets")
-        print(f"  - Over/Under PnL:     ${pnl['ou_pnl']:.2f} from {pnl['ou_bets_placed']} bets")
+
+        # Moneyline
+        wagered_ml = pnl['moneyline_bets_placed']
+        roi_ml = (pnl['moneyline_pnl'] / wagered_ml * 100) if wagered_ml > 0 else 0
+        print(f"  - Moneyline:      ${pnl['moneyline_pnl']:>8.2f} PnL from {pnl['moneyline_bets_placed']:<4} bets. Total Wagered: ${wagered_ml:.2f}, ROI: {roi_ml:.2f}%")
+
+        # Spread
+        wagered_spread = pnl['spread_bets_placed']
+        roi_spread = (pnl['spread_pnl'] / wagered_spread * 100) if wagered_spread > 0 else 0
+        print(f"  - Spread:         ${pnl['spread_pnl']:>8.2f} PnL from {pnl['spread_bets_placed']:<4} bets. Total Wagered: ${wagered_spread:.2f}, ROI: {roi_spread:.2f}%")
+
+        # Over/Under
+        wagered_ou = pnl['ou_bets_placed']
+        roi_ou = (pnl['ou_pnl'] / wagered_ou * 100) if wagered_ou > 0 else 0
+        print(f"  - Over/Under:     ${pnl['ou_pnl']:>8.2f} PnL from {pnl['ou_bets_placed']:<4} bets. Total Wagered: ${wagered_ou:.2f}, ROI: {roi_ou:.2f}%")
 
         if isinstance(self.predictions, dict):
             ev_pnl = self.calculate_pnl_of_game_above_ev_threshold()
-            ml_info, spread_info, ou_info = ev_pnl['moneyline'], ev_pnl['spread'], ev_pnl['ou']
             print("\nPnL on +EV Bets (Classifier Only):")
-            print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/acc['total_games']:.1%})")
-            print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/acc['total_games']:.1%})")
-            print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/acc['total_games']:.1%})")
+
+            # Moneyline
+            ml_info = ev_pnl['moneyline']
+            wagered_ml_ev = ml_info['count']
+            roi_ml_ev = (ml_info['pnl'] / wagered_ml_ev * 100) if wagered_ml_ev > 0 else 0
+            print(f"  - Moneyline:      ${ml_info['pnl']:>8.2f} PnL from {ml_info['count']:<4} bets. Total Wagered: ${wagered_ml_ev:.2f}, ROI: {roi_ml_ev:.2f}%")
+
+            # Spread
+            spread_info = ev_pnl['spread']
+            wagered_spread_ev = spread_info['count']
+            roi_spread_ev = (spread_info['pnl'] / wagered_spread_ev * 100) if wagered_spread_ev > 0 else 0
+            print(f"  - Spread:         ${spread_info['pnl']:>8.2f} PnL from {spread_info['count']:<4} bets. Total Wagered: ${wagered_spread_ev:.2f}, ROI: {roi_spread_ev:.2f}%")
+
+            # Over/Under
+            ou_info = ev_pnl['ou']
+            wagered_ou_ev = ou_info['count']
+            roi_ou_ev = (ou_info['pnl'] / wagered_ou_ev * 100) if wagered_ou_ev > 0 else 0
+            print(f"  - Over/Under:     ${ou_info['pnl']:>8.2f} PnL from {ou_info['count']:<4} bets. Total Wagered: ${wagered_ou_ev:.2f}, ROI: {roi_ou_ev:.2f}%")
 
             self.calculate_p_values()
 
             kelly_results = self.simulate_kelly_betting(initial_bankroll=initial_bankroll)
-            kelly_ml, kelly_spread, kelly_ou = kelly_results['moneyline'], kelly_results['spread'], kelly_results['ou']
             print(f"\nKelly Criterion Simulation (Historical Backtest):")
-            print(f"  - Moneyline:  Final Bankroll: ${kelly_ml['final_bankroll']:.2f} (Profit: ${kelly_ml['final_bankroll'] - initial_bankroll:.2f})")
-            print(f"  - Spread:     Final Bankroll: ${kelly_spread['final_bankroll']:.2f} (Profit: ${kelly_spread['final_bankroll'] - initial_bankroll:.2f})")
-            print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Profit: ${kelly_ou['final_bankroll'] - initial_bankroll:.2f})")
+
+            # Moneyline
+            kelly_ml = kelly_results['moneyline']
+            profit_ml = kelly_ml['final_bankroll'] - initial_bankroll
+            wagered_ml = kelly_ml['total_wagered']
+            roi_ml = (profit_ml / wagered_ml * 100) if wagered_ml > 0 else 0
+            print(f"  - Moneyline:  Profit: ${profit_ml:>8.2f}. Total Wagered: ${wagered_ml:,.2f}, ROI: {roi_ml:.2f}%. Final Bankroll: ${kelly_ml['final_bankroll']:,.2f}")
+
+            # Spread
+            kelly_spread = kelly_results['spread']
+            profit_spread = kelly_spread['final_bankroll'] - initial_bankroll
+            wagered_spread = kelly_spread['total_wagered']
+            roi_spread = (profit_spread / wagered_spread * 100) if wagered_spread > 0 else 0
+            print(f"  - Spread:     Profit: ${profit_spread:>8.2f}. Total Wagered: ${wagered_spread:,.2f}, ROI: {roi_spread:.2f}%. Final Bankroll: ${kelly_spread['final_bankroll']:,.2f}")
+
+            # Over/Under
+            kelly_ou = kelly_results['ou']
+            profit_ou = kelly_ou['final_bankroll'] - initial_bankroll
+            wagered_ou = kelly_ou['total_wagered']
+            roi_ou = (profit_ou / wagered_ou * 100) if wagered_ou > 0 else 0
+            print(f"  - Over/Under: Profit: ${profit_ou:>8.2f}. Total Wagered: ${wagered_ou:,.2f}, ROI: {roi_ou:.2f}%. Final Bankroll: ${kelly_ou['final_bankroll']:,.2f}")
             
             self.check_calibration()
             self.run_probabilistic_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
