@@ -33,7 +33,7 @@ def main(
     session = Session()
 
     current = start_date
-    current = date(2022, 12, 11)
+    current = date(2024, 5, 6)
     while current >= stop_date:
         for sport in SportEnum:
             # see if we've already done this sport/date

@@ -62,6 +62,11 @@ class Pregame:
         skip = 0
 
         for g in games:
+            if g.get("season_type") == 1:
+                logging.info(f"Skipping game {g['id']} due to season_type=1 (pre-season)")
+                skip += 1
+                continue
+    
             # -- validate/convert venue_id --
             vid = g.get("venue_id")
             if vid is not None:
@@ -396,9 +401,15 @@ class Pregame:
          - otherwise log and return 0.0
         """
         text = text.strip()
-        if text == "--":
+        if text in ("--", ""):
             return 0.0
 
+        # New: ratio form "W-L-T"
+        # if re.fullmatch(r"\d+-\d+-\d+", text):
+        #     w, l, t = map(int, text.split("-"))
+        #     total = w + l + t
+        #     return ((w + 0.5 * t) / total) if total else 0.0
+        
         # ratio form "2-1"
         if re.fullmatch(r"\d+-\d+", text):
             w, l = map(int, text.split("-"))
@@ -427,7 +438,8 @@ class Pregame:
         try:
             return float(text)
         except ValueError:
-            logging.error(f"Unrecognized stat value: {text} from: {url}")
+            logging.error(f"Unrecognized stat value: {text} from: {url}, pausing")
+            input(f"Unrecognized stat value: {text} from: {url}, pausing")
             return 0.0
 
     def get_team_stats(self, team_name: str):
