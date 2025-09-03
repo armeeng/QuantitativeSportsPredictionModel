@@ -8,6 +8,9 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.metrics import brier_score_loss
 
+# 1. update games query to use your training range and select the right sport
+# 2. choose the target (team1 wins, team1 covers, over)
+
 # --- Path Correction ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
@@ -19,12 +22,12 @@ from Model import MLModel
 DB_PATH = os.path.join(parent_dir, "sports.db")
 GAMES_QUERY = (
     "SELECT * FROM games "
-    "WHERE sport = 'MLB' AND DATE < '2024-12-10' "
+    "WHERE sport = 'CFB' AND DATE < '2024-07-10' "
     "ORDER BY date ASC;"
 )
 STATS_COLUMN = "stats"
 # Number of top-performing single features to output in the final list
-TOP_N_FEATURES_TO_LIST = 20
+TOP_N_FEATURES_TO_LIST = 50
 
 def run_univariate_feature_test(X: np.ndarray, y: pd.Series, feature_names: list, n_splits: int = 5):
     """
@@ -109,7 +112,14 @@ def main():
     # Extract ALL numerical and categorical features separately
     X_num, all_numerical_names = dummy_model._prepare_numerical_features(df)
     X_cat_df = dummy_model._extract_categorical_features(df, MLModel._DEFAULT_CATEGORICAL_FEATURES)
-    y = (df["team1_score"] > df["team2_score"]).astype(int)
+
+    # choose whatever you want the features for
+    # team1 wins
+    #y = (df["team1_score"] > df["team2_score"]).astype(int)
+    # team1 covers
+    y = (df["team1_score"] + df["team1_spread"] > df["team2_score"]).astype(int)
+    # total score goes over the line
+    #y = (df["team1_score"] + df["team2_score"] > df["total_score"]).astype(int)
 
     # Encode categorical features for analysis
     cat_encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1, dtype=np.int32)

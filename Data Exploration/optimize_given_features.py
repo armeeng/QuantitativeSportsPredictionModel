@@ -10,6 +10,9 @@ from contextlib import redirect_stdout
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 
+# 1. use the right features for your sport (get from univariate feature selector)
+# 2. update your train and test query to match the train query used previously and what you'll use in the future
+
 # --- Path Correction & Model Imports -----------------------------------------
 # Ensure MLModel and TestModel classes can be imported
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,10 +32,7 @@ except ImportError as e:
 # --- CONFIGURATION -----------------------------------------------------------
 
 # The full list of candidate features to test.
-CANDIDATE_FEATURES = [
-    77, 246, 292, 318, 873, 874, 875, 876, 942, 963, 1036, 1038,
-    1041, 1046, 1051, 1053, 1056
-]
+CANDIDATE_FEATURES = [110, 111, 112, 132, 133, 134, 153, 193, 200, 201, 241, 243, 249, 250, 251, 280, 287, 305, 307, 313, 314, 315, 378, 379, 449, 470, 491, 498, 540, 596, 666, 806, 851, 852, 862, 912, 914, 1044, 1065, 1163, 1165, 1166, 1171, 1175, 1176]
 
 # --- HELPER & PARSING FUNCTIONS ----------------------------------------------
 
@@ -54,14 +54,18 @@ def parse_output(output_text: str) -> dict:
         'ev_p_value_ou': re.compile(r"Strategy 1: Betting only on \+EV Opportunities.*?-\s*Ou\s*:\s*P-value:\s*([\d\.]+)", re.DOTALL),
         
         # Kelly Profit: Anchored to the "Kelly Criterion Simulation" header.
-        'kelly_profit_ml': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Moneyline:.*?Profit:\s*\$(-?[\d,\.]+)", re.DOTALL),
-        'kelly_profit_spread': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Spread:.*?Profit:\s*\$(-?[\d,\.]+)", re.DOTALL),
-        'kelly_profit_ou': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Over/Under:.*?Profit:\s*\$(-?[\d,\.]+)", re.DOTALL),
+        'kelly_profit_ml': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Moneyline:\s*Profit:\s*\$\s*(-?[\d,]+\.[\d]+)", re.DOTALL),
+        'kelly_profit_spread': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Spread:\s*Profit:\s*\$\s*(-?[\d,]+\.[\d]+)", re.DOTALL),
+        'kelly_profit_ou': re.compile(r"Kelly Criterion Simulation \(Historical Backtest\):.*?-\s*Over/Under:\s*Profit:\s*\$\s*(-?[\d,]+\.[\d]+)", re.DOTALL),
         
         # Bootstrap PoP: Fixed regex patterns to properly capture each betting strategy section
         'bootstrap_pop_ml': re.compile(r"---\s*Bootstrap Simulation Results\s*---.*?Moneyline Betting Strategy:.*?Probability of Profit:\s*([\d\.]+)%", re.DOTALL),
         'bootstrap_pop_spread': re.compile(r"---\s*Bootstrap Simulation Results\s*---.*?Spread Betting Strategy:.*?Probability of Profit:\s*([\d\.]+)%", re.DOTALL),
         'bootstrap_pop_ou': re.compile(r"---\s*Bootstrap Simulation Results\s*---.*?Ou Betting Strategy:.*?Probability of Profit:\s*([\d\.]+)%", re.DOTALL),
+        
+        'accuracy_ml': re.compile(r"Model Prediction Accuracy:.*?-\s*Winner Accuracy:\s*([\d\.]+)%", re.DOTALL),
+        'accuracy_spread': re.compile(r"Model Prediction Accuracy:.*?-\s*Spread Accuracy:\s*([\d\.]+)%", re.DOTALL),
+        'accuracy_ou': re.compile(r"Model Prediction Accuracy:.*?-\s*Over/Under Accuracy:\s*([\d\.]+)%", re.DOTALL),
     }
     
     results = {}
@@ -90,12 +94,12 @@ def run_training_for_combination(num_feat: list):
     COLUMN = "stats"
     TRAIN_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE < '2024-12-10' "
+        "WHERE sport = 'CFB' AND DATE < '2024-07-10' "
         "ORDER BY date ASC;"
     )
     TEST_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE > '2024-12-10' "
+        "WHERE sport = 'CFB' AND DATE > '2024-07-10' "
         "ORDER BY date ASC;"
     )
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)
@@ -162,62 +166,84 @@ def evaluate_combination(combination: list) -> dict:
         plt.close('all')
 
 def forward_feature_selection(objective: dict):
-    """Main optimizer loop that implements Forward Feature Selection."""
+    """
+    Ranks features individually, then adds them sequentially to find the best combo.
+    """
     print(f"\n{'='*80}")
     print(f"🚀 STARTING OPTIMIZATION FOR: {objective['name']} (Goal: {objective['goal']})")
     print(f"{'='*80}")
+
+    # --- Step 1: Rank all candidate features based on their individual score ---
+    print("\n--- Step 1: Ranking all features individually ---")
+    feature_scores = []
+    is_minimize = objective['goal'] == 'minimize'
     
+    pbar_rank = tqdm(CANDIDATE_FEATURES, desc="Evaluating individual features", leave=False)
+    for feature in pbar_rank:
+        pbar_rank.set_postfix_str(f"Testing feature: [{feature}]")
+        metrics = evaluate_combination([feature])  # Test each feature by itself
+        score = metrics.get(objective['metric_key'], np.nan)
+        if not np.isnan(score):
+            feature_scores.append((feature, score))
+
+    if not feature_scores:
+        print("\nERROR: Could not get a valid score for any individual feature. Stopping.")
+        return [], float('inf') if is_minimize else float('-inf')
+
+    # Sort features based on their individual performance (best to worst)
+    feature_scores.sort(key=lambda x: x[1], reverse=not is_minimize)
+    
+    ranked_features = [f for f, s in feature_scores]
+    print(f"\n✅ Feature ranking complete. Best performing feature is {ranked_features[0]}.")
+    print(f"   Full ranking: {ranked_features}")
+
+    # --- Step 2: Sequentially add features from the ranked list and find the best combination ---
+    print("\n--- Step 2: Building combination by adding features in ranked order ---")
     selected_features = []
     best_overall_combination = []
-    best_overall_score = float('inf') if objective['goal'] == 'minimize' else float('-inf')
-    
-    for i in range(len(CANDIDATE_FEATURES)):
-        remaining = [f for f in CANDIDATE_FEATURES if f not in selected_features]
-        if not remaining:
+    best_overall_score = float('inf') if is_minimize else float('-inf')
+    rounds_without_improvement = 0
+
+    pbar_build = tqdm(ranked_features, desc="Building best combination", leave=False)
+    for i, feature_to_add in enumerate(pbar_build):
+        selected_features.append(feature_to_add)
+        current_combination = sorted(selected_features) # Keep list sorted for consistency
+        
+        pbar_build.set_postfix_str(f"Testing combo: {current_combination}")
+        metrics = evaluate_combination(current_combination)
+        current_score = metrics.get(objective['metric_key'], np.nan)
+        
+        if np.isnan(current_score):
+            print(f"\n[!] Skipping round {i+1} due to invalid score for combo: {current_combination}")
+            continue
+
+        print(f"\n -> Round {i+1}/{len(ranked_features)} | Added feature {feature_to_add} | Score: {current_score:.4f}")
+
+        # Determine if the current round's score is an improvement
+        is_better = (is_minimize and current_score < best_overall_score) or \
+                    (not is_minimize and current_score > best_overall_score)
+
+        if is_better:
+            best_overall_score = current_score
+            best_overall_combination = list(current_combination)
+            rounds_without_improvement = 0  # Reset counter
+            print(f" ★★★ NEW OVERALL BEST! Score: {best_overall_score:.4f} with combo {best_overall_combination} ★★★")
+        else:
+            rounds_without_improvement += 1
+            print(f" -> No improvement. Rounds without improvement: {rounds_without_improvement}/3.")
+
+        # Check for the early stopping condition
+        if rounds_without_improvement >= 3:
+            print(f"\n🛑 Stopping early: Best score has not improved for {rounds_without_improvement} consecutive rounds.")
             break
-        
-        best_feature_this_round = None
-        score_this_round = None
-        
-        pbar = tqdm(remaining, desc=f"Round {i+1}/{len(CANDIDATE_FEATURES)}", leave=False)
-        for feature in pbar:
-            current_combination = sorted(selected_features + [feature])
-            pbar.set_postfix_str(f"Testing combo: {current_combination}")
             
-            metrics = evaluate_combination(current_combination)
-            current_score = metrics.get(objective['metric_key'], np.nan)
-            
-            if np.isnan(current_score):
-                continue
-            
-            if score_this_round is None or \
-               (objective['goal'] == 'minimize' and current_score < score_this_round) or \
-               (objective['goal'] == 'maximize' and current_score > score_this_round):
-                score_this_round = current_score
-                best_feature_this_round = feature
-        
-        if best_feature_this_round is None:
-            print(f"\n -> Round {i+1} found no valid results or improvements. Stopping.")
-            break
-        
-        selected_features.append(best_feature_this_round)
-        selected_features.sort()
-        print(f"\n -> Round {i+1} complete. Added feature {best_feature_this_round}. Best score this round: {score_this_round:.4f}")
-        
-        if (objective['goal'] == 'minimize' and score_this_round < best_overall_score) or \
-           (objective['goal'] == 'maximize' and score_this_round > best_overall_score):
-            best_overall_score = score_this_round
-            best_overall_combination = list(selected_features)
-            print(f" ★★★ NEW OVERALL BEST! Combination: {best_overall_combination}, Score: {best_overall_score:.4f} ★★★")
-    
     return best_overall_combination, best_overall_score
 
 # --- SCRIPT ENTRYPOINT ------------------------------------------------------
 
 def main():
     """Defines objectives and orchestrates the entire optimization process."""
-    # Define all optimization objectives you want to run.
-    # To run fewer objectives for a quicker test, just comment out lines here.
+
     objectives = [
         {'name': 'Kelly Profit (Moneyline)', 'metric_key': 'kelly_profit_ml', 'goal': 'maximize'},
         {'name': '+EV P-Value (Moneyline)', 'metric_key': 'ev_p_value_ml', 'goal': 'minimize'},
@@ -230,6 +256,10 @@ def main():
         {'name': 'Kelly Profit (Over/Under)', 'metric_key': 'kelly_profit_ou', 'goal': 'maximize'},
         {'name': 'EV P-Value (Over/Under)', 'metric_key': 'ev_p_value_ou', 'goal': 'minimize'},
         {'name': 'Bootstrap PoP (Over/Under)', 'metric_key': 'bootstrap_pop_ou', 'goal': 'maximize'},
+
+        {'name': 'Accuracy (Moneyline)', 'metric_key': 'accuracy_ml', 'goal': 'maximize'},
+        {'name': 'Accuracy (Spread)', 'metric_key': 'accuracy_spread', 'goal': 'maximize'},
+        {'name': 'Accuracy (Over/Under)', 'metric_key': 'accuracy_ou', 'goal': 'maximize'},
     ]
     
     final_results = {}

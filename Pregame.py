@@ -281,6 +281,25 @@ class Pregame:
         1. Try to fetch tr_name from DB.
         2. If missing, fuzzy-match, insert into DB, then return.
         """
+        # Define a dictionary of known historical names, specific to each sport.
+        # KEY = Old Name, VALUE = Current Name
+        HISTORICAL_ALIASES = {
+            'MLB': {
+                'Indians': 'Guardians',
+            },
+            'NFL': {
+                'Redskins': 'Commanders',
+            }
+        }
+
+        # 1) Check the hard-coded dictionary first ✅
+        # Get the dictionary for the current sport, or an empty one if the sport isn't listed.
+        sport_aliases = HISTORICAL_ALIASES.get(self.sport, {})
+        # If the espn_name is an old name, replace it with the new one.
+        # Otherwise, it remains unchanged.
+        espn_name = sport_aliases.get(espn_name, espn_name)
+        
+        # --- The rest of the function proceeds as before, but now using the corrected name ---
         # 1) Check DB
         cur = self.conn.execute(
             "SELECT tr_name FROM team_name_map WHERE sport=? AND espn_name=?",
@@ -405,10 +424,10 @@ class Pregame:
             return 0.0
 
         # New: ratio form "W-L-T"
-        # if re.fullmatch(r"\d+-\d+-\d+", text):
-        #     w, l, t = map(int, text.split("-"))
-        #     total = w + l + t
-        #     return ((w + 0.5 * t) / total) if total else 0.0
+        if re.fullmatch(r"\d+-\d+-\d+", text):
+            w, l, t = map(int, text.split("-"))
+            total = w + l + t
+            return ((w + 0.5 * t) / total) if total else 0.0
         
         # ratio form "2-1"
         if re.fullmatch(r"\d+-\d+", text):

@@ -401,7 +401,7 @@ class MLModel(BaseModel):
         if model is None: model = self.model_
         ## NEW: If model is a calibrated classifier, get the base estimator
         if isinstance(model, CalibratedClassifierCV):
-            model = model.base_estimator
+            model = model.estimator
 
         if self.feature_names_ is None:
             print("Feature names are not available. Please train the model first.")

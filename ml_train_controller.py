@@ -39,12 +39,11 @@ def build_model_name(model_type: str, column: str, query: str) -> str:
 
 def main():
     """
-    Train/test an MLB model.
+    Train/test a model.
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [77, 246, 292, 318, 873, 874, 875, 876, 942, 963, 1036, 1038, 1041, 1046, 1051, 1053, 1056]
-    num_feat = [77, 292]
+    num_feat = [150, 377, 804]
     cat_feat = [
     ]
 
@@ -63,12 +62,12 @@ def main():
 
     TRAIN_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE < '2023-12-10' "
+        "WHERE sport = 'CFB' AND DATE < '2023-07-10' "
         "ORDER BY date ASC;"
     )
     TEST_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND DATE between '2023-12-10' and '2024-05-10';"
+        "WHERE sport = 'CFB' AND DATE > '2023-07-10';"
     )
 
     # Build a name like 'lr_norm_NBA_all' or
@@ -85,7 +84,7 @@ def main():
         random_state=130,
         numerical_feature_indices=num_feat,
         categorical_feature_names=cat_feat,
-        include_market_spread=False,
+        include_market_spread=True,
         include_market_total=True,
         feature_engineering_mode='differential', # flatten or differential
         calibrate_model=False,
