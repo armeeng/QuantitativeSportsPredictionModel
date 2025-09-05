@@ -28,7 +28,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "MLB_MONEYLINE_V1" # This should match the model you want to load
+    MODEL_NAME    = "NFL_SP_[430]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc" # This should match the model you want to load
 
     TEST_QUERY = (
         "SELECT * FROM games "
@@ -40,7 +40,7 @@ def main():
     # These games should NOT have scores in your database yet.
     PREDICT_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'MLB' AND date BETWEEN '2024-12-10' AND '2025-07-15'"
+        "WHERE sport = 'NFL' AND date > '2025-08-10'"
         "ORDER BY date ASC;"
     )
 
@@ -50,7 +50,7 @@ def main():
     
     # The PREDICT_QUERY is parameterized to avoid re-predicting games.
     # We pass the model name to the query execution via pandas' params feature.
-    predictions, y_test, test_odds = model.predict(PREDICT_QUERY, mode='evaluation')
+    predictions, y_test, test_odds = model.predict(PREDICT_QUERY, mode='prediction')
 
     # ── OUTPUT & DATABASE INSERTION ─────────────────────────────────────
     if y_test is not None:

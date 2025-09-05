@@ -43,7 +43,7 @@ def main():
     """
 
     # ── Feature definitions ────────────────────────────────
-    num_feat = [150, 377, 804]
+    num_feat = [430]
     cat_feat = [
     ]
 
@@ -62,12 +62,12 @@ def main():
 
     TRAIN_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'CFB' AND DATE < '2023-07-10' "
+        "WHERE sport = 'NFL' AND DATE < '2024-07-10' "
         "ORDER BY date ASC;"
     )
     TEST_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'CFB' AND DATE > '2023-07-10';"
+        "WHERE sport = 'NFL' AND DATE BETWEEN '2024-09-20' AND '2024-09-30';"
     )
 
     # Build a name like 'lr_norm_NBA_all' or

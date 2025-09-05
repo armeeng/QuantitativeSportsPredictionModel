@@ -22,7 +22,7 @@ from Model import MLModel
 DB_PATH = os.path.join(parent_dir, "sports.db")
 GAMES_QUERY = (
     "SELECT * FROM games "
-    "WHERE sport = 'CFB' AND DATE < '2024-07-10' "
+    "WHERE sport = 'NFL' AND DATE < '2024-07-10' "
     "ORDER BY date ASC;"
 )
 STATS_COLUMN = "stats"
@@ -117,9 +117,9 @@ def main():
     # team1 wins
     #y = (df["team1_score"] > df["team2_score"]).astype(int)
     # team1 covers
-    y = (df["team1_score"] + df["team1_spread"] > df["team2_score"]).astype(int)
+    #y = (df["team1_score"] + df["team1_spread"] > df["team2_score"]).astype(int)
     # total score goes over the line
-    #y = (df["team1_score"] + df["team2_score"] > df["total_score"]).astype(int)
+    y = (df["team1_score"] + df["team2_score"] > df["total_score"]).astype(int)
 
     # Encode categorical features for analysis
     cat_encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1, dtype=np.int32)
