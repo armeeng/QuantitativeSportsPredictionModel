@@ -28,7 +28,13 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def main():
     # ── CONFIG ─────────────────────────────────────
-    MODEL_NAME    = "NFL_SP_[430]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc" # This should match the model you want to load
+    #MODEL_NAME    = "NFL_SP_[430]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc"
+    #MODEL_NAME    = "NFL_SP_[224, 392, 430, 693, 1033]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc"
+    #MODEL_NAME    = "NFL_ML_[430, 435, 1358, 1537]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc"
+    #MODEL_NAME    = "NFL_ML_[430, 435, 693, 1495]_lo_nonorm_NFL_date_<_2025_07_10_order_by_date_asc"
+    MODEL_NAME    = "CFB_OU_[193, 379, 596, 862, 912]_lo_nonorm_CFB_date_<_2025_07_10_order_by_date_asc"
+    #MODEL_NAME    = "CFB_OU_[111, 112, 250, 315, 376, 379, 587, 806, 1176]_lo_nonorm_CFB_date_<_2025_07_10_order_by_date_asc"
+
 
     TEST_QUERY = (
         "SELECT * FROM games "
@@ -40,7 +46,7 @@ def main():
     # These games should NOT have scores in your database yet.
     PREDICT_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'NFL' AND date > '2025-08-10'"
+        "WHERE sport = 'CFB' AND date > '2025-08-10'"
         "ORDER BY date ASC;"
     )
 

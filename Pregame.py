@@ -1483,15 +1483,15 @@ class Pregame:
         Fetches closing odds for moneyline, spread, and total (over/under)
         for the given ESPN event ID. Returns a dict:
             {
-              'team1_moneyline':     int or None,
-              'team2_moneyline':     int or None,
-              'team1_spread':        float or None,
-              'team2_spread':        float or None,
-              'team1_spread_odds':   int or None,
-              'team2_spread_odds':   int or None,
-              'total_score':         float or None,
-              'over_odds':           int or None,
-              'under_odds':          int or None
+            'team1_moneyline':     int or None,
+            'team2_moneyline':     int or None,
+            'team1_spread':        float or None,
+            'team2_spread':        float or None,
+            'team1_spread_odds':   int or None,
+            'team2_spread_odds':   int or None,
+            'total_score':         float or None,
+            'over_odds':           int or None,
+            'under_odds':          int or None
             }
         """
         category, league = self._ESPN_MAP[self.sport]
@@ -1524,61 +1524,83 @@ class Pregame:
         away = entry.get('awayTeamOdds', {})  # team1 = away
         home = entry.get('homeTeamOdds', {})  # team2 = home
 
-        # 1) Moneylines (straight moneyline odds)
-        team1_ml = away.get('moneyLine')
-        team2_ml = home.get('moneyLine')
-
-        # 2) Spread (point spread)
-        raw_spread = entry.get('spread')
-        if isinstance(raw_spread, (int, float)):
-            # raw_spread is the home-team spread (positive means home favored by that many)
-            team2_sp = raw_spread
-            team1_sp = -raw_spread
-        else:
-            # fallback to spreadOdds if no top-level spread
-            team1_sp = away.get('spreadOdds')
-            team2_sp = home.get('spreadOdds')
-
-        # 3) Closing spread odds (american)
-        def _extract_close_spread_odds(team_odds: dict) -> int | None:
-            """
-            Look under team_odds['close']['spread']['american'] if available,
-            else return None.
-            """
+        # Helper function to safely extract American odds from string/int
+        def _parse_american_odds(odds_value) -> int | None:
+            if odds_value is None:
+                return None
             try:
-                close_info = team_odds.get('close', {})
-                spread_info = close_info.get('spread', {})
-                american = spread_info.get('american')
-                if american is None:
-                    return None
-                # american might be a string like "+160" or "-105"
-                return int(str(american).replace("+", "").replace("−", "-"))
-            except Exception:
+                # Handle string format like "+160", "-105", "EVEN"
+                if isinstance(odds_value, str):
+                    if odds_value == "EVEN":
+                        return 100  # Even odds typically represented as +100
+                    return int(odds_value.replace("+", "").replace("−", "-"))
+                return int(odds_value)
+            except (ValueError, TypeError):
                 return None
 
-        team1_sp_odds = _extract_close_spread_odds(away)
-        team2_sp_odds = _extract_close_spread_odds(home)
+        # 1) Moneylines - use closing odds if available, otherwise current
+        def _get_moneyline(team_odds: dict) -> int | None:
+            # Try closing odds first
+            close_ml = team_odds.get('close', {}).get('moneyLine', {})
+            if isinstance(close_ml, dict):
+                american_odds = close_ml.get('american')
+                if american_odds is not None:
+                    return _parse_american_odds(american_odds)
+            
+            # Fallback to top-level moneyLine (current odds)
+            return team_odds.get('moneyLine')
 
-        # 4) Total (over/under)
+        team1_ml = _get_moneyline(away)
+        team2_ml = _get_moneyline(home)
+
+        # 2) Spread (point spread) - use closing if available, otherwise current
+        def _get_spread_and_odds(team_odds: dict, is_away: bool) -> tuple[float | None, int | None]:
+            # Try closing odds first
+            close_data = team_odds.get('close', {})
+            if close_data:
+                point_spread = close_data.get('pointSpread', {}).get('american')
+                spread_odds = close_data.get('spread', {}).get('american')
+                
+                if point_spread is not None:
+                    try:
+                        spread_value = float(str(point_spread).replace("+", ""))
+                        odds_value = _parse_american_odds(spread_odds)
+                        return spread_value, odds_value
+                    except (ValueError, TypeError):
+                        pass
+            
+            # Fallback to current odds
+            current_data = team_odds.get('current', {})
+            if current_data:
+                point_spread = current_data.get('pointSpread', {}).get('american')
+                spread_odds = current_data.get('spread', {}).get('american')
+                
+                if point_spread is not None:
+                    try:
+                        spread_value = float(str(point_spread).replace("+", ""))
+                        odds_value = _parse_american_odds(spread_odds)
+                        return spread_value, odds_value
+                    except (ValueError, TypeError):
+                        pass
+            
+            # Final fallback to top-level spread (but this won't have individual team spreads)
+            raw_spread = entry.get('spread')
+            if isinstance(raw_spread, (int, float)) and is_away:
+                return -raw_spread, team_odds.get('spreadOdds')
+            elif isinstance(raw_spread, (int, float)) and not is_away:
+                return raw_spread, team_odds.get('spreadOdds')
+                
+            return None, None
+
+        team1_sp, team1_sp_odds = _get_spread_and_odds(away, True)
+        team2_sp, team2_sp_odds = _get_spread_and_odds(home, False)
+
+        # 3) Total (over/under) - prefer closing, fallback to current
         total = entry.get('overUnder')
-
-        # 5) Closing over/under odds (american)
-        def _extract_close_total_odds(side: str) -> int | None:
-            """
-            side should be 'over' or 'under'. We look under entry['close'][side]['american'].
-            """
-            try:
-                close_block = entry.get('close', {})
-                side_info = close_block.get(side, {})
-                american = side_info.get('american')
-                if american is None:
-                    return None
-                return int(str(american).replace("+", "").replace("−", "-"))
-            except Exception:
-                return None
-
-        over_odds = _extract_close_total_odds('over')
-        under_odds = _extract_close_total_odds('under')
+        
+        # For over/under odds, look at top-level of entry, not in team odds
+        over_odds = _parse_american_odds(entry.get('overOdds'))
+        under_odds = _parse_american_odds(entry.get('underOdds'))
 
         return {
             'team1_moneyline':    team1_ml,

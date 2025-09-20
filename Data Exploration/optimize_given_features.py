@@ -32,7 +32,7 @@ except ImportError as e:
 # --- CONFIGURATION -----------------------------------------------------------
 
 # The full list of candidate features to test.
-CANDIDATE_FEATURES = [117, 123, 125, 127, 129, 131, 212, 224, 226, 232, 291, 363, 392, 393, 430, 435, 693, 707, 885, 1015, 1033, 1034, 1036, 1057, 1062, 1064, 1137, 1186, 1190, 1263, 1358, 1359, 1362, 1366, 1370, 1373, 1495, 1498, 1499, 1537, 1540, 1547, 1624, 1715, 1717, 1718, 1727, 1728]
+CANDIDATE_FEATURES = [25, 26, 53, 103, 118, 146, 160, 193, 194, 200, 320, 332, 342, 343, 464, 465, 471, 500, 513, 548, 639, 702, 703, 709, 723, 807, 808, 828, 842, 849, 856, 863, 913, 920, 944, 945, 977, 1033, 1093, 1100, 1107, 1108, 1112, 1113, 1122, 1123]
 
 # --- HELPER & PARSING FUNCTIONS ----------------------------------------------
 
@@ -94,12 +94,12 @@ def run_training_for_combination(num_feat: list):
     COLUMN = "stats"
     TRAIN_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'NFL' AND DATE < '2024-07-10' "
+        "WHERE sport = 'MLB' AND DATE < '2024-01-01' "
         "ORDER BY date ASC;"
     )
     TEST_QUERY = (
         "SELECT * FROM games "
-        "WHERE sport = 'NFL' AND DATE > '2024-07-10' "
+        "WHERE sport = 'MLB' AND DATE > '2024-01-01' "
         "ORDER BY date ASC;"
     )
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, TRAIN_QUERY)

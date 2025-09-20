@@ -33,9 +33,11 @@ def main(
     session = Session()
 
     current = start_date
-    current = date(2025, 9, 1)
+    current = date(2025, 9, 20)
     while current >= stop_date:
         for sport in SportEnum:
+            if sport == SportEnum.MLB:
+                continue
             # see if we've already done this sport/date
             rec = session.get(ProcessStatus, (sport, current))
             if rec is None:

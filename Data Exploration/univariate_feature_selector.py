@@ -22,7 +22,7 @@ from Model import MLModel
 DB_PATH = os.path.join(parent_dir, "sports.db")
 GAMES_QUERY = (
     "SELECT * FROM games "
-    "WHERE sport = 'NFL' AND DATE < '2024-07-10' "
+    "WHERE sport = 'MLB' AND DATE < '2024-01-10' "
     "ORDER BY date ASC;"
 )
 STATS_COLUMN = "stats"

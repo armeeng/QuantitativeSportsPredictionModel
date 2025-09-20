@@ -222,7 +222,85 @@ with tab1:
         if df.empty:
             st.warning(f"No games or predictions found for **{selected_sport}** on **{selected_date.strftime('%Y-%m-%d')}** with model **{selected_model}**.")
         else:
+            # --- State Initialization for Editable DataFrames ---
+            state_key = f"{selected_sport}_{selected_date.strftime('%Y%m%d')}_{selected_model}"
+            if 'bet_state_key' not in st.session_state or st.session_state.bet_state_key != state_key:
+                st.session_state.bet_state_key = state_key
+                
+                ml_bets_list, spread_bets_list, total_bets_list = [], [], []
+                # Loop through data to find all positive EV bets
+                for index, game in df.iterrows():
+                    game_name = f"{game['team1_name']} @ {game['team2_name']}"
+                    # Moneyline
+                    prob_t1, odds_t1 = game.get('team1_win_prob'), game.get('team1_moneyline')
+                    if calculate_ev(prob_t1, odds_t1) > 0: ml_bets_list.append({'Game': game_name, 'Bet Type': f"{game['team1_name']} ML", 'Line': 'N/A', 'Odds': odds_t1, 'Model Prob': prob_t1})
+                    prob_t2 = 1 - prob_t1 if prob_t1 is not None else None
+                    odds_t2 = game.get('team2_moneyline')
+                    if calculate_ev(prob_t2, odds_t2) > 0: ml_bets_list.append({'Game': game_name, 'Bet Type': f"{game['team2_name']} ML", 'Line': 'N/A', 'Odds': odds_t2, 'Model Prob': prob_t2})
+                    # Spread
+                    prob_t1_cover, spread_t1, odds_t1_spread = game.get('team1_cover_prob'), game.get('team1_spread'), game.get('team1_spread_odds')
+                    if calculate_ev(prob_t1_cover, odds_t1_spread) > 0: spread_bets_list.append({'Game': game_name, 'Bet Type': f"{game['team1_name']} {spread_t1:+.1f}", 'Line': spread_t1, 'Odds': odds_t1_spread, 'Model Prob': prob_t1_cover})
+                    prob_t2_cover = 1 - prob_t1_cover if prob_t1_cover is not None else None
+                    odds_t2_spread = game.get('team2_spread_odds')
+                    if calculate_ev(prob_t2_cover, odds_t2_spread) > 0: spread_bets_list.append({'Game': game_name, 'Bet Type': f"{game['team2_name']} {-spread_t1:+.1f}", 'Line': -spread_t1, 'Odds': odds_t2_spread, 'Model Prob': prob_t2_cover})
+                    # Totals
+                    prob_over, total_line, over_odds = game.get('over_prob'), game.get('total_score'), game.get('over_odds')
+                    if calculate_ev(prob_over, over_odds) > 0: total_bets_list.append({'Game': game_name, 'Bet Type': f"Over {total_line}", 'Line': total_line, 'Odds': over_odds, 'Model Prob': prob_over})
+                    prob_under = 1 - prob_over if prob_over is not None else None
+                    under_odds = game.get('under_odds')
+                    if calculate_ev(prob_under, under_odds) > 0: total_bets_list.append({'Game': game_name, 'Bet Type': f"Under {total_line}", 'Line': total_line, 'Odds': under_odds, 'Model Prob': prob_under})
+
+                # Create and store DataFrames in session state
+                st.session_state.ml_df = pd.DataFrame(ml_bets_list) if ml_bets_list else pd.DataFrame()
+                st.session_state.spread_df = pd.DataFrame(spread_bets_list) if spread_bets_list else pd.DataFrame()
+                st.session_state.total_df = pd.DataFrame(total_bets_list) if total_bets_list else pd.DataFrame()
+
+            # --- Recalculation and Display Logic ---
+            def process_and_display_bets(title, df_key, editor_key):
+                st.markdown(f"#### {title}")
+                if df_key not in st.session_state or st.session_state[df_key].empty:
+                    st.info(f"No positive EV {title.lower()} found.")
+                    return
+                
+                # Add EV and Kelly Bet columns for display
+                temp_df = st.session_state[df_key].copy()
+                temp_df['EV'] = temp_df.apply(lambda row: calculate_ev(row['Model Prob'], row['Odds']) * 100, axis=1)
+                def calc_kelly_display(row):
+                    dec_odds = american_to_decimal(row['Odds'])
+                    kelly_frac = calculate_kelly_fraction(row['Model Prob'], dec_odds)
+                    bet_size = bankroll * min(kelly_frac, max_bet_fraction)
+                    return f"${bet_size:.2f}"
+                temp_df['Kelly Bet'] = temp_df.apply(calc_kelly_display, axis=1)
+
+                edited_df = st.data_editor(
+                    temp_df,
+                    key=editor_key,
+                    use_container_width=True,
+                    hide_index=True,
+                    disabled=["Game", "Bet Type", "Line", "Model Prob", "EV", "Kelly Bet"],
+                    column_config={
+                        "Model Prob": st.column_config.NumberColumn("Model Prob", format="%.4f", min_value=0, max_value=100),
+                        "EV": st.column_config.NumberColumn("EV", format="%.2f%%"),
+                        "Odds": st.column_config.NumberColumn("Odds", format="%d", step=1)
+                    }
+                )
+
+                # Check if the user edited the odds
+                if not edited_df['Odds'].equals(temp_df['Odds']):
+                    # Update the original DataFrame in state with just the edited odds
+                    st.session_state[df_key]['Odds'] = edited_df['Odds']
+                    st.rerun()
+
+            st.markdown("### Recommended Bets Summary")
+            st.markdown("_Tip: You can edit the **Odds** column to see how the EV changes._")
+            process_and_display_bets("Moneyline Bets", 'ml_df', 'ml_editor')
+            process_and_display_bets("Spread Bets", 'spread_df', 'spread_editor')
+            process_and_display_bets("Over/Under Bets", 'total_df', 'total_editor')
+            st.divider()
+
+            # --- Game-by-Game Detail Section (remains unchanged) ---
             st.success(f"Found {len(df)} games for **{selected_sport}** on **{selected_date.strftime('%Y-%m-%d')}**")
+            st.markdown("### Game-by-Game Breakdown")
             for index, game in df.iterrows():
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2.5, 1.5, 2.5])
@@ -241,10 +319,8 @@ with tab1:
                     with col3:
                         st.image(game['team2_logo'], width=60)
                         st.subheader(f"{game['team2_name']} (Home)")
-
                     st.divider()
-
-                    # --- Moneyline Section ---
+                    # Moneyline Section
                     st.markdown("##### Moneyline")
                     b1, b2 = st.columns([1.5, 2.5])
                     with b1:
@@ -265,11 +341,9 @@ with tab1:
                         else: st.info("No value found. Do not bet.")
                     with b2:
                         imp_prob_t1, imp_prob_t2 = american_to_prob(odds_t1), american_to_prob(odds_t2)
-                        st.dataframe({'Team': [game['team1_name'], game['team2_name']], 'Model Prob': [f"{prob_t1*100:.1f}%" if prob_t1 else 'N/A', f"{prob_t2*100:.1f}%" if prob_t2 else 'N/A'], 'Odds': [odds_t1, odds_t2], 'Implied Prob': [f"{imp_prob_t1*100:.1f}%" if imp_prob_t1 else 'N/A', f"{imp_prob_t2*100:.1f}%" if imp_prob_t2 else 'N/A'], 'EV': [f"{ev_t1*100:.2f}%", f"{ev_t2*100:.2f}%"]}, use_container_width=True)
-
+                        st.dataframe({'Team': [game['team1_name'], game['team2_name']], 'Model Prob': [f"{prob_t1*100:.1f}%" if prob_t1 else 'N/A', f"{prob_t2*100:.1f}%" if prob_t2 else 'N/A'], 'Odds': [odds_t1, odds_t2], 'Implied Prob': [f"{imp_prob_t1*100:.1f}%" if imp_prob_t1 else 'N/A', f"{imp_prob_t2*100:.1f}%" if imp_prob_t2 else 'N/A'], 'EV': [f"{ev_t1*100:.2f}%", f"{ev_t2*100:.2f}%"]}, use_container_width=True, hide_index=True)
                     st.divider()
-
-                    # --- Point Spread Section ---
+                    # Point Spread Section
                     st.markdown("##### Point Spread")
                     b1, b2 = st.columns([1.5, 2.5])
                     with b1:
@@ -277,11 +351,9 @@ with tab1:
                         odds_t1_spread, odds_t2_spread = game.get('team1_spread_odds'), game.get('team2_spread_odds')
                         dec_odds_t1_spread, ev_t1_spread = american_to_decimal(odds_t1_spread), calculate_ev(prob_t1_cover, odds_t1_spread)
                         kelly_t1_spread = calculate_kelly_fraction(prob_t1_cover, dec_odds_t1_spread)
-                        
                         prob_t2_cover = 1 - prob_t1_cover if prob_t1_cover is not None else None
                         dec_odds_t2_spread, ev_t2_spread = american_to_decimal(odds_t2_spread), calculate_ev(prob_t2_cover, odds_t2_spread)
                         kelly_t2_spread = calculate_kelly_fraction(prob_t2_cover, dec_odds_t2_spread)
-
                         if ev_t1_spread > 0 and ev_t1_spread > ev_t2_spread:
                             bet_fraction, bet_size = min(kelly_t1_spread, max_bet_fraction), bankroll * min(kelly_t1_spread, max_bet_fraction)
                             st.success(f"✅ Bet on {game['team1_name']} ({spread_t1:+.1f})")
@@ -293,17 +365,9 @@ with tab1:
                         else: st.info("No value found. Do not bet.")
                     with b2:
                         imp_prob_t1_spread, imp_prob_t2_spread = american_to_prob(odds_t1_spread), american_to_prob(odds_t2_spread)
-                        st.dataframe({
-                            'Bet': [f"{game['team1_name']} ({spread_t1:+.1f})", f"{game['team2_name']} ({-spread_t1:+.1f})"],
-                            'Model Prob': [f"{prob_t1_cover*100:.1f}%" if prob_t1_cover else 'N/A', f"{prob_t2_cover*100:.1f}%" if prob_t2_cover else 'N/A'],
-                            'Odds': [odds_t1_spread, odds_t2_spread],
-                            'Implied Prob': [f"{imp_prob_t1_spread*100:.1f}%" if imp_prob_t1_spread else 'N/A', f"{imp_prob_t2_spread*100:.1f}%" if imp_prob_t2_spread else 'N/A'],
-                            'EV': [f"{ev_t1_spread*100:.2f}%", f"{ev_t2_spread*100:.2f}%"]
-                        }, use_container_width=True)
-
+                        st.dataframe({'Bet': [f"{game['team1_name']} ({spread_t1:+.1f})", f"{game['team2_name']} ({-spread_t1:+.1f})"],'Model Prob': [f"{prob_t1_cover*100:.1f}%" if prob_t1_cover else 'N/A', f"{prob_t2_cover*100:.1f}%" if prob_t2_cover else 'N/A'],'Odds': [odds_t1_spread, odds_t2_spread],'Implied Prob': [f"{imp_prob_t1_spread*100:.1f}%" if imp_prob_t1_spread else 'N/A', f"{imp_prob_t2_spread*100:.1f}%" if imp_prob_t2_spread else 'N/A'],'EV': [f"{ev_t1_spread*100:.2f}%", f"{ev_t2_spread*100:.2f}%"]}, use_container_width=True, hide_index=True)
                     st.divider()
-                    
-                    # --- Totals (Over/Under) Section ---
+                    # Totals (Over/Under) Section
                     st.markdown("##### Totals (Over/Under)")
                     b1, b2 = st.columns([1.5, 2.5])
                     with b1:
@@ -311,11 +375,9 @@ with tab1:
                         over_odds, under_odds = game.get('over_odds'), game.get('under_odds')
                         dec_odds_over, ev_over = american_to_decimal(over_odds), calculate_ev(prob_over, over_odds)
                         kelly_over = calculate_kelly_fraction(prob_over, dec_odds_over)
-                        
                         prob_under = 1 - prob_over if prob_over is not None else None
                         dec_odds_under, ev_under = american_to_decimal(under_odds), calculate_ev(prob_under, under_odds)
                         kelly_under = calculate_kelly_fraction(prob_under, dec_odds_under)
-
                         if ev_over > 0 and ev_over > ev_under:
                             bet_fraction, bet_size = min(kelly_over, max_bet_fraction), bankroll * min(kelly_over, max_bet_fraction)
                             st.success(f"✅ Bet on Over {total_line}")
@@ -327,14 +389,7 @@ with tab1:
                         else: st.info("No value found. Do not bet.")
                     with b2:
                         imp_prob_over, imp_prob_under = american_to_prob(over_odds), american_to_prob(under_odds)
-                        st.dataframe({
-                            'Bet': [f"Over {total_line}", f"Under {total_line}"],
-                            'Model Prob': [f"{prob_over*100:.1f}%" if prob_over else 'N/A', f"{prob_under*100:.1f}%" if prob_under else 'N/A'],
-                            'Odds': [over_odds, under_odds],
-                            'Implied Prob': [f"{imp_prob_over*100:.1f}%" if imp_prob_over else 'N/A', f"{imp_prob_under*100:.1f}%" if imp_prob_under else 'N/A'],
-                            'EV': [f"{ev_over*100:.2f}%", f"{ev_under*100:.2f}%"]
-                        }, use_container_width=True)
-
+                        st.dataframe({'Bet': [f"Over {total_line}", f"Under {total_line}"],'Model Prob': [f"{prob_over*100:.1f}%" if prob_over else 'N/A', f"{prob_under*100:.1f}%" if prob_under else 'N/A'],'Odds': [over_odds, under_odds],'Implied Prob': [f"{imp_prob_over*100:.1f}%" if imp_prob_over else 'N/A', f"{imp_prob_under*100:.1f}%" if imp_prob_under else 'N/A'],'EV': [f"{ev_over*100:.2f}%", f"{ev_under*100:.2f}%"]}, use_container_width=True, hide_index=True)
             with st.expander("Show Raw Data Table"):
                 st.dataframe(df)
     else:

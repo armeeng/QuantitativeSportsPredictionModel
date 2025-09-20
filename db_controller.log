@@ -47971,3 +47971,1414 @@
 2025-09-03 20:57:52 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
 2025-09-03 20:57:52 INFO     root: No games found in DB for CBB on 2025-08-29 to post-process.
 2025-09-03 20:57:52 INFO     root: Preprocessing MLB on 2025-08-29
+2025-09-10 17:05:34 INFO     root: Preprocessing NFL on 2025-09-17
+2025-09-10 17:05:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:35 INFO     root: Postprocessing NFL on 2025-09-17
+2025-09-10 17:05:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:38 INFO     root: No games found in DB for NFL on 2025-09-17 to post-process.
+2025-09-10 17:05:39 INFO     root: Preprocessing NBA on 2025-09-17
+2025-09-10 17:05:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:39 INFO     root: Postprocessing NBA on 2025-09-17
+2025-09-10 17:05:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:39 INFO     root: No games found in DB for NBA on 2025-09-17 to post-process.
+2025-09-10 17:05:39 INFO     root: Preprocessing CFB on 2025-09-17
+2025-09-10 17:05:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:39 INFO     root: Postprocessing CFB on 2025-09-17
+2025-09-10 17:05:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:39 INFO     root: No games found in DB for CFB on 2025-09-17 to post-process.
+2025-09-10 17:05:39 INFO     root: Preprocessing CBB on 2025-09-17
+2025-09-10 17:05:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:40 INFO     root: Postprocessing CBB on 2025-09-17
+2025-09-10 17:05:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:40 INFO     root: No games found in DB for CBB on 2025-09-17 to post-process.
+2025-09-10 17:05:40 INFO     root: Preprocessing NFL on 2025-09-16
+2025-09-10 17:05:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:40 INFO     root: Postprocessing NFL on 2025-09-16
+2025-09-10 17:05:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:41 INFO     root: No games found in DB for NFL on 2025-09-16 to post-process.
+2025-09-10 17:05:41 INFO     root: Preprocessing NBA on 2025-09-16
+2025-09-10 17:05:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:41 INFO     root: Postprocessing NBA on 2025-09-16
+2025-09-10 17:05:41 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:41 INFO     root: No games found in DB for NBA on 2025-09-16 to post-process.
+2025-09-10 17:05:41 INFO     root: Preprocessing CFB on 2025-09-16
+2025-09-10 17:05:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:41 INFO     root: Postprocessing CFB on 2025-09-16
+2025-09-10 17:05:41 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:43 INFO     root: No games found in DB for CFB on 2025-09-16 to post-process.
+2025-09-10 17:05:43 INFO     root: Preprocessing CBB on 2025-09-16
+2025-09-10 17:05:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:05:43 INFO     root: Postprocessing CBB on 2025-09-16
+2025-09-10 17:05:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:05:44 INFO     root: No games found in DB for CBB on 2025-09-16 to post-process.
+2025-09-10 17:05:44 INFO     root: Preprocessing NFL on 2025-09-15
+2025-09-10 17:07:29 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-09-10 17:07:29 INFO     root: Postprocessing NFL on 2025-09-15
+2025-09-10 17:07:36 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 2 games.
+2025-09-10 17:07:36 INFO     root: Preprocessing NBA on 2025-09-15
+2025-09-10 17:07:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:07:36 INFO     root: Postprocessing NBA on 2025-09-15
+2025-09-10 17:07:36 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:07:40 INFO     root: No games found in DB for NBA on 2025-09-15 to post-process.
+2025-09-10 17:07:40 INFO     root: Preprocessing CFB on 2025-09-15
+2025-09-10 17:07:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:07:40 INFO     root: Postprocessing CFB on 2025-09-15
+2025-09-10 17:07:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:07:44 INFO     root: No games found in DB for CFB on 2025-09-15 to post-process.
+2025-09-10 17:07:44 INFO     root: Preprocessing CBB on 2025-09-15
+2025-09-10 17:07:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:07:44 INFO     root: Postprocessing CBB on 2025-09-15
+2025-09-10 17:07:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:07:47 INFO     root: No games found in DB for CBB on 2025-09-15 to post-process.
+2025-09-10 17:07:47 INFO     root: Preprocessing NFL on 2025-09-14
+2025-09-10 17:08:50 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/opponent-average-team-passer-rating?date=2025-09-14, sleeping 4 minutes before retry
+2025-09-10 17:13:41 INFO     root: populate_pregame_data: inserted/updated 13 rows, skipped 0 games.
+2025-09-10 17:13:41 INFO     root: Postprocessing NFL on 2025-09-14
+2025-09-10 17:14:07 INFO     root: Successfully processed 13 games. Odds updated for 13. Score updates skipped for 13 games.
+2025-09-10 17:14:07 INFO     root: Preprocessing NBA on 2025-09-14
+2025-09-10 17:14:08 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:14:08 INFO     root: Postprocessing NBA on 2025-09-14
+2025-09-10 17:14:08 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:14:11 INFO     root: No games found in DB for NBA on 2025-09-14 to post-process.
+2025-09-10 17:14:11 INFO     root: Preprocessing CFB on 2025-09-14
+2025-09-10 17:14:12 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:14:12 INFO     root: Postprocessing CFB on 2025-09-14
+2025-09-10 17:14:12 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:14:15 INFO     root: No games found in DB for CFB on 2025-09-14 to post-process.
+2025-09-10 17:14:15 INFO     root: Preprocessing CBB on 2025-09-14
+2025-09-10 17:14:16 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:14:16 INFO     root: Postprocessing CBB on 2025-09-14
+2025-09-10 17:14:16 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:14:19 INFO     root: No games found in DB for CBB on 2025-09-14 to post-process.
+2025-09-10 17:14:19 INFO     root: Preprocessing NFL on 2025-09-13
+2025-09-10 17:14:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:14:19 INFO     root: Postprocessing NFL on 2025-09-13
+2025-09-10 17:14:20 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:14:23 INFO     root: No games found in DB for NFL on 2025-09-13 to post-process.
+2025-09-10 17:14:23 INFO     root: Preprocessing NBA on 2025-09-13
+2025-09-10 17:14:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:14:23 INFO     root: Postprocessing NBA on 2025-09-13
+2025-09-10 17:14:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:14:27 INFO     root: No games found in DB for NBA on 2025-09-13 to post-process.
+2025-09-10 17:14:27 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-10 17:16:50 ERROR    root: Team 'Hou Christian' not found in stats for 'points-per-game'
+2025-09-10 17:16:50 ERROR    root: Could not fetch stats for Hou Christian or Nebraska, skipping
+2025-09-10 17:16:50 ERROR    root: Team 'Towson' not found in stats for 'points-per-game'
+2025-09-10 17:16:50 ERROR    root: Could not fetch stats for Towson or Maryland, skipping
+2025-09-10 17:16:50 ERROR    root: Team 'William & Mary' not found in stats for 'points-per-game'
+2025-09-10 17:16:50 ERROR    root: Could not fetch stats for William & Mary or Virginia, skipping
+2025-09-10 17:16:50 ERROR    root: Team 'Samford' not found in stats for 'points-per-game'
+2025-09-10 17:16:50 ERROR    root: Could not fetch stats for Samford or Baylor, skipping
+2025-09-10 17:16:58 ERROR    root: Team 'New Hampshire' not found in stats for 'points-per-game'
+2025-09-10 17:16:58 ERROR    root: Could not fetch stats for New Hampshire or Ball St, skipping
+2025-09-10 17:17:00 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-09-10 17:17:00 ERROR    root: Could not fetch stats for Villanova or Penn St, skipping
+2025-09-10 17:17:06 ERROR    root: Team 'Norfolk St' not found in stats for 'points-per-game'
+2025-09-10 17:17:06 ERROR    root: Could not fetch stats for Norfolk St or Rutgers, skipping
+2025-09-10 17:17:06 ERROR    root: Team 'Youngstown St' not found in stats for 'points-per-game'
+2025-09-10 17:17:06 ERROR    root: Could not fetch stats for Youngstown St or Michigan St, skipping
+2025-09-10 17:17:13 ERROR    root: Team 'Richmond' not found in stats for 'points-per-game'
+2025-09-10 17:17:13 ERROR    root: Could not fetch stats for Richmond or North Carolina, skipping
+2025-09-10 17:17:13 ERROR    root: Team "N'Western St" not found in stats for 'points-per-game'
+2025-09-10 17:17:13 ERROR    root: Could not fetch stats for N'Western St or Cincinnati, skipping
+2025-09-10 17:17:13 ERROR    root: Team 'Incarnate Word' not found in stats for 'points-per-game'
+2025-09-10 17:17:13 ERROR    root: Could not fetch stats for Incarnate Word or UTSA, skipping
+2025-09-10 17:17:13 ERROR    root: Team 'Morgan St' not found in stats for 'points-per-game'
+2025-09-10 17:17:13 ERROR    root: Could not fetch stats for Morgan St or Toledo, skipping
+2025-09-10 17:17:28 ERROR    root: Team 'Alcorn St' not found in stats for 'points-per-game'
+2025-09-10 17:17:28 ERROR    root: Could not fetch stats for Alcorn St or Mississippi St, skipping
+2025-09-10 17:17:30 ERROR    root: Team 'Merrimack' not found in stats for 'points-per-game'
+2025-09-10 17:17:30 ERROR    root: Could not fetch stats for Merrimack or Kennesaw St, skipping
+2025-09-10 17:17:30 ERROR    root: Team 'E Kentucky' not found in stats for 'points-per-game'
+2025-09-10 17:17:30 ERROR    root: Could not fetch stats for E Kentucky or Marshall, skipping
+2025-09-10 17:17:30 ERROR    root: Team 'Monmouth' not found in stats for 'points-per-game'
+2025-09-10 17:17:30 ERROR    root: Could not fetch stats for Monmouth or Charlotte, skipping
+2025-09-10 17:17:43 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-10 17:17:43 ERROR    root: Could not fetch stats for Murray St or Georgia St, skipping
+2025-09-10 17:17:45 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-09-10 17:17:45 ERROR    root: Could not fetch stats for Prairie View or Rice, skipping
+2025-09-10 17:17:59 ERROR    root: Team 'Abilene Chrstn' not found in stats for 'points-per-game'
+2025-09-10 17:17:59 ERROR    root: Could not fetch stats for Abilene Chrstn or TCU, skipping
+2025-09-10 17:18:04 ERROR    root: Team 'Southern' not found in stats for 'points-per-game'
+2025-09-10 17:18:04 ERROR    root: Could not fetch stats for Southern or Fresno St, skipping
+2025-09-10 17:18:13 ERROR    root: Team 'Portland St' not found in stats for 'points-per-game'
+2025-09-10 17:18:13 ERROR    root: Could not fetch stats for Portland St or Hawai'i, skipping
+2025-09-10 17:18:13 INFO     root: populate_pregame_data: inserted/updated 43 rows, skipped 21 games.
+2025-09-10 17:18:13 INFO     root: Postprocessing CFB on 2025-09-13
+2025-09-10 17:19:23 INFO     root: Successfully processed 43 games. Odds updated for 43. Score updates skipped for 43 games.
+2025-09-10 17:19:23 INFO     root: Preprocessing CBB on 2025-09-13
+2025-09-10 17:19:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:19:24 INFO     root: Postprocessing CBB on 2025-09-13
+2025-09-10 17:19:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:19:27 INFO     root: No games found in DB for CBB on 2025-09-13 to post-process.
+2025-09-10 17:19:27 INFO     root: Preprocessing NFL on 2025-09-12
+2025-09-10 17:19:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:19:28 INFO     root: Postprocessing NFL on 2025-09-12
+2025-09-10 17:19:28 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:19:31 INFO     root: No games found in DB for NFL on 2025-09-12 to post-process.
+2025-09-10 17:19:31 INFO     root: Preprocessing NBA on 2025-09-12
+2025-09-10 17:19:31 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:19:31 INFO     root: Postprocessing NBA on 2025-09-12
+2025-09-10 17:19:31 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:19:35 INFO     root: No games found in DB for NBA on 2025-09-12 to post-process.
+2025-09-10 17:19:35 INFO     root: Preprocessing CFB on 2025-09-12
+2025-09-10 17:20:58 ERROR    root: Team 'Indiana St' not found in stats for 'points-per-game'
+2025-09-10 17:20:58 ERROR    root: Could not fetch stats for Indiana St or Indiana, skipping
+2025-09-10 17:20:58 ERROR    root: Team 'Colgate' not found in stats for 'points-per-game'
+2025-09-10 17:20:58 ERROR    root: Could not fetch stats for Colgate or Syracuse, skipping
+2025-09-10 17:21:03 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 2 games.
+2025-09-10 17:21:03 INFO     root: Postprocessing CFB on 2025-09-12
+2025-09-10 17:21:12 INFO     root: Successfully processed 3 games. Odds updated for 3. Score updates skipped for 3 games.
+2025-09-10 17:21:12 INFO     root: Preprocessing CBB on 2025-09-12
+2025-09-10 17:21:12 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:21:12 INFO     root: Postprocessing CBB on 2025-09-12
+2025-09-10 17:21:12 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:21:16 INFO     root: No games found in DB for CBB on 2025-09-12 to post-process.
+2025-09-10 17:21:16 INFO     root: Preprocessing NFL on 2025-09-11
+2025-09-10 17:22:40 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/opponent-giveaway-fumble-recovery-pct?date=2025-09-11, sleeping 4 minutes before retry
+2025-09-10 17:26:55 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-09-10 17:26:55 INFO     root: Postprocessing NFL on 2025-09-11
+2025-09-10 17:27:00 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-10 17:27:00 INFO     root: Preprocessing NBA on 2025-09-11
+2025-09-10 17:27:00 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:27:00 INFO     root: Postprocessing NBA on 2025-09-11
+2025-09-10 17:27:00 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:27:03 INFO     root: No games found in DB for NBA on 2025-09-11 to post-process.
+2025-09-10 17:27:03 INFO     root: Preprocessing CFB on 2025-09-11
+2025-09-10 17:28:16 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-09-10 17:28:16 INFO     root: Postprocessing CFB on 2025-09-11
+2025-09-10 17:28:21 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-10 17:28:21 INFO     root: Preprocessing CBB on 2025-09-11
+2025-09-10 17:28:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:28:21 INFO     root: Postprocessing CBB on 2025-09-11
+2025-09-10 17:28:22 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:28:25 INFO     root: No games found in DB for CBB on 2025-09-11 to post-process.
+2025-09-10 17:28:25 INFO     root: Postprocessing NFL on 2025-09-08
+2025-09-10 17:28:27 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-10 17:28:27 INFO     root: Postprocessing NFL on 2025-09-07
+2025-09-10 17:28:47 INFO     root: Successfully processed 13 games. Odds updated for 13. Score updates skipped for 0 games.
+2025-09-10 17:28:47 INFO     root: Preprocessing CFB on 2025-09-06
+2025-09-10 17:29:57 ERROR    root: Team 'Grambling' not found in stats for 'points-per-game'
+2025-09-10 17:29:57 ERROR    root: Could not fetch stats for Grambling or Ohio St, skipping
+2025-09-10 17:30:01 ERROR    root: Team 'Austin Peay' not found in stats for 'points-per-game'
+2025-09-10 17:30:01 ERROR    root: Could not fetch stats for Austin Peay or Georgia, skipping
+2025-09-10 17:30:01 ERROR    root: Team 'Bethune' not found in stats for 'points-per-game'
+2025-09-10 17:30:01 ERROR    root: Could not fetch stats for Bethune or Miami, skipping
+2025-09-10 17:30:06 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-09-10 17:30:06 ERROR    root: Could not fetch stats for SC State or South Carolina, skipping
+2025-09-10 17:30:10 ERROR    root: Team 'E Texas A&M' not found in stats for 'points-per-game'
+2025-09-10 17:30:10 ERROR    root: Could not fetch stats for E Texas A&M or Florida St, skipping
+2025-09-10 17:30:20 ERROR    root: Team 'E Tennessee St' not found in stats for 'points-per-game'
+2025-09-10 17:30:20 ERROR    root: Could not fetch stats for E Tennessee St or Tennessee, skipping
+2025-09-10 17:30:23 ERROR    root: Team 'Cal Poly' not found in stats for 'points-per-game'
+2025-09-10 17:30:23 ERROR    root: Could not fetch stats for Cal Poly or Utah, skipping
+2025-09-10 17:30:23 ERROR    root: Team "N'Western St" not found in stats for 'points-per-game'
+2025-09-10 17:30:23 ERROR    root: Could not fetch stats for N'Western St or Minnesota, skipping
+2025-09-10 17:30:30 ERROR    root: Team 'Howard' not found in stats for 'points-per-game'
+2025-09-10 17:30:30 ERROR    root: Could not fetch stats for Howard or Temple, skipping
+2025-09-10 17:30:30 ERROR    root: Team 'Idaho St' not found in stats for 'points-per-game'
+2025-09-10 17:30:30 ERROR    root: Could not fetch stats for Idaho St or New Mexico, skipping
+2025-09-10 17:30:33 ERROR    root: Team 'Gardner-Webb' not found in stats for 'points-per-game'
+2025-09-10 17:30:33 ERROR    root: Could not fetch stats for Gardner-Webb or Georgia Tech, skipping
+2025-09-10 17:30:36 ERROR    root: Team 'Lindenwood' not found in stats for 'points-per-game'
+2025-09-10 17:30:36 ERROR    root: Could not fetch stats for Lindenwood or App State, skipping
+2025-09-10 17:30:41 ERROR    root: Team 'Saint Francis' not found in stats for 'points-per-game'
+2025-09-10 17:30:41 ERROR    root: Could not fetch stats for Saint Francis or Buffalo, skipping
+2025-09-10 17:30:44 ERROR    root: Team 'Northern Iowa' not found in stats for 'points-per-game'
+2025-09-10 17:30:44 ERROR    root: Could not fetch stats for Northern Iowa or Wyoming, skipping
+2025-09-10 17:30:44 ERROR    root: Team 'W Carolina' not found in stats for 'points-per-game'
+2025-09-10 17:30:44 ERROR    root: Could not fetch stats for W Carolina or Wake Forest, skipping
+2025-09-10 17:30:48 ERROR    root: Team 'Sacramento St' not found in stats for 'points-per-game'
+2025-09-10 17:30:48 ERROR    root: Could not fetch stats for Sacramento St or Nevada, skipping
+2025-09-10 17:30:48 ERROR    root: Team 'Jackson St' not found in stats for 'points-per-game'
+2025-09-10 17:30:48 ERROR    root: Could not fetch stats for Jackson St or Southern Miss, skipping
+2025-09-10 17:30:48 ERROR    root: Team 'Bryant' not found in stats for 'points-per-game'
+2025-09-10 17:30:48 ERROR    root: Could not fetch stats for Bryant or UMass, skipping
+2025-09-10 17:30:48 ERROR    root: Team 'Texas Southern' not found in stats for 'points-per-game'
+2025-09-10 17:30:48 ERROR    root: Could not fetch stats for Texas Southern or California, skipping
+2025-09-10 17:30:49 ERROR    root: Team 'NC Central' not found in stats for 'points-per-game'
+2025-09-10 17:30:49 ERROR    root: Could not fetch stats for NC Central or Old Dominion, skipping
+2025-09-10 17:30:49 ERROR    root: Team 'Campbell' not found in stats for 'points-per-game'
+2025-09-10 17:30:49 ERROR    root: Could not fetch stats for Campbell or E Carolina, skipping
+2025-09-10 17:30:49 ERROR    root: Team 'Florida A&M' not found in stats for 'points-per-game'
+2025-09-10 17:30:49 ERROR    root: Could not fetch stats for Florida A&M or Florida Atlantic, skipping
+2025-09-10 17:30:55 ERROR    root: Team 'NC A&T' not found in stats for 'points-per-game'
+2025-09-10 17:30:55 ERROR    root: Could not fetch stats for NC A&T or UCF, skipping
+2025-09-10 17:30:56 ERROR    root: Team 'N Colorado' not found in stats for 'points-per-game'
+2025-09-10 17:30:56 ERROR    root: Could not fetch stats for N Colorado or Colorado St, skipping
+2025-09-10 17:31:00 ERROR    root: Team 'Long Island' not found in stats for 'points-per-game'
+2025-09-10 17:31:00 ERROR    root: Could not fetch stats for Long Island or E Michigan, skipping
+2025-09-10 17:31:08 ERROR    root: Team 'S Illinois' not found in stats for 'points-per-game'
+2025-09-10 17:31:08 ERROR    root: Could not fetch stats for S Illinois or Purdue, skipping
+2025-09-10 17:31:08 ERROR    root: Team 'Charleston So' not found in stats for 'points-per-game'
+2025-09-10 17:31:08 ERROR    root: Could not fetch stats for Charleston So or Coastal Car, skipping
+2025-09-10 17:31:09 ERROR    root: Team 'McNeese' not found in stats for 'points-per-game'
+2025-09-10 17:31:09 ERROR    root: Could not fetch stats for McNeese or Louisiana, skipping
+2025-09-10 17:31:11 ERROR    root: Team 'UT Martin' not found in stats for 'points-per-game'
+2025-09-10 17:31:11 ERROR    root: Could not fetch stats for UT Martin or UTEP, skipping
+2025-09-10 17:31:11 ERROR    root: Team 'Weber St' not found in stats for 'points-per-game'
+2025-09-10 17:31:11 ERROR    root: Could not fetch stats for Weber St or Arizona, skipping
+2025-09-10 17:31:14 ERROR    root: Team 'UC Davis' not found in stats for 'points-per-game'
+2025-09-10 17:31:14 ERROR    root: Could not fetch stats for UC Davis or Washington, skipping
+2025-09-10 17:31:16 INFO     root: populate_pregame_data: inserted/updated 48 rows, skipped 31 games.
+2025-09-10 17:31:16 INFO     root: Postprocessing CFB on 2025-09-06
+2025-09-10 17:32:31 INFO     root: Successfully processed 48 games. Odds updated for 48. Score updates skipped for 0 games.
+2025-09-10 17:32:31 INFO     root: Postprocessing NFL on 2025-09-05
+2025-09-10 17:32:36 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-10 17:32:36 INFO     root: Preprocessing CFB on 2025-09-05
+2025-09-10 17:34:21 ERROR    root: Team 'W Illinois' not found in stats for 'points-per-game'
+2025-09-10 17:34:21 ERROR    root: Could not fetch stats for W Illinois or Northwestern, skipping
+2025-09-10 17:34:22 ERROR    root: Team 'E Washington' not found in stats for 'points-per-game'
+2025-09-10 17:34:22 ERROR    root: Could not fetch stats for E Washington or Boise St, skipping
+2025-09-10 17:34:22 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 2 games.
+2025-09-10 17:34:22 INFO     root: Postprocessing CFB on 2025-09-05
+2025-09-10 17:34:29 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-09-10 17:34:29 INFO     root: Postprocessing NFL on 2025-09-04
+2025-09-10 17:34:34 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-10 17:34:34 INFO     root: Preprocessing NFL on 2025-09-02
+2025-09-10 17:34:34 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:34:34 INFO     root: Postprocessing NFL on 2025-09-02
+2025-09-10 17:34:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:34:38 INFO     root: No games found in DB for NFL on 2025-09-02 to post-process.
+2025-09-10 17:34:38 INFO     root: Preprocessing NBA on 2025-09-02
+2025-09-10 17:34:38 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:34:38 INFO     root: Postprocessing NBA on 2025-09-02
+2025-09-10 17:34:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:34:42 INFO     root: No games found in DB for NBA on 2025-09-02 to post-process.
+2025-09-10 17:34:42 INFO     root: Preprocessing CFB on 2025-09-02
+2025-09-10 17:34:42 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:34:42 INFO     root: Postprocessing CFB on 2025-09-02
+2025-09-10 17:34:42 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:34:46 INFO     root: No games found in DB for CFB on 2025-09-02 to post-process.
+2025-09-10 17:34:46 INFO     root: Preprocessing CBB on 2025-09-02
+2025-09-10 17:34:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:34:46 INFO     root: Postprocessing CBB on 2025-09-02
+2025-09-10 17:34:47 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:34:50 INFO     root: No games found in DB for CBB on 2025-09-02 to post-process.
+2025-09-10 17:34:50 INFO     root: Preprocessing CFB on 2025-08-30
+2025-09-10 17:36:29 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-09-10 17:36:29 ERROR    root: Could not fetch stats for Montana St or Oregon, skipping
+2025-09-10 17:36:30 ERROR    root: Team 'N Arizona' not found in stats for 'points-per-game'
+2025-09-10 17:36:30 ERROR    root: Could not fetch stats for N Arizona or Arizona St, skipping
+2025-09-10 17:36:32 ERROR    root: Team 'Long Island' not found in stats for 'points-per-game'
+2025-09-10 17:36:32 ERROR    root: Could not fetch stats for Long Island or Florida, skipping
+2025-09-10 17:36:32 ERROR    root: Team 'E Texas A&M' not found in stats for 'points-per-game'
+2025-09-10 17:36:32 ERROR    root: Could not fetch stats for E Texas A&M or SMU, skipping
+2025-09-10 17:36:32 ERROR    root: Team 'North Dakota' not found in stats for 'points-per-game'
+2025-09-10 17:36:32 ERROR    root: Could not fetch stats for North Dakota or Kansas St, skipping
+2025-09-10 17:36:32 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-09-10 17:36:32 ERROR    root: Could not fetch stats for Illinois St or Oklahoma, skipping
+2025-09-10 17:36:37 ERROR    root: Team 'South Dakota' not found in stats for 'points-per-game'
+2025-09-10 17:36:37 ERROR    root: Could not fetch stats for South Dakota or Iowa St, skipping
+2025-09-10 17:36:37 ERROR    root: Team 'AR-Pine Bluff' not found in stats for 'points-per-game'
+2025-09-10 17:36:37 ERROR    root: Could not fetch stats for AR-Pine Bluff or Texas Tech, skipping
+2025-09-10 17:36:47 ERROR    root: Team 'Duquesne' not found in stats for 'points-per-game'
+2025-09-10 17:36:47 ERROR    root: Could not fetch stats for Duquesne or Pittsburgh, skipping
+2025-09-10 17:36:47 ERROR    root: Team 'VMI' not found in stats for 'points-per-game'
+2025-09-10 17:36:47 ERROR    root: Could not fetch stats for VMI or Navy, skipping
+2025-09-10 17:36:47 ERROR    root: Team 'Merrimack' not found in stats for 'points-per-game'
+2025-09-10 17:36:47 ERROR    root: Could not fetch stats for Merrimack or Kent St, skipping
+2025-09-10 17:36:49 ERROR    root: Team 'Fordham' not found in stats for 'points-per-game'
+2025-09-10 17:36:49 ERROR    root: Could not fetch stats for Fordham or Boston College, skipping
+2025-09-10 17:36:49 ERROR    root: Team 'Robert Morris' not found in stats for 'points-per-game'
+2025-09-10 17:36:49 ERROR    root: Could not fetch stats for Robert Morris or West Virginia, skipping
+2025-09-10 17:36:49 ERROR    root: Team 'C Connecticut' not found in stats for 'points-per-game'
+2025-09-10 17:36:49 ERROR    root: Could not fetch stats for C Connecticut or UConn, skipping
+2025-09-10 17:36:49 ERROR    root: Team 'E Kentucky' not found in stats for 'points-per-game'
+2025-09-10 17:36:49 ERROR    root: Could not fetch stats for E Kentucky or Louisville, skipping
+2025-09-10 17:36:49 ERROR    root: Team 'Bucknell' not found in stats for 'points-per-game'
+2025-09-10 17:36:49 ERROR    root: Could not fetch stats for Bucknell or Air Force, skipping
+2025-09-10 17:36:51 ERROR    root: Team 'Holy Cross' not found in stats for 'points-per-game'
+2025-09-10 17:36:51 ERROR    root: Could not fetch stats for Holy Cross or N Illinois, skipping
+2025-09-10 17:36:51 ERROR    root: Team 'Maine' not found in stats for 'points-per-game'
+2025-09-10 17:36:51 ERROR    root: Could not fetch stats for Maine or Liberty, skipping
+2025-09-10 17:36:51 ERROR    root: Team 'Alabama A&M' not found in stats for 'points-per-game'
+2025-09-10 17:36:51 ERROR    root: Could not fetch stats for Alabama A&M or Arkansas, skipping
+2025-09-10 17:36:51 ERROR    root: Team 'Chattanooga' not found in stats for 'points-per-game'
+2025-09-10 17:36:51 ERROR    root: Could not fetch stats for Chattanooga or Memphis, skipping
+2025-09-10 17:36:51 ERROR    root: Team 'UAlbany' not found in stats for 'points-per-game'
+2025-09-10 17:36:51 ERROR    root: Could not fetch stats for UAlbany or Iowa, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'Weber St' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for Weber St or J Madison, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'Charleston So' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for Charleston So or Vanderbilt, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'Austin Peay' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for Austin Peay or Middle Tenn, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'North Alabama' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for North Alabama or W Kentucky, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'SE Missouri' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for SE Missouri or Arkansas St, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'Morgan St' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for Morgan St or S Alabama, skipping
+2025-09-10 17:36:52 ERROR    root: Team 'Nicholls' not found in stats for 'points-per-game'
+2025-09-10 17:36:52 ERROR    root: Could not fetch stats for Nicholls or Troy, skipping
+2025-09-10 17:36:54 ERROR    root: Team 'SE Louisiana' not found in stats for 'points-per-game'
+2025-09-10 17:36:54 ERROR    root: Could not fetch stats for SE Louisiana or Louisiana Tech, skipping
+2025-09-10 17:36:56 ERROR    root: Team 'Portland St' not found in stats for 'points-per-game'
+2025-09-10 17:36:56 ERROR    root: Could not fetch stats for Portland St or BYU, skipping
+2025-09-10 17:36:59 ERROR    root: Team 'Lamar' not found in stats for 'points-per-game'
+2025-09-10 17:36:59 ERROR    root: Could not fetch stats for Lamar or N Texas, skipping
+2025-09-10 17:36:59 ERROR    root: Team 'Abilene Chrstn' not found in stats for 'points-per-game'
+2025-09-10 17:36:59 ERROR    root: Could not fetch stats for Abilene Chrstn or Tulsa, skipping
+2025-09-10 17:36:59 ERROR    root: Team 'Bryant' not found in stats for 'points-per-game'
+2025-09-10 17:36:59 ERROR    root: Could not fetch stats for Bryant or New Mexico St, skipping
+2025-09-10 17:37:01 ERROR    root: Team 'Idaho' not found in stats for 'points-per-game'
+2025-09-10 17:37:01 ERROR    root: Could not fetch stats for Idaho or Washington St, skipping
+2025-09-10 17:37:08 INFO     root: populate_pregame_data: inserted/updated 26 rows, skipped 34 games.
+2025-09-10 17:37:08 INFO     root: Preprocessing CFB on 2025-08-29
+2025-09-10 17:37:30 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/rushing-yards-pct?date=2025-08-29, sleeping 4 minutes before retry
+2025-09-10 17:42:24 ERROR    root: Team 'W Illinois' not found in stats for 'points-per-game'
+2025-09-10 17:42:24 ERROR    root: Could not fetch stats for W Illinois or Illinois, skipping
+2025-09-10 17:42:24 ERROR    root: Team 'Tarleton St' not found in stats for 'points-per-game'
+2025-09-10 17:42:24 ERROR    root: Could not fetch stats for Tarleton St or Army, skipping
+2025-09-10 17:42:28 ERROR    root: Team 'Wagner' not found in stats for 'points-per-game'
+2025-09-10 17:42:28 ERROR    root: Could not fetch stats for Wagner or Kansas, skipping
+2025-09-10 17:42:35 ERROR    root: Team 'Bethune' not found in stats for 'points-per-game'
+2025-09-10 17:42:35 ERROR    root: Could not fetch stats for Bethune or Florida Intl, skipping
+2025-09-10 17:42:40 INFO     root: populate_pregame_data: inserted/updated 7 rows, skipped 4 games.
+2025-09-10 17:42:40 INFO     root: Preprocessing NFL on 2025-08-28
+2025-09-10 17:42:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:42:40 INFO     root: Postprocessing NFL on 2025-08-28
+2025-09-10 17:42:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:42:44 INFO     root: No games found in DB for NFL on 2025-08-28 to post-process.
+2025-09-10 17:42:44 INFO     root: Preprocessing NBA on 2025-08-28
+2025-09-10 17:42:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:42:44 INFO     root: Postprocessing NBA on 2025-08-28
+2025-09-10 17:42:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:42:48 INFO     root: No games found in DB for NBA on 2025-08-28 to post-process.
+2025-09-10 17:42:48 INFO     root: Preprocessing CFB on 2025-08-28
+2025-09-10 17:44:09 ERROR    root: Team 'Lafayette' not found in stats for 'points-per-game'
+2025-09-10 17:44:09 ERROR    root: Could not fetch stats for Lafayette or Bowling Green, skipping
+2025-09-10 17:44:12 ERROR    root: Team 'Delaware St' not found in stats for 'points-per-game'
+2025-09-10 17:44:12 ERROR    root: Could not fetch stats for Delaware St or Delaware, skipping
+2025-09-10 17:44:12 ERROR    root: Team 'Saint Francis' not found in stats for 'points-per-game'
+2025-09-10 17:44:12 ERROR    root: Could not fetch stats for Saint Francis or UL Monroe, skipping
+2025-09-10 17:44:14 ERROR    root: Team 'C Arkansas' not found in stats for 'points-per-game'
+2025-09-10 17:44:14 ERROR    root: Could not fetch stats for C Arkansas or Missouri, skipping
+2025-09-10 17:44:14 ERROR    root: Team 'Elon' not found in stats for 'points-per-game'
+2025-09-10 17:44:14 ERROR    root: Could not fetch stats for Elon or Duke, skipping
+2025-09-10 17:44:14 ERROR    root: Team 'UT Martin' not found in stats for 'points-per-game'
+2025-09-10 17:44:14 ERROR    root: Could not fetch stats for UT Martin or Oklahoma St, skipping
+2025-09-10 17:44:16 ERROR    root: Team 'SF Austin' not found in stats for 'points-per-game'
+2025-09-10 17:44:16 ERROR    root: Could not fetch stats for SF Austin or Houston, skipping
+2025-09-10 17:44:16 ERROR    root: Team 'Alabama St' not found in stats for 'points-per-game'
+2025-09-10 17:44:16 ERROR    root: Could not fetch stats for Alabama St or UAB, skipping
+2025-09-10 17:44:19 ERROR    root: Team 'Stony Brook' not found in stats for 'points-per-game'
+2025-09-10 17:44:19 ERROR    root: Could not fetch stats for Stony Brook or San Diego St, skipping
+2025-09-10 17:44:19 INFO     root: populate_pregame_data: inserted/updated 8 rows, skipped 9 games.
+2025-09-10 17:44:19 INFO     root: Postprocessing CFB on 2025-08-28
+2025-09-10 17:44:35 INFO     root: Successfully processed 8 games. Odds updated for 8. Score updates skipped for 0 games.
+2025-09-10 17:44:35 INFO     root: Preprocessing CBB on 2025-08-28
+2025-09-10 17:44:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:35 INFO     root: Postprocessing CBB on 2025-08-28
+2025-09-10 17:44:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:39 INFO     root: No games found in DB for CBB on 2025-08-28 to post-process.
+2025-09-10 17:44:39 INFO     root: Preprocessing NFL on 2025-08-27
+2025-09-10 17:44:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:39 INFO     root: Postprocessing NFL on 2025-08-27
+2025-09-10 17:44:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:39 INFO     root: No games found in DB for NFL on 2025-08-27 to post-process.
+2025-09-10 17:44:39 INFO     root: Preprocessing NBA on 2025-08-27
+2025-09-10 17:44:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:40 INFO     root: Postprocessing NBA on 2025-08-27
+2025-09-10 17:44:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:40 INFO     root: No games found in DB for NBA on 2025-08-27 to post-process.
+2025-09-10 17:44:40 INFO     root: Preprocessing CFB on 2025-08-27
+2025-09-10 17:44:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:41 INFO     root: Postprocessing CFB on 2025-08-27
+2025-09-10 17:44:41 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:42 INFO     root: No games found in DB for CFB on 2025-08-27 to post-process.
+2025-09-10 17:44:42 INFO     root: Preprocessing CBB on 2025-08-27
+2025-09-10 17:44:42 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:42 INFO     root: Postprocessing CBB on 2025-08-27
+2025-09-10 17:44:42 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:44 INFO     root: No games found in DB for CBB on 2025-08-27 to post-process.
+2025-09-10 17:44:44 INFO     root: Preprocessing NFL on 2025-08-26
+2025-09-10 17:44:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:44 INFO     root: Postprocessing NFL on 2025-08-26
+2025-09-10 17:44:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:44 INFO     root: No games found in DB for NFL on 2025-08-26 to post-process.
+2025-09-10 17:44:44 INFO     root: Preprocessing NBA on 2025-08-26
+2025-09-10 17:44:45 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:45 INFO     root: Postprocessing NBA on 2025-08-26
+2025-09-10 17:44:45 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:45 INFO     root: No games found in DB for NBA on 2025-08-26 to post-process.
+2025-09-10 17:44:45 INFO     root: Preprocessing CFB on 2025-08-26
+2025-09-10 17:44:45 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:45 INFO     root: Postprocessing CFB on 2025-08-26
+2025-09-10 17:44:45 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:45 INFO     root: No games found in DB for CFB on 2025-08-26 to post-process.
+2025-09-10 17:44:45 INFO     root: Preprocessing CBB on 2025-08-26
+2025-09-10 17:44:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:46 INFO     root: Postprocessing CBB on 2025-08-26
+2025-09-10 17:44:46 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:47 INFO     root: No games found in DB for CBB on 2025-08-26 to post-process.
+2025-09-10 17:44:47 INFO     root: Preprocessing NFL on 2025-08-25
+2025-09-10 17:44:47 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:47 INFO     root: Postprocessing NFL on 2025-08-25
+2025-09-10 17:44:47 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:49 INFO     root: No games found in DB for NFL on 2025-08-25 to post-process.
+2025-09-10 17:44:49 INFO     root: Preprocessing NBA on 2025-08-25
+2025-09-10 17:44:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:49 INFO     root: Postprocessing NBA on 2025-08-25
+2025-09-10 17:44:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:50 INFO     root: No games found in DB for NBA on 2025-08-25 to post-process.
+2025-09-10 17:44:50 INFO     root: Preprocessing CFB on 2025-08-25
+2025-09-10 17:44:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:50 INFO     root: Postprocessing CFB on 2025-08-25
+2025-09-10 17:44:50 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:50 INFO     root: No games found in DB for CFB on 2025-08-25 to post-process.
+2025-09-10 17:44:50 INFO     root: Preprocessing CBB on 2025-08-25
+2025-09-10 17:44:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:51 INFO     root: Postprocessing CBB on 2025-08-25
+2025-09-10 17:44:51 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:51 INFO     root: No games found in DB for CBB on 2025-08-25 to post-process.
+2025-09-10 17:44:51 INFO     root: Preprocessing NFL on 2025-08-24
+2025-09-10 17:44:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:51 INFO     root: Postprocessing NFL on 2025-08-24
+2025-09-10 17:44:51 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:52 INFO     root: No games found in DB for NFL on 2025-08-24 to post-process.
+2025-09-10 17:44:52 INFO     root: Preprocessing NBA on 2025-08-24
+2025-09-10 17:44:52 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:52 INFO     root: Postprocessing NBA on 2025-08-24
+2025-09-10 17:44:52 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:54 INFO     root: No games found in DB for NBA on 2025-08-24 to post-process.
+2025-09-10 17:44:54 INFO     root: Preprocessing CFB on 2025-08-24
+2025-09-10 17:44:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:55 INFO     root: Postprocessing CFB on 2025-08-24
+2025-09-10 17:44:55 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:55 INFO     root: No games found in DB for CFB on 2025-08-24 to post-process.
+2025-09-10 17:44:55 INFO     root: Preprocessing CBB on 2025-08-24
+2025-09-10 17:44:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:55 INFO     root: Postprocessing CBB on 2025-08-24
+2025-09-10 17:44:55 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:55 INFO     root: No games found in DB for CBB on 2025-08-24 to post-process.
+2025-09-10 17:44:55 INFO     root: Preprocessing NFL on 2025-08-23
+2025-09-10 17:44:56 INFO     root: Skipping game 401777124 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401772998 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401772999 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401776265 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401773015 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401773011 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401776565 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401774030 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401776567 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: Skipping game 401774590 due to season_type=1 (pre-season)
+2025-09-10 17:44:56 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 10 games.
+2025-09-10 17:44:56 INFO     root: Postprocessing NFL on 2025-08-23
+2025-09-10 17:44:56 INFO     root: No games found in DB for NFL on 2025-08-23 to post-process.
+2025-09-10 17:44:56 INFO     root: Preprocessing NBA on 2025-08-23
+2025-09-10 17:44:56 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:44:56 INFO     root: Postprocessing NBA on 2025-08-23
+2025-09-10 17:44:56 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:44:57 INFO     root: No games found in DB for NBA on 2025-08-23 to post-process.
+2025-09-10 17:44:57 INFO     root: Preprocessing CFB on 2025-08-23
+2025-09-10 17:45:40 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/opponent-passing-yards-per-game?date=2025-08-23, sleeping 4 minutes before retry
+2025-09-10 17:50:10 ERROR    root: Team 'Idaho St' not found in stats for 'points-per-game'
+2025-09-10 17:50:10 ERROR    root: Could not fetch stats for Idaho St or UNLV, skipping
+2025-09-10 17:50:15 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 1 games.
+2025-09-10 17:50:15 INFO     root: Postprocessing CFB on 2025-08-23
+2025-09-10 17:50:25 INFO     root: Successfully processed 4 games. Odds updated for 4. Score updates skipped for 0 games.
+2025-09-10 17:50:25 INFO     root: Preprocessing CBB on 2025-08-23
+2025-09-10 17:50:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:26 INFO     root: Postprocessing CBB on 2025-08-23
+2025-09-10 17:50:26 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:50:30 INFO     root: No games found in DB for CBB on 2025-08-23 to post-process.
+2025-09-10 17:50:30 INFO     root: Preprocessing NFL on 2025-08-22
+2025-09-10 17:50:30 INFO     root: Skipping game 401772997 due to season_type=1 (pre-season)
+2025-09-10 17:50:30 INFO     root: Skipping game 401773008 due to season_type=1 (pre-season)
+2025-09-10 17:50:30 INFO     root: Skipping game 401772975 due to season_type=1 (pre-season)
+2025-09-10 17:50:30 INFO     root: Skipping game 401773004 due to season_type=1 (pre-season)
+2025-09-10 17:50:30 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 4 games.
+2025-09-10 17:50:30 INFO     root: Postprocessing NFL on 2025-08-22
+2025-09-10 17:50:35 INFO     root: No games found in DB for NFL on 2025-08-22 to post-process.
+2025-09-10 17:50:35 INFO     root: Preprocessing NBA on 2025-08-22
+2025-09-10 17:50:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:35 INFO     root: Postprocessing NBA on 2025-08-22
+2025-09-10 17:50:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:50:39 INFO     root: No games found in DB for NBA on 2025-08-22 to post-process.
+2025-09-10 17:50:39 INFO     root: Preprocessing CFB on 2025-08-22
+2025-09-10 17:50:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:40 INFO     root: Postprocessing CFB on 2025-08-22
+2025-09-10 17:50:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:50:44 INFO     root: No games found in DB for CFB on 2025-08-22 to post-process.
+2025-09-10 17:50:44 INFO     root: Preprocessing CBB on 2025-08-22
+2025-09-10 17:50:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:44 INFO     root: Postprocessing CBB on 2025-08-22
+2025-09-10 17:50:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:50:49 INFO     root: No games found in DB for CBB on 2025-08-22 to post-process.
+2025-09-10 17:50:49 INFO     root: Preprocessing NFL on 2025-08-21
+2025-09-10 17:50:49 INFO     root: Skipping game 401773019 due to season_type=1 (pre-season)
+2025-09-10 17:50:49 INFO     root: Skipping game 401772974 due to season_type=1 (pre-season)
+2025-09-10 17:50:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 2 games.
+2025-09-10 17:50:49 INFO     root: Postprocessing NFL on 2025-08-21
+2025-09-10 17:50:54 INFO     root: No games found in DB for NFL on 2025-08-21 to post-process.
+2025-09-10 17:50:54 INFO     root: Preprocessing NBA on 2025-08-21
+2025-09-10 17:50:54 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:54 INFO     root: Postprocessing NBA on 2025-08-21
+2025-09-10 17:50:54 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:50:58 INFO     root: No games found in DB for NBA on 2025-08-21 to post-process.
+2025-09-10 17:50:58 INFO     root: Preprocessing CFB on 2025-08-21
+2025-09-10 17:50:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:50:59 INFO     root: Postprocessing CFB on 2025-08-21
+2025-09-10 17:50:59 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:03 INFO     root: No games found in DB for CFB on 2025-08-21 to post-process.
+2025-09-10 17:51:03 INFO     root: Preprocessing CBB on 2025-08-21
+2025-09-10 17:51:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:03 INFO     root: Postprocessing CBB on 2025-08-21
+2025-09-10 17:51:03 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:08 INFO     root: No games found in DB for CBB on 2025-08-21 to post-process.
+2025-09-10 17:51:08 INFO     root: Preprocessing NFL on 2025-08-20
+2025-09-10 17:51:08 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:08 INFO     root: Postprocessing NFL on 2025-08-20
+2025-09-10 17:51:08 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:13 INFO     root: No games found in DB for NFL on 2025-08-20 to post-process.
+2025-09-10 17:51:13 INFO     root: Preprocessing NBA on 2025-08-20
+2025-09-10 17:51:13 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:13 INFO     root: Postprocessing NBA on 2025-08-20
+2025-09-10 17:51:13 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:17 INFO     root: No games found in DB for NBA on 2025-08-20 to post-process.
+2025-09-10 17:51:17 INFO     root: Preprocessing CFB on 2025-08-20
+2025-09-10 17:51:18 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:18 INFO     root: Postprocessing CFB on 2025-08-20
+2025-09-10 17:51:18 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:22 INFO     root: No games found in DB for CFB on 2025-08-20 to post-process.
+2025-09-10 17:51:22 INFO     root: Preprocessing CBB on 2025-08-20
+2025-09-10 17:51:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:23 INFO     root: Postprocessing CBB on 2025-08-20
+2025-09-10 17:51:23 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:27 INFO     root: No games found in DB for CBB on 2025-08-20 to post-process.
+2025-09-10 17:51:27 INFO     root: Preprocessing NFL on 2025-08-19
+2025-09-10 17:51:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:28 INFO     root: Postprocessing NFL on 2025-08-19
+2025-09-10 17:51:28 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:32 INFO     root: No games found in DB for NFL on 2025-08-19 to post-process.
+2025-09-10 17:51:32 INFO     root: Preprocessing NBA on 2025-08-19
+2025-09-10 17:51:32 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:32 INFO     root: Postprocessing NBA on 2025-08-19
+2025-09-10 17:51:32 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:37 INFO     root: No games found in DB for NBA on 2025-08-19 to post-process.
+2025-09-10 17:51:37 INFO     root: Preprocessing CFB on 2025-08-19
+2025-09-10 17:51:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:37 INFO     root: Postprocessing CFB on 2025-08-19
+2025-09-10 17:51:37 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:41 INFO     root: No games found in DB for CFB on 2025-08-19 to post-process.
+2025-09-10 17:51:41 INFO     root: Preprocessing CBB on 2025-08-19
+2025-09-10 17:51:42 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:42 INFO     root: Postprocessing CBB on 2025-08-19
+2025-09-10 17:51:42 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:46 INFO     root: No games found in DB for CBB on 2025-08-19 to post-process.
+2025-09-10 17:51:46 INFO     root: Preprocessing NFL on 2025-08-18
+2025-09-10 17:51:46 INFO     root: Skipping game 401772973 due to season_type=1 (pre-season)
+2025-09-10 17:51:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 1 games.
+2025-09-10 17:51:46 INFO     root: Postprocessing NFL on 2025-08-18
+2025-09-10 17:51:50 INFO     root: No games found in DB for NFL on 2025-08-18 to post-process.
+2025-09-10 17:51:50 INFO     root: Preprocessing NBA on 2025-08-18
+2025-09-10 17:51:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:50 INFO     root: Postprocessing NBA on 2025-08-18
+2025-09-10 17:51:51 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:55 INFO     root: No games found in DB for NBA on 2025-08-18 to post-process.
+2025-09-10 17:51:55 INFO     root: Preprocessing CFB on 2025-08-18
+2025-09-10 17:51:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:55 INFO     root: Postprocessing CFB on 2025-08-18
+2025-09-10 17:51:55 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:51:59 INFO     root: No games found in DB for CFB on 2025-08-18 to post-process.
+2025-09-10 17:51:59 INFO     root: Preprocessing CBB on 2025-08-18
+2025-09-10 17:51:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:51:59 INFO     root: Postprocessing CBB on 2025-08-18
+2025-09-10 17:52:00 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:01 INFO     root: No games found in DB for CBB on 2025-08-18 to post-process.
+2025-09-10 17:52:01 INFO     root: Preprocessing NFL on 2025-08-17
+2025-09-10 17:52:01 INFO     root: Skipping game 401773014 due to season_type=1 (pre-season)
+2025-09-10 17:52:01 INFO     root: Skipping game 401772972 due to season_type=1 (pre-season)
+2025-09-10 17:52:01 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 2 games.
+2025-09-10 17:52:01 INFO     root: Postprocessing NFL on 2025-08-17
+2025-09-10 17:52:01 INFO     root: No games found in DB for NFL on 2025-08-17 to post-process.
+2025-09-10 17:52:01 INFO     root: Preprocessing NBA on 2025-08-17
+2025-09-10 17:52:01 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:01 INFO     root: Postprocessing NBA on 2025-08-17
+2025-09-10 17:52:02 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:02 INFO     root: No games found in DB for NBA on 2025-08-17 to post-process.
+2025-09-10 17:52:02 INFO     root: Preprocessing CFB on 2025-08-17
+2025-09-10 17:52:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:02 INFO     root: Postprocessing CFB on 2025-08-17
+2025-09-10 17:52:02 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:02 INFO     root: No games found in DB for CFB on 2025-08-17 to post-process.
+2025-09-10 17:52:02 INFO     root: Preprocessing CBB on 2025-08-17
+2025-09-10 17:52:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:02 INFO     root: Postprocessing CBB on 2025-08-17
+2025-09-10 17:52:02 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:03 INFO     root: No games found in DB for CBB on 2025-08-17 to post-process.
+2025-09-10 17:52:03 INFO     root: Preprocessing NFL on 2025-08-16
+2025-09-10 17:52:03 INFO     root: Skipping game 401776264 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773003 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773013 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773006 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773027 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401774569 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773007 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773021 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773009 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401773000 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: Skipping game 401774637 due to season_type=1 (pre-season)
+2025-09-10 17:52:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 11 games.
+2025-09-10 17:52:03 INFO     root: Postprocessing NFL on 2025-08-16
+2025-09-10 17:52:05 INFO     root: No games found in DB for NFL on 2025-08-16 to post-process.
+2025-09-10 17:52:05 INFO     root: Preprocessing NBA on 2025-08-16
+2025-09-10 17:52:06 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:06 INFO     root: Postprocessing NBA on 2025-08-16
+2025-09-10 17:52:06 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:06 INFO     root: No games found in DB for NBA on 2025-08-16 to post-process.
+2025-09-10 17:52:06 INFO     root: Preprocessing CFB on 2025-08-16
+2025-09-10 17:52:07 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:07 INFO     root: Postprocessing CFB on 2025-08-16
+2025-09-10 17:52:07 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:07 INFO     root: No games found in DB for CFB on 2025-08-16 to post-process.
+2025-09-10 17:52:07 INFO     root: Preprocessing CBB on 2025-08-16
+2025-09-10 17:52:07 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:07 INFO     root: Postprocessing CBB on 2025-08-16
+2025-09-10 17:52:07 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:07 INFO     root: No games found in DB for CBB on 2025-08-16 to post-process.
+2025-09-10 17:52:07 INFO     root: Preprocessing NFL on 2025-08-15
+2025-09-10 17:52:08 INFO     root: Skipping game 401773017 due to season_type=1 (pre-season)
+2025-09-10 17:52:08 INFO     root: Skipping game 401774591 due to season_type=1 (pre-season)
+2025-09-10 17:52:08 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 2 games.
+2025-09-10 17:52:08 INFO     root: Postprocessing NFL on 2025-08-15
+2025-09-10 17:52:08 INFO     root: No games found in DB for NFL on 2025-08-15 to post-process.
+2025-09-10 17:52:08 INFO     root: Preprocessing NBA on 2025-08-15
+2025-09-10 17:52:08 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:08 INFO     root: Postprocessing NBA on 2025-08-15
+2025-09-10 17:52:08 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:08 INFO     root: No games found in DB for NBA on 2025-08-15 to post-process.
+2025-09-10 17:52:08 INFO     root: Preprocessing CFB on 2025-08-15
+2025-09-10 17:52:09 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:09 INFO     root: Postprocessing CFB on 2025-08-15
+2025-09-10 17:52:09 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:11 INFO     root: No games found in DB for CFB on 2025-08-15 to post-process.
+2025-09-10 17:52:11 INFO     root: Preprocessing CBB on 2025-08-15
+2025-09-10 17:52:11 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:11 INFO     root: Postprocessing CBB on 2025-08-15
+2025-09-10 17:52:11 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:12 INFO     root: No games found in DB for CBB on 2025-08-15 to post-process.
+2025-09-10 17:52:12 INFO     root: Preprocessing NFL on 2025-08-14
+2025-09-10 17:52:12 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:12 INFO     root: Postprocessing NFL on 2025-08-14
+2025-09-10 17:52:13 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:13 INFO     root: No games found in DB for NFL on 2025-08-14 to post-process.
+2025-09-10 17:52:13 INFO     root: Preprocessing NBA on 2025-08-14
+2025-09-10 17:52:13 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:13 INFO     root: Postprocessing NBA on 2025-08-14
+2025-09-10 17:52:13 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:13 INFO     root: No games found in DB for NBA on 2025-08-14 to post-process.
+2025-09-10 17:52:13 INFO     root: Preprocessing CFB on 2025-08-14
+2025-09-10 17:52:14 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:14 INFO     root: Postprocessing CFB on 2025-08-14
+2025-09-10 17:52:14 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:15 INFO     root: No games found in DB for CFB on 2025-08-14 to post-process.
+2025-09-10 17:52:15 INFO     root: Preprocessing CBB on 2025-08-14
+2025-09-10 17:52:15 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:15 INFO     root: Postprocessing CBB on 2025-08-14
+2025-09-10 17:52:15 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:17 INFO     root: No games found in DB for CBB on 2025-08-14 to post-process.
+2025-09-10 17:52:17 INFO     root: Preprocessing NFL on 2025-08-13
+2025-09-10 17:52:17 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:17 INFO     root: Postprocessing NFL on 2025-08-13
+2025-09-10 17:52:17 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:18 INFO     root: No games found in DB for NFL on 2025-08-13 to post-process.
+2025-09-10 17:52:18 INFO     root: Preprocessing NBA on 2025-08-13
+2025-09-10 17:52:18 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:18 INFO     root: Postprocessing NBA on 2025-08-13
+2025-09-10 17:52:18 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:19 INFO     root: No games found in DB for NBA on 2025-08-13 to post-process.
+2025-09-10 17:52:19 INFO     root: Preprocessing CFB on 2025-08-13
+2025-09-10 17:52:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:19 INFO     root: Postprocessing CFB on 2025-08-13
+2025-09-10 17:52:19 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:20 INFO     root: No games found in DB for CFB on 2025-08-13 to post-process.
+2025-09-10 17:52:20 INFO     root: Preprocessing CBB on 2025-08-13
+2025-09-10 17:52:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:20 INFO     root: Postprocessing CBB on 2025-08-13
+2025-09-10 17:52:20 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:20 INFO     root: No games found in DB for CBB on 2025-08-13 to post-process.
+2025-09-10 17:52:20 INFO     root: Preprocessing NFL on 2025-08-12
+2025-09-10 17:52:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:21 INFO     root: Postprocessing NFL on 2025-08-12
+2025-09-10 17:52:21 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:22 INFO     root: No games found in DB for NFL on 2025-08-12 to post-process.
+2025-09-10 17:52:22 INFO     root: Preprocessing NBA on 2025-08-12
+2025-09-10 17:52:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:23 INFO     root: Postprocessing NBA on 2025-08-12
+2025-09-10 17:52:23 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:24 INFO     root: No games found in DB for NBA on 2025-08-12 to post-process.
+2025-09-10 17:52:24 INFO     root: Preprocessing CFB on 2025-08-12
+2025-09-10 17:52:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:24 INFO     root: Postprocessing CFB on 2025-08-12
+2025-09-10 17:52:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:25 INFO     root: No games found in DB for CFB on 2025-08-12 to post-process.
+2025-09-10 17:52:25 INFO     root: Preprocessing CBB on 2025-08-12
+2025-09-10 17:52:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:25 INFO     root: Postprocessing CBB on 2025-08-12
+2025-09-10 17:52:25 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:25 INFO     root: No games found in DB for CBB on 2025-08-12 to post-process.
+2025-09-10 17:52:25 INFO     root: Preprocessing NFL on 2025-08-11
+2025-09-10 17:52:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:26 INFO     root: Postprocessing NFL on 2025-08-11
+2025-09-10 17:52:27 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:28 INFO     root: No games found in DB for NFL on 2025-08-11 to post-process.
+2025-09-10 17:52:28 INFO     root: Preprocessing NBA on 2025-08-11
+2025-09-10 17:52:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:28 INFO     root: Postprocessing NBA on 2025-08-11
+2025-09-10 17:52:29 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:31 INFO     root: No games found in DB for NBA on 2025-08-11 to post-process.
+2025-09-10 17:52:31 INFO     root: Preprocessing CFB on 2025-08-11
+2025-09-10 17:52:31 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:31 INFO     root: Postprocessing CFB on 2025-08-11
+2025-09-10 17:52:31 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:31 INFO     root: No games found in DB for CFB on 2025-08-11 to post-process.
+2025-09-10 17:52:31 INFO     root: Preprocessing CBB on 2025-08-11
+2025-09-10 17:52:32 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:32 INFO     root: Postprocessing CBB on 2025-08-11
+2025-09-10 17:52:32 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:32 INFO     root: No games found in DB for CBB on 2025-08-11 to post-process.
+2025-09-10 17:52:32 INFO     root: Preprocessing NFL on 2025-08-10
+2025-09-10 17:52:32 INFO     root: Skipping game 401776564 due to season_type=1 (pre-season)
+2025-09-10 17:52:32 INFO     root: Skipping game 401773026 due to season_type=1 (pre-season)
+2025-09-10 17:52:32 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 2 games.
+2025-09-10 17:52:32 INFO     root: Postprocessing NFL on 2025-08-10
+2025-09-10 17:52:33 INFO     root: No games found in DB for NFL on 2025-08-10 to post-process.
+2025-09-10 17:52:33 INFO     root: Preprocessing NBA on 2025-08-10
+2025-09-10 17:52:33 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:33 INFO     root: Postprocessing NBA on 2025-08-10
+2025-09-10 17:52:34 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:35 INFO     root: No games found in DB for NBA on 2025-08-10 to post-process.
+2025-09-10 17:52:35 INFO     root: Preprocessing CFB on 2025-08-10
+2025-09-10 17:52:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:35 INFO     root: Postprocessing CFB on 2025-08-10
+2025-09-10 17:52:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:37 INFO     root: No games found in DB for CFB on 2025-08-10 to post-process.
+2025-09-10 17:52:37 INFO     root: Preprocessing CBB on 2025-08-10
+2025-09-10 17:52:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:37 INFO     root: Postprocessing CBB on 2025-08-10
+2025-09-10 17:52:38 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:38 INFO     root: No games found in DB for CBB on 2025-08-10 to post-process.
+2025-09-10 17:52:38 INFO     root: Preprocessing NFL on 2025-08-09
+2025-09-10 17:52:38 INFO     root: Skipping game 401776263 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401773012 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401773020 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401773002 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401774029 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401773010 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401774636 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: Skipping game 401776566 due to season_type=1 (pre-season)
+2025-09-10 17:52:38 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 8 games.
+2025-09-10 17:52:38 INFO     root: Postprocessing NFL on 2025-08-09
+2025-09-10 17:52:38 INFO     root: No games found in DB for NFL on 2025-08-09 to post-process.
+2025-09-10 17:52:38 INFO     root: Preprocessing NBA on 2025-08-09
+2025-09-10 17:52:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:39 INFO     root: Postprocessing NBA on 2025-08-09
+2025-09-10 17:52:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:40 INFO     root: No games found in DB for NBA on 2025-08-09 to post-process.
+2025-09-10 17:52:40 INFO     root: Preprocessing CFB on 2025-08-09
+2025-09-10 17:52:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:40 INFO     root: Postprocessing CFB on 2025-08-09
+2025-09-10 17:52:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:42 INFO     root: No games found in DB for CFB on 2025-08-09 to post-process.
+2025-09-10 17:52:42 INFO     root: Preprocessing CBB on 2025-08-09
+2025-09-10 17:52:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:43 INFO     root: Postprocessing CBB on 2025-08-09
+2025-09-10 17:52:43 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:43 INFO     root: No games found in DB for CBB on 2025-08-09 to post-process.
+2025-09-10 17:52:43 INFO     root: Preprocessing NFL on 2025-08-08
+2025-09-10 17:52:43 INFO     root: Skipping game 401773016 due to season_type=1 (pre-season)
+2025-09-10 17:52:43 INFO     root: Skipping game 401773018 due to season_type=1 (pre-season)
+2025-09-10 17:52:43 INFO     root: Skipping game 401772996 due to season_type=1 (pre-season)
+2025-09-10 17:52:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 3 games.
+2025-09-10 17:52:43 INFO     root: Postprocessing NFL on 2025-08-08
+2025-09-10 17:52:43 INFO     root: No games found in DB for NFL on 2025-08-08 to post-process.
+2025-09-10 17:52:43 INFO     root: Preprocessing NBA on 2025-08-08
+2025-09-10 17:52:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:44 INFO     root: Postprocessing NBA on 2025-08-08
+2025-09-10 17:52:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:44 INFO     root: No games found in DB for NBA on 2025-08-08 to post-process.
+2025-09-10 17:52:44 INFO     root: Preprocessing CFB on 2025-08-08
+2025-09-10 17:52:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:44 INFO     root: Postprocessing CFB on 2025-08-08
+2025-09-10 17:52:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:45 INFO     root: No games found in DB for CFB on 2025-08-08 to post-process.
+2025-09-10 17:52:45 INFO     root: Preprocessing CBB on 2025-08-08
+2025-09-10 17:52:45 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:45 INFO     root: Postprocessing CBB on 2025-08-08
+2025-09-10 17:52:45 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:46 INFO     root: No games found in DB for CBB on 2025-08-08 to post-process.
+2025-09-10 17:52:46 INFO     root: Preprocessing NFL on 2025-08-07
+2025-09-10 17:52:46 INFO     root: Skipping game 401773001 due to season_type=1 (pre-season)
+2025-09-10 17:52:46 INFO     root: Skipping game 401773005 due to season_type=1 (pre-season)
+2025-09-10 17:52:46 INFO     root: Skipping game 401774568 due to season_type=1 (pre-season)
+2025-09-10 17:52:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 3 games.
+2025-09-10 17:52:46 INFO     root: Postprocessing NFL on 2025-08-07
+2025-09-10 17:52:47 INFO     root: No games found in DB for NFL on 2025-08-07 to post-process.
+2025-09-10 17:52:47 INFO     root: Preprocessing NBA on 2025-08-07
+2025-09-10 17:52:47 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:47 INFO     root: Postprocessing NBA on 2025-08-07
+2025-09-10 17:52:47 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:48 INFO     root: No games found in DB for NBA on 2025-08-07 to post-process.
+2025-09-10 17:52:48 INFO     root: Preprocessing CFB on 2025-08-07
+2025-09-10 17:52:48 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:48 INFO     root: Postprocessing CFB on 2025-08-07
+2025-09-10 17:52:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:49 INFO     root: No games found in DB for CFB on 2025-08-07 to post-process.
+2025-09-10 17:52:49 INFO     root: Preprocessing CBB on 2025-08-07
+2025-09-10 17:52:49 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:49 INFO     root: Postprocessing CBB on 2025-08-07
+2025-09-10 17:52:49 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:49 INFO     root: No games found in DB for CBB on 2025-08-07 to post-process.
+2025-09-10 17:52:49 INFO     root: Preprocessing NFL on 2025-08-06
+2025-09-10 17:52:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:50 INFO     root: Postprocessing NFL on 2025-08-06
+2025-09-10 17:52:50 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:51 INFO     root: No games found in DB for NFL on 2025-08-06 to post-process.
+2025-09-10 17:52:51 INFO     root: Preprocessing NBA on 2025-08-06
+2025-09-10 17:52:51 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:51 INFO     root: Postprocessing NBA on 2025-08-06
+2025-09-10 17:52:51 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:52 INFO     root: No games found in DB for NBA on 2025-08-06 to post-process.
+2025-09-10 17:52:52 INFO     root: Preprocessing CFB on 2025-08-06
+2025-09-10 17:52:52 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:52 INFO     root: Postprocessing CFB on 2025-08-06
+2025-09-10 17:52:53 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:54 INFO     root: No games found in DB for CFB on 2025-08-06 to post-process.
+2025-09-10 17:52:54 INFO     root: Preprocessing CBB on 2025-08-06
+2025-09-10 17:52:54 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:54 INFO     root: Postprocessing CBB on 2025-08-06
+2025-09-10 17:52:54 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:55 INFO     root: No games found in DB for CBB on 2025-08-06 to post-process.
+2025-09-10 17:52:55 INFO     root: Preprocessing NFL on 2025-08-05
+2025-09-10 17:52:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:55 INFO     root: Postprocessing NFL on 2025-08-05
+2025-09-10 17:52:55 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:56 INFO     root: No games found in DB for NFL on 2025-08-05 to post-process.
+2025-09-10 17:52:56 INFO     root: Preprocessing NBA on 2025-08-05
+2025-09-10 17:52:56 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:56 INFO     root: Postprocessing NBA on 2025-08-05
+2025-09-10 17:52:56 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:57 INFO     root: No games found in DB for NBA on 2025-08-05 to post-process.
+2025-09-10 17:52:57 INFO     root: Preprocessing CFB on 2025-08-05
+2025-09-10 17:52:57 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:57 INFO     root: Postprocessing CFB on 2025-08-05
+2025-09-10 17:52:58 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:59 INFO     root: No games found in DB for CFB on 2025-08-05 to post-process.
+2025-09-10 17:52:59 INFO     root: Preprocessing CBB on 2025-08-05
+2025-09-10 17:52:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:52:59 INFO     root: Postprocessing CBB on 2025-08-05
+2025-09-10 17:52:59 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:52:59 INFO     root: No games found in DB for CBB on 2025-08-05 to post-process.
+2025-09-10 17:52:59 INFO     root: Preprocessing NFL on 2025-08-04
+2025-09-10 17:53:00 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:00 INFO     root: Postprocessing NFL on 2025-08-04
+2025-09-10 17:53:00 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:01 INFO     root: No games found in DB for NFL on 2025-08-04 to post-process.
+2025-09-10 17:53:01 INFO     root: Preprocessing NBA on 2025-08-04
+2025-09-10 17:53:01 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:01 INFO     root: Postprocessing NBA on 2025-08-04
+2025-09-10 17:53:02 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:03 INFO     root: No games found in DB for NBA on 2025-08-04 to post-process.
+2025-09-10 17:53:03 INFO     root: Preprocessing CFB on 2025-08-04
+2025-09-10 17:53:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:03 INFO     root: Postprocessing CFB on 2025-08-04
+2025-09-10 17:53:03 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:05 INFO     root: No games found in DB for CFB on 2025-08-04 to post-process.
+2025-09-10 17:53:05 INFO     root: Preprocessing CBB on 2025-08-04
+2025-09-10 17:53:05 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:05 INFO     root: Postprocessing CBB on 2025-08-04
+2025-09-10 17:53:05 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:06 INFO     root: No games found in DB for CBB on 2025-08-04 to post-process.
+2025-09-10 17:53:06 INFO     root: Preprocessing NFL on 2025-08-03
+2025-09-10 17:53:06 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:06 INFO     root: Postprocessing NFL on 2025-08-03
+2025-09-10 17:53:06 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:07 INFO     root: No games found in DB for NFL on 2025-08-03 to post-process.
+2025-09-10 17:53:07 INFO     root: Preprocessing NBA on 2025-08-03
+2025-09-10 17:53:07 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:07 INFO     root: Postprocessing NBA on 2025-08-03
+2025-09-10 17:53:08 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:08 INFO     root: No games found in DB for NBA on 2025-08-03 to post-process.
+2025-09-10 17:53:08 INFO     root: Preprocessing CFB on 2025-08-03
+2025-09-10 17:53:08 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:08 INFO     root: Postprocessing CFB on 2025-08-03
+2025-09-10 17:53:08 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:10 INFO     root: No games found in DB for CFB on 2025-08-03 to post-process.
+2025-09-10 17:53:10 INFO     root: Preprocessing CBB on 2025-08-03
+2025-09-10 17:53:10 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:10 INFO     root: Postprocessing CBB on 2025-08-03
+2025-09-10 17:53:10 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:10 INFO     root: No games found in DB for CBB on 2025-08-03 to post-process.
+2025-09-10 17:53:10 INFO     root: Preprocessing NFL on 2025-08-02
+2025-09-10 17:53:11 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:11 INFO     root: Postprocessing NFL on 2025-08-02
+2025-09-10 17:53:11 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:12 INFO     root: No games found in DB for NFL on 2025-08-02 to post-process.
+2025-09-10 17:53:12 INFO     root: Preprocessing NBA on 2025-08-02
+2025-09-10 17:53:12 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:12 INFO     root: Postprocessing NBA on 2025-08-02
+2025-09-10 17:53:12 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:14 INFO     root: No games found in DB for NBA on 2025-08-02 to post-process.
+2025-09-10 17:53:14 INFO     root: Preprocessing CFB on 2025-08-02
+2025-09-10 17:53:14 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:14 INFO     root: Postprocessing CFB on 2025-08-02
+2025-09-10 17:53:14 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:14 INFO     root: No games found in DB for CFB on 2025-08-02 to post-process.
+2025-09-10 17:53:14 INFO     root: Preprocessing CBB on 2025-08-02
+2025-09-10 17:53:15 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:15 INFO     root: Postprocessing CBB on 2025-08-02
+2025-09-10 17:53:15 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:15 INFO     root: No games found in DB for CBB on 2025-08-02 to post-process.
+2025-09-10 17:53:15 INFO     root: Preprocessing NFL on 2025-08-01
+2025-09-10 17:53:15 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:15 INFO     root: Postprocessing NFL on 2025-08-01
+2025-09-10 17:53:16 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:16 INFO     root: No games found in DB for NFL on 2025-08-01 to post-process.
+2025-09-10 17:53:16 INFO     root: Preprocessing NBA on 2025-08-01
+2025-09-10 17:53:16 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:17 INFO     root: Postprocessing NBA on 2025-08-01
+2025-09-10 17:53:17 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:18 INFO     root: No games found in DB for NBA on 2025-08-01 to post-process.
+2025-09-10 17:53:18 INFO     root: Preprocessing CFB on 2025-08-01
+2025-09-10 17:53:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:19 INFO     root: Postprocessing CFB on 2025-08-01
+2025-09-10 17:53:19 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:19 INFO     root: No games found in DB for CFB on 2025-08-01 to post-process.
+2025-09-10 17:53:19 INFO     root: Preprocessing CBB on 2025-08-01
+2025-09-10 17:53:19 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:19 INFO     root: Postprocessing CBB on 2025-08-01
+2025-09-10 17:53:19 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:20 INFO     root: No games found in DB for CBB on 2025-08-01 to post-process.
+2025-09-10 17:53:20 INFO     root: Preprocessing NFL on 2025-07-31
+2025-09-10 17:53:20 INFO     root: Skipping game 401772971 due to season_type=1 (pre-season)
+2025-09-10 17:53:20 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 1 games.
+2025-09-10 17:53:20 INFO     root: Postprocessing NFL on 2025-07-31
+2025-09-10 17:53:20 INFO     root: No games found in DB for NFL on 2025-07-31 to post-process.
+2025-09-10 17:53:20 INFO     root: Preprocessing NBA on 2025-07-31
+2025-09-10 17:53:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:21 INFO     root: Postprocessing NBA on 2025-07-31
+2025-09-10 17:53:21 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:21 INFO     root: No games found in DB for NBA on 2025-07-31 to post-process.
+2025-09-10 17:53:21 INFO     root: Preprocessing CFB on 2025-07-31
+2025-09-10 17:53:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:22 INFO     root: Postprocessing CFB on 2025-07-31
+2025-09-10 17:53:22 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:24 INFO     root: No games found in DB for CFB on 2025-07-31 to post-process.
+2025-09-10 17:53:24 INFO     root: Preprocessing CBB on 2025-07-31
+2025-09-10 17:53:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:24 INFO     root: Postprocessing CBB on 2025-07-31
+2025-09-10 17:53:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:24 INFO     root: No games found in DB for CBB on 2025-07-31 to post-process.
+2025-09-10 17:53:24 INFO     root: Preprocessing NFL on 2025-07-30
+2025-09-10 17:53:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:25 INFO     root: Postprocessing NFL on 2025-07-30
+2025-09-10 17:53:25 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:25 INFO     root: No games found in DB for NFL on 2025-07-30 to post-process.
+2025-09-10 17:53:25 INFO     root: Preprocessing NBA on 2025-07-30
+2025-09-10 17:53:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:25 INFO     root: Postprocessing NBA on 2025-07-30
+2025-09-10 17:53:26 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:26 INFO     root: No games found in DB for NBA on 2025-07-30 to post-process.
+2025-09-10 17:53:26 INFO     root: Preprocessing CFB on 2025-07-30
+2025-09-10 17:53:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:26 INFO     root: Postprocessing CFB on 2025-07-30
+2025-09-10 17:53:26 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:27 INFO     root: No games found in DB for CFB on 2025-07-30 to post-process.
+2025-09-10 17:53:27 INFO     root: Preprocessing CBB on 2025-07-30
+2025-09-10 17:53:27 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:27 INFO     root: Postprocessing CBB on 2025-07-30
+2025-09-10 17:53:28 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:29 INFO     root: No games found in DB for CBB on 2025-07-30 to post-process.
+2025-09-10 17:53:29 INFO     root: Preprocessing NFL on 2025-07-29
+2025-09-10 17:53:30 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:30 INFO     root: Postprocessing NFL on 2025-07-29
+2025-09-10 17:53:30 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:30 INFO     root: No games found in DB for NFL on 2025-07-29 to post-process.
+2025-09-10 17:53:30 INFO     root: Preprocessing NBA on 2025-07-29
+2025-09-10 17:53:31 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:31 INFO     root: Postprocessing NBA on 2025-07-29
+2025-09-10 17:53:31 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:31 INFO     root: No games found in DB for NBA on 2025-07-29 to post-process.
+2025-09-10 17:53:31 INFO     root: Preprocessing CFB on 2025-07-29
+2025-09-10 17:53:32 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:32 INFO     root: Postprocessing CFB on 2025-07-29
+2025-09-10 17:53:32 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:32 INFO     root: No games found in DB for CFB on 2025-07-29 to post-process.
+2025-09-10 17:53:32 INFO     root: Preprocessing CBB on 2025-07-29
+2025-09-10 17:53:33 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:33 INFO     root: Postprocessing CBB on 2025-07-29
+2025-09-10 17:53:33 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:34 INFO     root: No games found in DB for CBB on 2025-07-29 to post-process.
+2025-09-10 17:53:34 INFO     root: Preprocessing NFL on 2025-07-28
+2025-09-10 17:53:34 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:34 INFO     root: Postprocessing NFL on 2025-07-28
+2025-09-10 17:53:34 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:35 INFO     root: No games found in DB for NFL on 2025-07-28 to post-process.
+2025-09-10 17:53:35 INFO     root: Preprocessing NBA on 2025-07-28
+2025-09-10 17:53:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:36 INFO     root: Postprocessing NBA on 2025-07-28
+2025-09-10 17:53:36 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:36 INFO     root: No games found in DB for NBA on 2025-07-28 to post-process.
+2025-09-10 17:53:36 INFO     root: Preprocessing CFB on 2025-07-28
+2025-09-10 17:53:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:36 INFO     root: Postprocessing CFB on 2025-07-28
+2025-09-10 17:53:36 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:36 INFO     root: No games found in DB for CFB on 2025-07-28 to post-process.
+2025-09-10 17:53:36 INFO     root: Preprocessing CBB on 2025-07-28
+2025-09-10 17:53:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:36 INFO     root: Postprocessing CBB on 2025-07-28
+2025-09-10 17:53:37 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:37 INFO     root: No games found in DB for CBB on 2025-07-28 to post-process.
+2025-09-10 17:53:37 INFO     root: Preprocessing NFL on 2025-07-27
+2025-09-10 17:53:37 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:37 INFO     root: Postprocessing NFL on 2025-07-27
+2025-09-10 17:53:37 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:38 INFO     root: No games found in DB for NFL on 2025-07-27 to post-process.
+2025-09-10 17:53:38 INFO     root: Preprocessing NBA on 2025-07-27
+2025-09-10 17:53:38 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:38 INFO     root: Postprocessing NBA on 2025-07-27
+2025-09-10 17:53:38 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:39 INFO     root: No games found in DB for NBA on 2025-07-27 to post-process.
+2025-09-10 17:53:39 INFO     root: Preprocessing CFB on 2025-07-27
+2025-09-10 17:53:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:40 INFO     root: Postprocessing CFB on 2025-07-27
+2025-09-10 17:53:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:41 INFO     root: No games found in DB for CFB on 2025-07-27 to post-process.
+2025-09-10 17:53:41 INFO     root: Preprocessing CBB on 2025-07-27
+2025-09-10 17:53:41 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-10 17:53:41 INFO     root: Postprocessing CBB on 2025-07-27
+2025-09-10 17:53:42 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-10 17:53:42 INFO     root: No games found in DB for CBB on 2025-07-27 to post-process.
+2025-09-10 17:53:42 INFO     root: Preprocessing CBB on 2025-02-27
+2025-09-11 18:08:09 INFO     root: Postprocessing NFL on 2025-09-11
+2025-09-11 18:08:14 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-11 18:08:14 INFO     root: Postprocessing CFB on 2025-09-11
+2025-09-11 18:08:19 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-11 18:08:19 INFO     root: Preprocessing CFB on 2025-09-06
+2025-09-14 02:45:43 INFO     root: Postprocessing NFL on 2025-09-14
+2025-09-14 02:46:06 INFO     root: Successfully processed 13 games. Odds updated for 13. Score updates skipped for 13 games.
+2025-09-14 02:46:06 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-14 02:47:15 ERROR    root: Team 'Portland St' not found in stats for 'points-per-game'
+2025-09-14 02:47:15 ERROR    root: Could not fetch stats for Portland St or Hawai'i, skipping
+2025-09-14 02:47:17 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-09-14 02:47:17 ERROR    root: Could not fetch stats for Villanova or Penn St, skipping
+2025-09-14 02:47:44 ERROR    root: Team 'Hou Christian' not found in stats for 'points-per-game'
+2025-09-14 02:47:44 ERROR    root: Could not fetch stats for Hou Christian or Nebraska, skipping
+2025-09-14 02:47:44 ERROR    root: Team 'Towson' not found in stats for 'points-per-game'
+2025-09-14 02:47:44 ERROR    root: Could not fetch stats for Towson or Maryland, skipping
+2025-09-14 02:47:44 ERROR    root: Team 'William & Mary' not found in stats for 'points-per-game'
+2025-09-14 02:47:44 ERROR    root: Could not fetch stats for William & Mary or Virginia, skipping
+2025-09-14 02:47:44 ERROR    root: Team 'Samford' not found in stats for 'points-per-game'
+2025-09-14 02:47:44 ERROR    root: Could not fetch stats for Samford or Baylor, skipping
+2025-09-14 02:47:47 ERROR    root: Team 'New Hampshire' not found in stats for 'points-per-game'
+2025-09-14 02:47:47 ERROR    root: Could not fetch stats for New Hampshire or Ball St, skipping
+2025-09-14 02:47:48 ERROR    root: Team 'Norfolk St' not found in stats for 'points-per-game'
+2025-09-14 02:47:48 ERROR    root: Could not fetch stats for Norfolk St or Rutgers, skipping
+2025-09-14 02:47:48 ERROR    root: Team 'Youngstown St' not found in stats for 'points-per-game'
+2025-09-14 02:47:48 ERROR    root: Could not fetch stats for Youngstown St or Michigan St, skipping
+2025-09-14 02:47:53 ERROR    root: Team 'Richmond' not found in stats for 'points-per-game'
+2025-09-14 02:47:53 ERROR    root: Could not fetch stats for Richmond or North Carolina, skipping
+2025-09-14 02:47:53 ERROR    root: Team "N'Western St" not found in stats for 'points-per-game'
+2025-09-14 02:47:53 ERROR    root: Could not fetch stats for N'Western St or Cincinnati, skipping
+2025-09-14 02:47:53 ERROR    root: Team 'Incarnate Word' not found in stats for 'points-per-game'
+2025-09-14 02:47:53 ERROR    root: Could not fetch stats for Incarnate Word or UTSA, skipping
+2025-09-14 02:47:53 ERROR    root: Team 'Morgan St' not found in stats for 'points-per-game'
+2025-09-14 02:47:53 ERROR    root: Could not fetch stats for Morgan St or Toledo, skipping
+2025-09-14 02:47:56 ERROR    root: Team 'Alcorn St' not found in stats for 'points-per-game'
+2025-09-14 02:47:56 ERROR    root: Could not fetch stats for Alcorn St or Mississippi St, skipping
+2025-09-14 02:47:56 ERROR    root: Team 'Merrimack' not found in stats for 'points-per-game'
+2025-09-14 02:47:56 ERROR    root: Could not fetch stats for Merrimack or Kennesaw St, skipping
+2025-09-14 02:47:56 ERROR    root: Team 'E Kentucky' not found in stats for 'points-per-game'
+2025-09-14 02:47:56 ERROR    root: Could not fetch stats for E Kentucky or Marshall, skipping
+2025-09-14 02:47:56 ERROR    root: Team 'Monmouth' not found in stats for 'points-per-game'
+2025-09-14 02:47:56 ERROR    root: Could not fetch stats for Monmouth or Charlotte, skipping
+2025-09-14 02:48:01 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-14 02:48:01 ERROR    root: Could not fetch stats for Murray St or Georgia St, skipping
+2025-09-14 02:48:02 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-09-14 02:48:02 ERROR    root: Could not fetch stats for Prairie View or Rice, skipping
+2025-09-14 02:48:09 ERROR    root: Team 'Abilene Chrstn' not found in stats for 'points-per-game'
+2025-09-14 02:48:09 ERROR    root: Could not fetch stats for Abilene Chrstn or TCU, skipping
+2025-09-14 02:48:23 ERROR    root: Team 'Southern' not found in stats for 'points-per-game'
+2025-09-14 02:48:23 ERROR    root: Could not fetch stats for Southern or Fresno St, skipping
+2025-09-14 02:48:28 INFO     root: populate_pregame_data: inserted/updated 43 rows, skipped 21 games.
+2025-09-14 02:48:28 INFO     root: Postprocessing CFB on 2025-09-13
+2025-09-14 10:50:32 INFO     root: Postprocessing NFL on 2025-09-14
+2025-09-14 10:50:57 INFO     root: Successfully processed 13 games. Odds updated for 13. Score updates skipped for 13 games.
+2025-09-14 10:50:57 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-14 10:52:33 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-09-14 10:52:33 ERROR    root: Could not fetch stats for Villanova or Penn St, skipping
+2025-09-14 10:53:03 ERROR    root: Team 'Hou Christian' not found in stats for 'points-per-game'
+2025-09-14 10:53:03 ERROR    root: Could not fetch stats for Hou Christian or Nebraska, skipping
+2025-09-14 10:53:03 ERROR    root: Team 'Towson' not found in stats for 'points-per-game'
+2025-09-14 10:53:03 ERROR    root: Could not fetch stats for Towson or Maryland, skipping
+2025-09-14 10:53:03 ERROR    root: Team 'William & Mary' not found in stats for 'points-per-game'
+2025-09-14 10:53:03 ERROR    root: Could not fetch stats for William & Mary or Virginia, skipping
+2025-09-14 10:53:03 ERROR    root: Team 'Samford' not found in stats for 'points-per-game'
+2025-09-14 10:53:03 ERROR    root: Could not fetch stats for Samford or Baylor, skipping
+2025-09-14 10:53:07 ERROR    root: Team 'New Hampshire' not found in stats for 'points-per-game'
+2025-09-14 10:53:07 ERROR    root: Could not fetch stats for New Hampshire or Ball St, skipping
+2025-09-14 10:53:09 ERROR    root: Team 'Norfolk St' not found in stats for 'points-per-game'
+2025-09-14 10:53:09 ERROR    root: Could not fetch stats for Norfolk St or Rutgers, skipping
+2025-09-14 10:53:09 ERROR    root: Team 'Youngstown St' not found in stats for 'points-per-game'
+2025-09-14 10:53:09 ERROR    root: Could not fetch stats for Youngstown St or Michigan St, skipping
+2025-09-14 10:53:13 ERROR    root: Team 'Richmond' not found in stats for 'points-per-game'
+2025-09-14 10:53:13 ERROR    root: Could not fetch stats for Richmond or North Carolina, skipping
+2025-09-14 10:53:13 ERROR    root: Team "N'Western St" not found in stats for 'points-per-game'
+2025-09-14 10:53:13 ERROR    root: Could not fetch stats for N'Western St or Cincinnati, skipping
+2025-09-14 10:53:13 ERROR    root: Team 'Incarnate Word' not found in stats for 'points-per-game'
+2025-09-14 10:53:13 ERROR    root: Could not fetch stats for Incarnate Word or UTSA, skipping
+2025-09-14 10:53:13 ERROR    root: Team 'Morgan St' not found in stats for 'points-per-game'
+2025-09-14 10:53:13 ERROR    root: Could not fetch stats for Morgan St or Toledo, skipping
+2025-09-14 10:53:17 ERROR    root: Team 'Alcorn St' not found in stats for 'points-per-game'
+2025-09-14 10:53:17 ERROR    root: Could not fetch stats for Alcorn St or Mississippi St, skipping
+2025-09-14 10:53:17 ERROR    root: Team 'Merrimack' not found in stats for 'points-per-game'
+2025-09-14 10:53:17 ERROR    root: Could not fetch stats for Merrimack or Kennesaw St, skipping
+2025-09-14 10:53:17 ERROR    root: Team 'E Kentucky' not found in stats for 'points-per-game'
+2025-09-14 10:53:17 ERROR    root: Could not fetch stats for E Kentucky or Marshall, skipping
+2025-09-14 10:53:17 ERROR    root: Team 'Monmouth' not found in stats for 'points-per-game'
+2025-09-14 10:53:17 ERROR    root: Could not fetch stats for Monmouth or Charlotte, skipping
+2025-09-14 10:53:22 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-14 10:53:22 ERROR    root: Could not fetch stats for Murray St or Georgia St, skipping
+2025-09-14 10:53:23 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-09-14 10:53:23 ERROR    root: Could not fetch stats for Prairie View or Rice, skipping
+2025-09-14 10:53:32 ERROR    root: Team 'Abilene Chrstn' not found in stats for 'points-per-game'
+2025-09-14 10:53:32 ERROR    root: Could not fetch stats for Abilene Chrstn or TCU, skipping
+2025-09-14 10:53:38 ERROR    root: Team 'Southern' not found in stats for 'points-per-game'
+2025-09-14 10:53:38 ERROR    root: Could not fetch stats for Southern or Fresno St, skipping
+2025-09-14 10:53:43 ERROR    root: Team 'Portland St' not found in stats for 'points-per-game'
+2025-09-14 10:53:43 ERROR    root: Could not fetch stats for Portland St or Hawai'i, skipping
+2025-09-14 10:53:43 INFO     root: populate_pregame_data: inserted/updated 43 rows, skipped 21 games.
+2025-09-14 10:53:43 INFO     root: Postprocessing CFB on 2025-09-13
+2025-09-14 10:54:55 INFO     root: Successfully processed 43 games. Odds updated for 43. Score updates skipped for 0 games.
+2025-09-14 10:54:55 INFO     root: Preprocessing CFB on 2025-09-12
+2025-09-15 14:33:54 INFO     root: Postprocessing NFL on 2025-09-15
+2025-09-15 14:34:00 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 2 games.
+2025-09-15 14:34:00 INFO     root: Postprocessing NFL on 2025-09-14
+2025-09-15 14:34:21 INFO     root: Successfully processed 13 games. Odds updated for 13. Score updates skipped for 0 games.
+2025-09-15 14:34:21 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-17 13:16:30 INFO     root: Preprocessing NFL on 2025-09-22
+2025-09-17 13:17:50 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-09-17 13:17:50 INFO     root: Postprocessing NFL on 2025-09-22
+2025-09-17 13:17:55 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-17 13:17:55 INFO     root: Preprocessing NBA on 2025-09-22
+2025-09-17 13:17:55 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:17:55 INFO     root: Postprocessing NBA on 2025-09-22
+2025-09-17 13:17:55 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:17:58 INFO     root: No games found in DB for NBA on 2025-09-22 to post-process.
+2025-09-17 13:17:58 INFO     root: Preprocessing CFB on 2025-09-22
+2025-09-17 13:17:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:17:59 INFO     root: Postprocessing CFB on 2025-09-22
+2025-09-17 13:17:59 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:18:02 INFO     root: No games found in DB for CFB on 2025-09-22 to post-process.
+2025-09-17 13:18:02 INFO     root: Preprocessing CBB on 2025-09-22
+2025-09-17 13:18:02 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:18:02 INFO     root: Postprocessing CBB on 2025-09-22
+2025-09-17 13:18:02 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:18:06 INFO     root: No games found in DB for CBB on 2025-09-22 to post-process.
+2025-09-17 13:18:06 INFO     root: Preprocessing NFL on 2025-09-21
+2025-09-17 13:18:49 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/opponent-first-downs-per-game?date=2025-09-21, sleeping 4 minutes before retry
+2025-09-17 13:23:47 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
+2025-09-17 13:23:47 INFO     root: Postprocessing NFL on 2025-09-21
+2025-09-17 13:24:10 INFO     root: Successfully processed 14 games. Odds updated for 14. Score updates skipped for 14 games.
+2025-09-17 13:24:10 INFO     root: Preprocessing NBA on 2025-09-21
+2025-09-17 13:24:10 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:24:10 INFO     root: Postprocessing NBA on 2025-09-21
+2025-09-17 13:24:10 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:24:13 INFO     root: No games found in DB for NBA on 2025-09-21 to post-process.
+2025-09-17 13:24:13 INFO     root: Preprocessing CFB on 2025-09-21
+2025-09-17 13:24:13 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:24:13 INFO     root: Postprocessing CFB on 2025-09-21
+2025-09-17 13:24:14 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:24:17 INFO     root: No games found in DB for CFB on 2025-09-21 to post-process.
+2025-09-17 13:24:17 INFO     root: Preprocessing CBB on 2025-09-21
+2025-09-17 13:24:17 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:24:17 INFO     root: Postprocessing CBB on 2025-09-21
+2025-09-17 13:24:17 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:24:21 INFO     root: No games found in DB for CBB on 2025-09-21 to post-process.
+2025-09-17 13:24:21 INFO     root: Preprocessing NFL on 2025-09-20
+2025-09-17 13:24:21 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:24:21 INFO     root: Postprocessing NFL on 2025-09-20
+2025-09-17 13:24:21 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:24:24 INFO     root: No games found in DB for NFL on 2025-09-20 to post-process.
+2025-09-17 13:24:24 INFO     root: Preprocessing NBA on 2025-09-20
+2025-09-17 13:24:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:24:24 INFO     root: Postprocessing NBA on 2025-09-20
+2025-09-17 13:24:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:24:28 INFO     root: No games found in DB for NBA on 2025-09-20 to post-process.
+2025-09-17 13:24:28 INFO     root: Preprocessing CFB on 2025-09-20
+2025-09-17 13:25:35 ERROR    root: Team 'Wofford' not found in stats for 'points-per-game'
+2025-09-17 13:25:35 ERROR    root: Could not fetch stats for Wofford or Virginia Tech, skipping
+2025-09-17 13:25:40 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-09-17 13:25:40 ERROR    root: Could not fetch stats for SC State or S Florida, skipping
+2025-09-17 13:25:42 ERROR    root: Team 'Wagner' not found in stats for 'points-per-game'
+2025-09-17 13:25:42 ERROR    root: Could not fetch stats for Wagner or C Michigan, skipping
+2025-09-17 13:25:58 ERROR    root: Team 'Gardner-Webb' not found in stats for 'points-per-game'
+2025-09-17 13:25:58 ERROR    root: Could not fetch stats for Gardner-Webb or Ohio, skipping
+2025-09-17 13:26:02 ERROR    root: Team 'Idaho' not found in stats for 'points-per-game'
+2025-09-17 13:26:02 ERROR    root: Could not fetch stats for Idaho or San Jose St, skipping
+2025-09-17 13:26:06 ERROR    root: Team 'Duquesne' not found in stats for 'points-per-game'
+2025-09-17 13:26:06 ERROR    root: Could not fetch stats for Duquesne or Akron, skipping
+2025-09-17 13:26:07 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-17 13:26:07 ERROR    root: Could not fetch stats for Murray St or Jacksonville St, skipping
+2025-09-17 13:26:09 ERROR    root: Team 'UT Martin' not found in stats for 'points-per-game'
+2025-09-17 13:26:09 ERROR    root: Could not fetch stats for UT Martin or Missouri St, skipping
+2025-09-17 13:26:12 ERROR    root: Team 'Maine' not found in stats for 'points-per-game'
+2025-09-17 13:26:12 ERROR    root: Could not fetch stats for Maine or Georgia So, skipping
+2025-09-17 13:26:24 ERROR    root: Team 'SE Louisiana' not found in stats for 'points-per-game'
+2025-09-17 13:26:24 ERROR    root: Could not fetch stats for SE Louisiana or LSU, skipping
+2025-09-17 13:26:25 ERROR    root: Team 'McNeese' not found in stats for 'points-per-game'
+2025-09-17 13:26:25 ERROR    root: Could not fetch stats for McNeese or Utah St, skipping
+2025-09-17 13:26:25 ERROR    root: Team 'Nicholls' not found in stats for 'points-per-game'
+2025-09-17 13:26:25 ERROR    root: Could not fetch stats for Nicholls or Texas St, skipping
+2025-09-17 13:26:33 INFO     root: populate_pregame_data: inserted/updated 47 rows, skipped 12 games.
+2025-09-17 13:26:33 INFO     root: Postprocessing CFB on 2025-09-20
+2025-09-17 13:27:40 INFO     root: Successfully processed 47 games. Odds updated for 47. Score updates skipped for 47 games.
+2025-09-17 13:27:40 INFO     root: Preprocessing CBB on 2025-09-20
+2025-09-17 13:27:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:27:40 INFO     root: Postprocessing CBB on 2025-09-20
+2025-09-17 13:27:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:27:43 INFO     root: No games found in DB for CBB on 2025-09-20 to post-process.
+2025-09-17 13:27:43 INFO     root: Preprocessing NFL on 2025-09-19
+2025-09-17 13:27:43 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:27:43 INFO     root: Postprocessing NFL on 2025-09-19
+2025-09-17 13:27:43 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:27:47 INFO     root: No games found in DB for NFL on 2025-09-19 to post-process.
+2025-09-17 13:27:47 INFO     root: Preprocessing NBA on 2025-09-19
+2025-09-17 13:27:47 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:27:47 INFO     root: Postprocessing NBA on 2025-09-19
+2025-09-17 13:27:47 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:27:50 INFO     root: No games found in DB for NBA on 2025-09-19 to post-process.
+2025-09-17 13:27:50 INFO     root: Preprocessing CFB on 2025-09-19
+2025-09-17 13:28:53 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-09-17 13:28:53 INFO     root: Postprocessing CFB on 2025-09-19
+2025-09-17 13:29:00 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 2 games.
+2025-09-17 13:29:00 INFO     root: Preprocessing CBB on 2025-09-19
+2025-09-17 13:29:00 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:29:00 INFO     root: Postprocessing CBB on 2025-09-19
+2025-09-17 13:29:00 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:29:03 INFO     root: No games found in DB for CBB on 2025-09-19 to post-process.
+2025-09-17 13:29:03 INFO     root: Preprocessing NFL on 2025-09-18
+2025-09-17 13:29:29 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nfl/stat/field-goal-attempts-per-game?date=2025-09-18, sleeping 4 minutes before retry
+2025-09-17 13:34:23 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-09-17 13:34:23 INFO     root: Postprocessing NFL on 2025-09-18
+2025-09-17 13:34:28 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-17 13:34:28 INFO     root: Preprocessing NBA on 2025-09-18
+2025-09-17 13:34:28 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:34:28 INFO     root: Postprocessing NBA on 2025-09-18
+2025-09-17 13:34:28 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:34:32 INFO     root: No games found in DB for NBA on 2025-09-18 to post-process.
+2025-09-17 13:34:32 INFO     root: Preprocessing CFB on 2025-09-18
+2025-09-17 13:35:33 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-09-17 13:35:33 INFO     root: Postprocessing CFB on 2025-09-18
+2025-09-17 13:35:38 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-17 13:35:38 INFO     root: Preprocessing CBB on 2025-09-18
+2025-09-17 13:35:38 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-09-17 13:35:38 INFO     root: Postprocessing CBB on 2025-09-18
+2025-09-17 13:35:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-09-17 13:35:42 INFO     root: No games found in DB for CBB on 2025-09-18 to post-process.
+2025-09-17 13:35:42 INFO     root: Postprocessing NFL on 2025-09-15
+2025-09-17 13:35:48 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-09-17 13:35:48 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-17 13:35:59 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/fourth-downs-per-game?date=2025-09-13, sleeping 4 minutes before retry
+2025-09-17 13:40:51 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-09-17 13:40:51 ERROR    root: Could not fetch stats for Villanova or Penn St, skipping
+2025-09-17 13:41:16 ERROR    root: Team 'Hou Christian' not found in stats for 'points-per-game'
+2025-09-17 13:41:16 ERROR    root: Could not fetch stats for Hou Christian or Nebraska, skipping
+2025-09-17 13:41:16 ERROR    root: Team 'Towson' not found in stats for 'points-per-game'
+2025-09-17 13:41:16 ERROR    root: Could not fetch stats for Towson or Maryland, skipping
+2025-09-17 13:41:16 ERROR    root: Team 'William & Mary' not found in stats for 'points-per-game'
+2025-09-17 13:41:16 ERROR    root: Could not fetch stats for William & Mary or Virginia, skipping
+2025-09-17 13:41:16 ERROR    root: Team 'Samford' not found in stats for 'points-per-game'
+2025-09-17 13:41:16 ERROR    root: Could not fetch stats for Samford or Baylor, skipping
+2025-09-17 13:41:19 ERROR    root: Team 'New Hampshire' not found in stats for 'points-per-game'
+2025-09-17 13:41:19 ERROR    root: Could not fetch stats for New Hampshire or Ball St, skipping
+2025-09-17 13:41:20 ERROR    root: Team 'Norfolk St' not found in stats for 'points-per-game'
+2025-09-17 13:41:20 ERROR    root: Could not fetch stats for Norfolk St or Rutgers, skipping
+2025-09-17 13:41:20 ERROR    root: Team 'Youngstown St' not found in stats for 'points-per-game'
+2025-09-17 13:41:20 ERROR    root: Could not fetch stats for Youngstown St or Michigan St, skipping
+2025-09-17 13:41:25 ERROR    root: Team 'Richmond' not found in stats for 'points-per-game'
+2025-09-17 13:41:25 ERROR    root: Could not fetch stats for Richmond or North Carolina, skipping
+2025-09-17 13:41:25 ERROR    root: Team "N'Western St" not found in stats for 'points-per-game'
+2025-09-17 13:41:25 ERROR    root: Could not fetch stats for N'Western St or Cincinnati, skipping
+2025-09-17 13:41:25 ERROR    root: Team 'Incarnate Word' not found in stats for 'points-per-game'
+2025-09-17 13:41:25 ERROR    root: Could not fetch stats for Incarnate Word or UTSA, skipping
+2025-09-17 13:41:25 ERROR    root: Team 'Morgan St' not found in stats for 'points-per-game'
+2025-09-17 13:41:25 ERROR    root: Could not fetch stats for Morgan St or Toledo, skipping
+2025-09-17 13:41:27 ERROR    root: Team 'Alcorn St' not found in stats for 'points-per-game'
+2025-09-17 13:41:27 ERROR    root: Could not fetch stats for Alcorn St or Mississippi St, skipping
+2025-09-17 13:41:27 ERROR    root: Team 'Merrimack' not found in stats for 'points-per-game'
+2025-09-17 13:41:27 ERROR    root: Could not fetch stats for Merrimack or Kennesaw St, skipping
+2025-09-17 13:41:27 ERROR    root: Team 'E Kentucky' not found in stats for 'points-per-game'
+2025-09-17 13:41:27 ERROR    root: Could not fetch stats for E Kentucky or Marshall, skipping
+2025-09-17 13:41:27 ERROR    root: Team 'Monmouth' not found in stats for 'points-per-game'
+2025-09-17 13:41:27 ERROR    root: Could not fetch stats for Monmouth or Charlotte, skipping
+2025-09-17 13:41:32 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-17 13:41:32 ERROR    root: Could not fetch stats for Murray St or Georgia St, skipping
+2025-09-17 13:41:33 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-09-17 13:41:33 ERROR    root: Could not fetch stats for Prairie View or Rice, skipping
+2025-09-17 13:41:40 ERROR    root: Team 'Abilene Chrstn' not found in stats for 'points-per-game'
+2025-09-17 13:41:40 ERROR    root: Could not fetch stats for Abilene Chrstn or TCU, skipping
+2025-09-17 13:41:45 ERROR    root: Team 'Southern' not found in stats for 'points-per-game'
+2025-09-17 13:41:45 ERROR    root: Could not fetch stats for Southern or Fresno St, skipping
+2025-09-17 13:41:49 ERROR    root: Team 'Portland St' not found in stats for 'points-per-game'
+2025-09-17 13:41:49 ERROR    root: Could not fetch stats for Portland St or Hawai'i, skipping
+2025-09-17 13:41:49 INFO     root: populate_pregame_data: inserted/updated 43 rows, skipped 21 games.
+2025-09-17 13:41:49 INFO     root: Preprocessing CFB on 2025-09-12
+2025-09-17 13:42:53 ERROR    root: Team 'Indiana St' not found in stats for 'points-per-game'
+2025-09-17 13:42:53 ERROR    root: Could not fetch stats for Indiana St or Indiana, skipping
+2025-09-17 13:42:53 ERROR    root: Team 'Colgate' not found in stats for 'points-per-game'
+2025-09-17 13:42:53 ERROR    root: Could not fetch stats for Colgate or Syracuse, skipping
+2025-09-17 13:42:57 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 2 games.
+2025-09-17 13:42:57 INFO     root: Postprocessing CFB on 2025-09-12
+2025-09-17 13:43:05 INFO     root: Successfully processed 3 games. Odds updated for 3. Score updates skipped for 0 games.
+2025-09-17 13:43:05 INFO     root: Postprocessing NFL on 2025-09-11
+2025-09-17 13:43:07 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-17 13:43:07 INFO     root: Postprocessing CFB on 2025-09-11
+2025-09-17 13:43:09 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-17 13:43:09 INFO     root: Preprocessing CFB on 2025-09-06
+2025-09-18 17:44:37 INFO     root: Postprocessing NFL on 2025-09-18
+2025-09-18 17:44:42 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-18 17:44:42 INFO     root: Postprocessing CFB on 2025-09-18
+2025-09-18 17:44:47 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-09-18 17:44:47 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-19 19:00:13 INFO     root: Postprocessing CFB on 2025-09-19
+2025-09-19 19:00:19 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 2 games.
+2025-09-19 19:00:19 INFO     root: Postprocessing NFL on 2025-09-18
+2025-09-19 19:00:21 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-19 19:00:21 INFO     root: Postprocessing CFB on 2025-09-18
+2025-09-19 19:00:23 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-09-19 19:00:23 INFO     root: Preprocessing CFB on 2025-09-13
+2025-09-20 10:39:20 INFO     root: Preprocessing CFB on 2025-09-20
+2025-09-20 10:40:44 ERROR    root: Team 'Wofford' not found in stats for 'points-per-game'
+2025-09-20 10:40:44 ERROR    root: Could not fetch stats for Wofford or Virginia Tech, skipping
+2025-09-20 10:40:50 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-09-20 10:40:50 ERROR    root: Could not fetch stats for SC State or S Florida, skipping
+2025-09-20 10:40:52 ERROR    root: Team 'Wagner' not found in stats for 'points-per-game'
+2025-09-20 10:40:52 ERROR    root: Could not fetch stats for Wagner or C Michigan, skipping
+2025-09-20 10:41:11 ERROR    root: Team 'Gardner-Webb' not found in stats for 'points-per-game'
+2025-09-20 10:41:11 ERROR    root: Could not fetch stats for Gardner-Webb or Ohio, skipping
+2025-09-20 10:41:15 ERROR    root: Team 'Idaho' not found in stats for 'points-per-game'
+2025-09-20 10:41:15 ERROR    root: Could not fetch stats for Idaho or San Jose St, skipping
+2025-09-20 10:41:20 ERROR    root: Team 'Duquesne' not found in stats for 'points-per-game'
+2025-09-20 10:41:20 ERROR    root: Could not fetch stats for Duquesne or Akron, skipping
+2025-09-20 10:41:21 ERROR    root: Team 'Murray St' not found in stats for 'points-per-game'
+2025-09-20 10:41:21 ERROR    root: Could not fetch stats for Murray St or Jacksonville St, skipping
+2025-09-20 10:41:23 ERROR    root: Team 'UT Martin' not found in stats for 'points-per-game'
+2025-09-20 10:41:23 ERROR    root: Could not fetch stats for UT Martin or Missouri St, skipping
+2025-09-20 10:41:26 ERROR    root: Team 'Maine' not found in stats for 'points-per-game'
+2025-09-20 10:41:26 ERROR    root: Could not fetch stats for Maine or Georgia So, skipping
+2025-09-20 10:41:40 ERROR    root: Team 'SE Louisiana' not found in stats for 'points-per-game'
+2025-09-20 10:41:40 ERROR    root: Could not fetch stats for SE Louisiana or LSU, skipping
+2025-09-20 10:41:42 ERROR    root: Team 'McNeese' not found in stats for 'points-per-game'
+2025-09-20 10:41:42 ERROR    root: Could not fetch stats for McNeese or Utah St, skipping
+2025-09-20 10:41:42 ERROR    root: Team 'Nicholls' not found in stats for 'points-per-game'
+2025-09-20 10:41:42 ERROR    root: Could not fetch stats for Nicholls or Texas St, skipping
+2025-09-20 10:41:51 INFO     root: populate_pregame_data: inserted/updated 47 rows, skipped 12 games.
+2025-09-20 10:41:51 INFO     root: Postprocessing CFB on 2025-09-20
+2025-09-20 10:43:03 INFO     root: Successfully processed 47 games. Odds updated for 47. Score updates skipped for 47 games.
+2025-09-20 10:43:03 INFO     root: Postprocessing CFB on 2025-09-19
+2025-09-20 10:43:10 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-09-20 10:43:10 INFO     root: Preprocessing CFB on 2025-09-13
