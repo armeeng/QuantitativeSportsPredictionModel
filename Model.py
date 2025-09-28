@@ -149,13 +149,11 @@ class MLModel(BaseModel):
                  use_random_subset_of_numerical_features: bool = False,
                  subset_fraction: float = None,
                  hyperparameter_tuning: bool = False, tuning_n_iter: int = 50, tuning_cv: int = 5,
-                 ## NEW: Parameters for controlling model calibration
                  calibrate_model: bool = False,
                  calibration_method: str = 'isotonic', # 'isotonic' or 'sigmoid'
                  calibration_split_size: float = 0.2, # Fraction of training data for calibration
                  random_state: int = 42):
         """
-        ## MODIFIED: `__init__` now accepts parameters to enable and configure model calibration.
 
         Args:
             ... (other args)
