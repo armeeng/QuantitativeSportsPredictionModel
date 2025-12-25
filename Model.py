@@ -187,7 +187,7 @@ class MLModel(BaseModel):
             'knn_classifier': lambda: KNeighborsClassifier(n_neighbors=5),
             'svc': lambda: SVC(probability=True, random_state=self.random_state),
             'random_forest_classifier': lambda: RandomForestClassifier(n_estimators=100, random_state=self.random_state),
-            'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, use_label_encoder=False, eval_metric='logloss', random_state=self.random_state),
+            'xgboost_classifier': lambda: XGBClassifier(objective='binary:logistic', n_estimators=100, eval_metric='logloss', random_state=self.random_state),
             'mlp_classifier': lambda: MLPClassifier(hidden_layer_sizes=(100, 50), max_iter=500, random_state=self.random_state),
             'gradient_boosting_classifier': lambda: GradientBoostingClassifier(n_estimators=100, random_state=self.random_state),
             'gaussian_nb': lambda: GaussianNB(),

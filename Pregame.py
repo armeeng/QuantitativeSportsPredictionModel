@@ -153,7 +153,7 @@ class Pregame:
 
             # -- upsert into SQLite --
             self.conn.execute("""
-                INSERT OR REPLACE INTO games (
+                INSERT INTO games (
                     game_id, date, days_since_epoch, day_of_the_week, game_time, sport,
                     team1_id, team1_name, team1_color, team1_alt_color, team1_logo,
                     team2_id, team2_name, team2_color, team2_alt_color, team2_logo,
@@ -164,60 +164,77 @@ class Pregame:
                     team1_spread_odds, team2_spread_odds,
                     total_score, over_odds, under_odds
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?,
-                    ?, ?, ?, ?, ?, ?,
-                    ?, ?, ?,
-                    ?, ?, ?,
-                    ?, ?, ?,
-                    ?, ?, ?
+                    :game_id, :date, :days_since_epoch, :day_of_week, :game_time, :sport,
+                    :team1_id, :team1_name, :team1_color, :team1_alt_color, :team1_logo,
+                    :team2_id, :team2_name, :team2_color, :team2_alt_color, :team2_logo,
+                    :venue_id, :city, :state, :country, :is_neutral, :is_conference, :season_type,
+                    :stats, :normalized_stats,
+                    :team1_moneyline, :team2_moneyline,
+                    :team1_spread,  :team2_spread,
+                    :team1_spread_odds, :team2_spread_odds,
+                    :total_score, :over_odds, :under_odds
                 )
-            """, (
-                g["id"],
-                self.date.isoformat(),
-                g["days_since_epoch"],
-                dow,
-                g["game_time"],
-                self.sport,
-
-                g["team1_id"],
-                g["team1_name"],
-                g["team1_color"],
-                g["team1_alternate_color"],
-                g["team1_logo"],
-
-                g["team2_id"],
-                g["team2_name"],
-                g["team2_color"],
-                g["team2_alternate_color"],
-                g["team2_logo"],
-
-                venue_int,
-                g["city"],
-                g["state"],
-                g["country"],
-                int(g["is_neutral"]),
-                int(g["is_conference"]),
-                g.get("season_type"),
-
-                json.dumps(stats_blob),
-                json.dumps(normalized_blob),
-
-                # existing odds:
-                odds.get("team1_moneyline"),
-                odds.get("team2_moneyline"),
-                odds.get("team1_spread"),
-                odds.get("team2_spread"),
-                # new spread‐odds fields:
-                odds.get("team1_spread_odds"),
-                odds.get("team2_spread_odds"),
-                # existing total and new over/under odds:
-                odds.get("total_score"),
-                odds.get("over_odds"),
-                odds.get("under_odds"),
-            )
-            )
+                ON CONFLICT(game_id) DO UPDATE SET
+                    date = excluded.date,
+                    days_since_epoch = excluded.days_since_epoch,
+                    day_of_the_week = excluded.day_of_the_week,
+                    game_time = excluded.game_time,
+                    sport = excluded.sport,
+                    team1_id = excluded.team1_id,
+                    team1_name = excluded.team1_name,
+                    team2_id = excluded.team2_id,
+                    team2_name = excluded.team2_name,
+                    venue_id = excluded.venue_id,
+                    is_neutral = excluded.is_neutral,
+                    is_conference = excluded.is_conference,
+                    season_type = excluded.season_type,
+                    stats = excluded.stats,
+                    normalized_stats = excluded.normalized_stats,
+                    team1_moneyline = excluded.team1_moneyline,
+                    team2_moneyline = excluded.team2_moneyline,
+                    team1_spread = excluded.team1_spread,
+                    team2_spread = excluded.team2_spread,
+                    team1_spread_odds = excluded.team1_spread_odds,
+                    team2_spread_odds = excluded.team2_spread_odds,
+                    total_score = excluded.total_score,
+                    over_odds = excluded.over_odds,
+                    under_odds = excluded.under_odds;
+            """, {
+                "game_id": g["id"],
+                "date": self.date.isoformat(),
+                "days_since_epoch": g["days_since_epoch"],
+                "day_of_week": dow,
+                "game_time": g["game_time"],
+                "sport": self.sport,
+                "team1_id": g["team1_id"],
+                "team1_name": g["team1_name"],
+                "team1_color": g["team1_color"],
+                "team1_alt_color": g["team1_alternate_color"],
+                "team1_logo": g["team1_logo"],
+                "team2_id": g["team2_id"],
+                "team2_name": g["team2_name"],
+                "team2_color": g["team2_color"],
+                "team2_alt_color": g["team2_alternate_color"],
+                "team2_logo": g["team2_logo"],
+                "venue_id": venue_int,
+                "city": g["city"],
+                "state": g["state"],
+                "country": g["country"],
+                "is_neutral": int(g["is_neutral"]),
+                "is_conference": int(g["is_conference"]),
+                "season_type": g.get("season_type"),
+                "stats": json.dumps(stats_blob),
+                "normalized_stats": json.dumps(normalized_blob),
+                "team1_moneyline": odds.get("team1_moneyline"),
+                "team2_moneyline": odds.get("team2_moneyline"),
+                "team1_spread": odds.get("team1_spread"),
+                "team2_spread": odds.get("team2_spread"),
+                "team1_spread_odds": odds.get("team1_spread_odds"),
+                "team2_spread_odds": odds.get("team2_spread_odds"),
+                "total_score": odds.get("total_score"),
+                "over_odds": odds.get("over_odds"),
+                "under_odds": odds.get("under_odds"),
+            })
             inserted += 1
 
         self.conn.commit()
@@ -1501,6 +1518,22 @@ class Pregame:
             f"competitions/{game_id}/odds"
         )
         resp = requests.get(url)
+        if resp.status_code == 404:
+            # This is an expected case: the game exists, but no odds data.
+            # You could add a log/print message here if you want.
+            logging.info(f"No odds data found for game {game_id} (404).")
+            return {
+                'team1_moneyline':    None,
+                'team2_moneyline':    None,
+                'team1_spread':       None,
+                'team2_spread':       None,
+                'team1_spread_odds':  None,
+                'team2_spread_odds':  None,
+                'total_score':        None,
+                'over_odds':          None,
+                'under_odds':         None
+            }
+
         resp.raise_for_status()
         payload = resp.json()
 

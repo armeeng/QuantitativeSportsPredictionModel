@@ -108,11 +108,15 @@ def main():
                     ).first()
 
                     prediction_payload = {
-                        'team1_win_prob': pred_data.get('team1_win_prob'),
-                        'team1_cover_prob': pred_data.get('team1_cover_prob'),
-                        'over_prob': pred_data.get('over_prob'),
-                        'pred_team1_score': pred_data.get('pred_team1_score'),
-                        'pred_team2_score': pred_data.get('pred_team2_score'),
+                        'team1_win_prob': float(pred_data.get('team1_win_prob', 0)),
+                        'team1_cover_prob': float(pred_data.get('team1_cover_prob', 0)),
+                        'over_prob': float(pred_data.get('over_prob', 0)),
+                        'pred_team1_score': (
+                            float(pred_data.get('pred_team1_score')) if pred_data.get('pred_team1_score') is not None else None
+                        ),
+                        'pred_team2_score': (
+                            float(pred_data.get('pred_team2_score')) if pred_data.get('pred_team2_score') is not None else None
+                        ),
                     }
 
                     if existing_pred:

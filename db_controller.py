@@ -33,7 +33,7 @@ def main(
     session = Session()
 
     current = start_date
-    current = date(2025, 9, 28)
+    current = date(2025, 12, 24)
     while current >= stop_date:
         for sport in SportEnum:
             if sport == SportEnum.MLB:
@@ -44,24 +44,24 @@ def main(
                 rec = ProcessStatus(sport=sport, date=current)
 
             # 1) pregame (stats/odds/weather/etc.)
-            if not rec.preprocessed:
-                logging.info(f"Preprocessing {sport.value} on {current}")
-                pg = Pregame(current, sport.value)
-                skipped = pg.populate_pregame_data()
-                if skipped == 0:
-                    rec.preprocessed = True
-                    session.merge(rec)
-                    session.commit()
+            #if not rec.preprocessed:
+            logging.info(f"Preprocessing {sport.value} on {current}")
+            pg = Pregame(current, sport.value)
+            skipped = pg.populate_pregame_data()
+            if skipped == 0:
+                rec.preprocessed = True
+                session.merge(rec)
+                session.commit()
 
             # 2) post-process (final scores)
-            if not rec.postprocessed:
-                logging.info(f"Postprocessing {sport.value} on {current}")
-                pg = Pregame(current, sport.value)
-                skipped = pg.update_final_scores_and_closing_odds()
-                if skipped == 0:
-                    rec.postprocessed = True
-                    session.merge(rec)
-                    session.commit()
+            #if not rec.postprocessed:
+            logging.info(f"Postprocessing {sport.value} on {current}")
+            pg = Pregame(current, sport.value)
+            skipped = pg.update_final_scores_and_closing_odds()
+            if skipped == 0:
+                rec.postprocessed = True
+                session.merge(rec)
+                session.commit()
 
         current -= timedelta(days=1)
 

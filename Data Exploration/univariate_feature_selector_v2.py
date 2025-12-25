@@ -7,6 +7,10 @@ import lightgbm as lgb
 from sklearn.model_selection import StratifiedKFold
 from sklearn.preprocessing import OrdinalEncoder
 from sklearn.metrics import brier_score_loss
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+import xgboost as xgb
 
 # --- Path Correction ---
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +31,7 @@ SPORT_TO_RUN = 'CFB' # Options: 'NBA', 'NFL', 'CFB', 'CBB', 'MLB'
 
 # 2. CHOOSE THE TARGET VARIABLE
 # Options: 'team1_wins', 'team1_covers', 'over'
-TARGET_VARIABLE = 'over' 
+TARGET_VARIABLE = 'team1_wins' 
 
 # 3. DEFINE THE SEASONS FOR EACH SPORT
 # You can adjust these date ranges as needed.
@@ -90,7 +94,14 @@ def run_univariate_feature_test(X: np.ndarray, y: pd.Series, feature_names: list
             X_train, X_val = X_single_feature[train_idx], X_single_feature[val_idx]
             y_train, y_val = y.iloc[train_idx], y.iloc[val_idx]
 
-            model = lgb.LGBMClassifier(objective='binary', random_state=42, verbosity=-1)
+            # Create a pipeline to scale data before fitting the logistic regression
+            #model = lgb.LGBMClassifier(objective='binary', random_state=42, verbosity=-1)
+            #model = make_pipeline(StandardScaler(), LogisticRegression(random_state=42))
+            model = xgb.XGBClassifier(
+                objective='binary:logistic',  # Use 'binary:logistic' for probabilities
+                random_state=42,              # For reproducibility, matching your original code
+                eval_metric='logloss'         # Suppresses a warning about the default eval metric
+            )
             model.fit(X_train, y_train)
             
             probabilities = model.predict_proba(X_val)[:, 1]

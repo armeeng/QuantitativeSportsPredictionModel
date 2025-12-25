@@ -138,26 +138,55 @@ def load_historical_data_for_testmodel(selected_sport: str, selected_model: str,
 
 def fetch_live_scoreboard_data(selected_date: date, selected_sport: str) -> dict:
     live_data_map = {}
-    ESPN_MAP = {'NBA': ('basketball', 'nba'), 'NFL': ('football', 'nfl'), 'CFB': ('football', 'college-football'), 'CBB': ('basketball', 'mens-college-basketball'), 'MLB': ('baseball', 'mlb')}
-    if selected_sport not in ESPN_MAP: return {}
+    ESPN_MAP = {
+        'NBA': ('basketball', 'nba'), 
+        'NFL': ('football', 'nfl'), 
+        'CFB': ('football', 'college-football'), 
+        'CBB': ('basketball', 'mens-college-basketball'), 
+        'MLB': ('baseball', 'mlb')
+    }
+    
+    if selected_sport not in ESPN_MAP: 
+        return {}
+    
     category, league = ESPN_MAP[selected_sport]
     url = f"https://site.api.espn.com/apis/site/v2/sports/{category}/{league}/scoreboard"
     date_str = selected_date.strftime("%Y%m%d")
+    
     try:
-        resp = requests.get(url, params={"dates": date_str}, timeout=5)
+        # <<< MODIFIED SECTION START >>>
+        # Create params dict and add extra params for CBB
+        params = {"dates": date_str}
+        if selected_sport == "CBB":
+            params.update({"groups": 50, "limit": 500})
+
+        resp = requests.get(url, params=params, timeout=5)
+        # <<< MODIFIED SECTION END >>>
+        
         resp.raise_for_status()
         data = resp.json()
+        
         for event in data.get("events", []):
             game_id = event.get("id")
-            if not game_id: continue
+            if not game_id: 
+                continue
+            
             comp = event["competitions"][0]
             status = comp.get("status", {}).get("type", {})
             teams = {c["homeAway"]: c for c in comp["competitors"]}
             away, home = teams.get("away"), teams.get("home")
+            
             if away and home:
-                live_data_map[game_id] = {'away_score': int(away.get("score", 0)), 'home_score': int(home.get("score", 0)), 'status_detail': status.get("detail", "Scheduled")}
+                live_data_map[game_id] = {
+                    'away_score': int(away.get("score", 0)), 
+                    'home_score': int(home.get("score", 0)), 
+                    'status_detail': status.get("detail", "Scheduled")
+                }
+                
     except requests.exceptions.RequestException as e:
+        # Assuming st.toast is available in this scope
         st.toast(f"Couldn't fetch live scores: {e}", icon="📡")
+        
     return live_data_map
 
 @st.cache_data
@@ -305,7 +334,8 @@ with tab1:
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2.5, 1.5, 2.5])
                     with col1:
-                        st.image(game['team1_logo'], width=60)
+                        if pd.notna(game['team1_logo']) and game['team1_logo']:
+                            st.image(game['team1_logo'], width=60)
                         st.subheader(f"{game['team1_name']} (Away)")
                     with col2:
                         live_data = live_scoreboard.get(str(game['game_id']), {})
@@ -317,7 +347,8 @@ with tab1:
                         else:
                             st.markdown("<h3 style='text-align: center; color: grey;'>VS</h3>", unsafe_allow_html=True)
                     with col3:
-                        st.image(game['team2_logo'], width=60)
+                        if pd.notna(game['team2_logo']) and game['team2_logo']:
+                            st.image(game['team2_logo'], width=60)
                         st.subheader(f"{game['team2_name']} (Home)")
                     st.divider()
                     # Moneyline Section
