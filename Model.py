@@ -497,7 +497,8 @@ class MLModel(BaseModel):
 
         # Evaluate Model
         self.predictions = self.model_.predict(X_test_scaled)
-        test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
+        test_dates = df_test['date'] if 'date' in df_test.columns else None
+        test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds, dates=test_dates)
         test_evaluator.display_results()
 
         # Feature Importance
@@ -614,7 +615,9 @@ class MLModel(BaseModel):
                 'spread': self.model_['spread'].predict_proba(X_test_scaled),
                 'over': self.model_['over'].predict_proba(X_test_scaled)
             }
-            test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds)
+            test_dates = df_test['date'] if 'date' in df_test.columns else None
+
+            test_evaluator = TestModel(predictions=self.predictions, y_test=self.y_test, test_odds=self.test_odds, dates=test_dates)
             test_evaluator.display_results()
             
             # Feature Importance

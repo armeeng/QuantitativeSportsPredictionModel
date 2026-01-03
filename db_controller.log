@@ -75164,3 +75164,1152 @@
 2025-12-24 20:18:46 INFO     root: Postprocessing CFB on 2025-12-03
 2025-12-24 20:19:55 INFO     root: Successfully processed 43 games. Odds updated for 43. Score updates skipped for 28 games.
 2025-12-24 20:19:55 INFO     root: Preprocessing CBB on 2025-12-03
+2025-12-27 15:11:58 INFO     root: Preprocessing NFL on 2025-12-27
+2025-12-27 15:13:56 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-12-27 15:13:56 INFO     root: Postprocessing NFL on 2025-12-27
+2025-12-27 15:14:03 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 2 games.
+2025-12-27 15:14:03 INFO     root: Preprocessing NBA on 2025-12-27
+2025-12-27 15:15:34 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-12-27 15:15:34 INFO     root: Postprocessing NBA on 2025-12-27
+2025-12-27 15:15:52 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 9 games.
+2025-12-27 15:15:52 INFO     root: Preprocessing CFB on 2025-12-27
+2025-12-27 15:15:52 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-27, sleeping 4 minutes before retry
+2025-12-27 15:21:48 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 15:21:48 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 15:21:48 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 15:22:08 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 15:22:08 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:22:08 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 15:22:08 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:22:08 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 15:22:08 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 15:22:49 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:22:49 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:22:49 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 15:22:49 INFO     root: Postprocessing CFB on 2025-12-27
+2025-12-27 15:24:00 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 23 games.
+2025-12-27 15:24:00 INFO     root: Preprocessing CBB on 2025-12-27
+2025-12-27 15:25:31 ERROR    root: Team 'Cleary' not found in stats for 'points-per-game'
+2025-12-27 15:25:31 ERROR    root: Could not fetch stats for Cleary or Duquesne, skipping
+2025-12-27 15:25:31 ERROR    root: Team 'Columbia (SC)' not found in stats for 'points-per-game'
+2025-12-27 15:25:31 ERROR    root: Could not fetch stats for Columbia (SC) or NC Wilmington, skipping
+2025-12-27 15:25:33 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 2 games.
+2025-12-27 15:25:33 INFO     root: Postprocessing CBB on 2025-12-27
+2025-12-27 15:25:39 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 1 games.
+2025-12-27 15:25:39 INFO     root: Preprocessing NFL on 2025-12-26
+2025-12-27 15:25:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:25:39 INFO     root: Postprocessing NFL on 2025-12-26
+2025-12-27 15:25:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:25:39 INFO     root: No games found in DB for NFL on 2025-12-26 to post-process.
+2025-12-27 15:25:39 INFO     root: Preprocessing NBA on 2025-12-26
+2025-12-27 15:27:12 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-12-27 15:27:12 INFO     root: Postprocessing NBA on 2025-12-26
+2025-12-27 15:27:29 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2025-12-27 15:27:29 INFO     root: Preprocessing CFB on 2025-12-26
+2025-12-27 15:28:21 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/opponent-yards-per-pass-attempt?date=2025-12-26, sleeping 4 minutes before retry
+2025-12-27 15:33:06 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 15:33:06 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 15:33:06 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 15:33:28 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 15:33:28 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:33:28 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 15:33:28 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:33:28 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 15:33:28 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 15:34:11 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:34:11 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:34:11 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 15:34:11 INFO     root: Postprocessing CFB on 2025-12-26
+2025-12-27 15:35:22 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 15:35:22 INFO     root: Preprocessing CBB on 2025-12-26
+2025-12-27 15:35:22 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:35:22 INFO     root: Postprocessing CBB on 2025-12-26
+2025-12-27 15:35:23 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:35:24 INFO     root: No games found in DB for CBB on 2025-12-26 to post-process.
+2025-12-27 15:35:24 INFO     root: Preprocessing NFL on 2025-12-25
+2025-12-27 15:37:27 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-12-27 15:37:27 INFO     root: Postprocessing NFL on 2025-12-25
+2025-12-27 15:37:34 INFO     root: Successfully processed 3 games. Odds updated for 3. Score updates skipped for 0 games.
+2025-12-27 15:37:34 INFO     root: Preprocessing NBA on 2025-12-25
+2025-12-27 15:39:01 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-12-27 15:39:01 INFO     root: Postprocessing NBA on 2025-12-25
+2025-12-27 15:39:10 INFO     root: Successfully processed 5 games. Odds updated for 5. Score updates skipped for 0 games.
+2025-12-27 15:39:10 INFO     root: Preprocessing CFB on 2025-12-25
+2025-12-27 15:39:10 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-25, sleeping 4 minutes before retry
+2025-12-27 15:44:54 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 15:44:54 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 15:44:54 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 15:45:13 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 15:45:13 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:45:13 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 15:45:13 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:45:13 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 15:45:13 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 15:46:02 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:46:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:46:02 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 15:46:02 INFO     root: Postprocessing CFB on 2025-12-25
+2025-12-27 15:47:13 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 15:47:13 INFO     root: Preprocessing CBB on 2025-12-25
+2025-12-27 15:47:14 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:47:14 INFO     root: Postprocessing CBB on 2025-12-25
+2025-12-27 15:47:14 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:47:17 INFO     root: No games found in DB for CBB on 2025-12-25 to post-process.
+2025-12-27 15:47:17 INFO     root: Preprocessing NFL on 2025-12-24
+2025-12-27 15:47:17 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:47:17 INFO     root: Postprocessing NFL on 2025-12-24
+2025-12-27 15:47:17 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:47:18 INFO     root: No games found in DB for NFL on 2025-12-24 to post-process.
+2025-12-27 15:47:18 INFO     root: Preprocessing NBA on 2025-12-24
+2025-12-27 15:47:18 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:47:18 INFO     root: Postprocessing NBA on 2025-12-24
+2025-12-27 15:47:18 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:47:18 INFO     root: No games found in DB for NBA on 2025-12-24 to post-process.
+2025-12-27 15:47:18 INFO     root: Preprocessing CFB on 2025-12-24
+2025-12-27 15:49:09 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 15:49:09 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 15:49:09 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 15:49:30 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 15:49:30 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:49:30 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 15:49:30 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:49:30 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 15:49:30 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 15:50:13 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:50:13 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:50:13 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 15:50:13 INFO     root: Postprocessing CFB on 2025-12-24
+2025-12-27 15:51:25 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 15:51:25 INFO     root: Preprocessing CBB on 2025-12-24
+2025-12-27 15:51:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:51:25 INFO     root: Postprocessing CBB on 2025-12-24
+2025-12-27 15:51:25 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:51:26 INFO     root: No games found in DB for CBB on 2025-12-24 to post-process.
+2025-12-27 15:51:26 INFO     root: Preprocessing NFL on 2025-12-23
+2025-12-27 15:51:26 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 15:51:26 INFO     root: Postprocessing NFL on 2025-12-23
+2025-12-27 15:51:26 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 15:51:26 INFO     root: No games found in DB for NFL on 2025-12-23 to post-process.
+2025-12-27 15:51:26 INFO     root: Preprocessing NBA on 2025-12-23
+2025-12-27 15:53:11 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
+2025-12-27 15:53:11 INFO     root: Postprocessing NBA on 2025-12-23
+2025-12-27 15:53:33 INFO     root: Successfully processed 14 games. Odds updated for 14. Score updates skipped for 0 games.
+2025-12-27 15:53:33 INFO     root: Preprocessing CFB on 2025-12-23
+2025-12-27 15:55:22 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 15:55:22 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 15:55:22 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 15:55:42 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 15:55:42 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:55:42 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 15:55:42 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:55:42 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 15:55:42 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 15:56:25 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 15:56:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 15:56:25 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 15:56:25 INFO     root: Postprocessing CFB on 2025-12-23
+2025-12-27 15:57:34 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 15:57:34 INFO     root: Preprocessing CBB on 2025-12-23
+2025-12-27 15:59:33 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-12-27 15:59:33 INFO     root: Postprocessing CBB on 2025-12-23
+2025-12-27 15:59:54 INFO     root: Successfully processed 12 games. Odds updated for 12. Score updates skipped for 0 games.
+2025-12-27 15:59:54 INFO     root: Preprocessing NFL on 2025-12-22
+2025-12-27 16:01:54 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-12-27 16:01:54 INFO     root: Postprocessing NFL on 2025-12-22
+2025-12-27 16:01:57 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-12-27 16:01:57 INFO     root: Preprocessing NBA on 2025-12-22
+2025-12-27 16:02:01 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/1st-half-points-per-game?date=2025-12-22, sleeping 4 minutes before retry
+2025-12-27 16:07:28 INFO     root: populate_pregame_data: inserted/updated 7 rows, skipped 0 games.
+2025-12-27 16:07:28 INFO     root: Postprocessing NBA on 2025-12-22
+2025-12-27 16:07:40 INFO     root: Successfully processed 7 games. Odds updated for 7. Score updates skipped for 0 games.
+2025-12-27 16:07:41 INFO     root: Preprocessing CFB on 2025-12-22
+2025-12-27 16:09:29 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 16:09:29 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 16:09:29 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 16:09:50 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 16:09:50 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:09:50 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 16:09:50 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:09:50 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 16:09:50 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 16:10:30 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:10:30 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:10:30 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 16:10:30 INFO     root: Postprocessing CFB on 2025-12-22
+2025-12-27 16:11:39 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 16:11:39 INFO     root: Preprocessing CBB on 2025-12-22
+2025-12-27 16:13:35 ERROR    root: Team 'Centenary (NJ)' not found in stats for 'points-per-game'
+2025-12-27 16:13:35 ERROR    root: Could not fetch stats for Centenary (NJ) or Saint Peter's, skipping
+2025-12-27 16:13:37 ERROR    root: Team 'Trinity Co Jax' not found in stats for 'points-per-game'
+2025-12-27 16:13:37 ERROR    root: Could not fetch stats for Trinity Co Jax or Florida Intl, skipping
+2025-12-27 16:13:40 ERROR    root: Team 'Milligan' not found in stats for 'points-per-game'
+2025-12-27 16:13:40 ERROR    root: Could not fetch stats for Milligan or Miami OH, skipping
+2025-12-27 16:13:40 ERROR    root: Team 'Defiance' not found in stats for 'points-per-game'
+2025-12-27 16:13:40 ERROR    root: Could not fetch stats for Defiance or W Michigan, skipping
+2025-12-27 16:13:40 ERROR    root: Team 'Sci & Arts OK' not found in stats for 'points-per-game'
+2025-12-27 16:13:40 ERROR    root: Could not fetch stats for Sci & Arts OK or N Texas, skipping
+2025-12-27 16:13:40 ERROR    root: Team 'Dall Christian' not found in stats for 'points-per-game'
+2025-12-27 16:13:40 ERROR    root: Could not fetch stats for Dall Christian or Louisiana Tech, skipping
+2025-12-27 16:13:42 ERROR    root: Team 'Siena Heights' not found in stats for 'points-per-game'
+2025-12-27 16:13:42 ERROR    root: Could not fetch stats for Siena Heights or Bowling Green, skipping
+2025-12-27 16:13:50 ERROR    root: Team 'East-West' not found in stats for 'points-per-game'
+2025-12-27 16:13:50 ERROR    root: Could not fetch stats for East-West or E Illinois, skipping
+2025-12-27 16:13:54 ERROR    root: Team 'Lincoln U (CA)' not found in stats for 'points-per-game'
+2025-12-27 16:13:54 ERROR    root: Could not fetch stats for Lincoln U (CA) or Weber St, skipping
+2025-12-27 16:13:54 ERROR    root: Team 'Whittier' not found in stats for 'points-per-game'
+2025-12-27 16:13:54 ERROR    root: Could not fetch stats for Whittier or San Diego St, skipping
+2025-12-27 16:14:03 ERROR    root: Team 'PSU Behrend' not found in stats for 'points-per-game'
+2025-12-27 16:14:03 ERROR    root: Could not fetch stats for PSU Behrend or Buffalo, skipping
+2025-12-27 16:14:13 ERROR    root: Team 'City (NY)' not found in stats for 'points-per-game'
+2025-12-27 16:14:13 ERROR    root: Could not fetch stats for City (NY) or Fairfield, skipping
+2025-12-27 16:14:52 INFO     root: populate_pregame_data: inserted/updated 49 rows, skipped 12 games.
+2025-12-27 16:14:52 INFO     root: Postprocessing CBB on 2025-12-22
+2025-12-27 16:16:11 INFO     root: Successfully processed 49 games. Odds updated for 49. Score updates skipped for 0 games.
+2025-12-27 16:16:11 INFO     root: Preprocessing NFL on 2025-12-21
+2025-12-27 16:18:33 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-12-27 16:18:33 INFO     root: Postprocessing NFL on 2025-12-21
+2025-12-27 16:18:54 INFO     root: Successfully processed 12 games. Odds updated for 12. Score updates skipped for 0 games.
+2025-12-27 16:18:54 INFO     root: Preprocessing NBA on 2025-12-21
+2025-12-27 16:20:11 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/ranking/first-half-by-other?date=2025-12-21, sleeping 4 minutes before retry
+2025-12-27 16:24:23 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-12-27 16:24:23 INFO     root: Postprocessing NBA on 2025-12-21
+2025-12-27 16:24:36 INFO     root: Successfully processed 6 games. Odds updated for 6. Score updates skipped for 0 games.
+2025-12-27 16:24:36 INFO     root: Preprocessing CFB on 2025-12-21
+2025-12-27 16:26:19 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 16:26:19 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 16:26:19 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 16:26:40 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 16:26:40 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:26:40 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 16:26:40 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:26:40 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 16:26:40 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 16:27:25 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:27:25 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:27:25 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 16:27:25 INFO     root: Postprocessing CFB on 2025-12-21
+2025-12-27 16:28:39 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 16:28:39 INFO     root: Preprocessing CBB on 2025-12-21
+2025-12-27 16:30:34 ERROR    root: Team 'Rosemont' not found in stats for 'points-per-game'
+2025-12-27 16:30:34 ERROR    root: Could not fetch stats for Rosemont or Navy, skipping
+2025-12-27 16:30:35 ERROR    root: Team 'PSU Brandywine' not found in stats for 'points-per-game'
+2025-12-27 16:30:35 ERROR    root: Could not fetch stats for PSU Brandywine or Mt St Mary's, skipping
+2025-12-27 16:30:44 ERROR    root: Team 'Holy Family' not found in stats for 'points-per-game'
+2025-12-27 16:30:44 ERROR    root: Could not fetch stats for Holy Family or Delaware St, skipping
+2025-12-27 16:30:48 ERROR    root: Team 'VA Lynchburg' not found in stats for 'points-per-game'
+2025-12-27 16:30:48 ERROR    root: Could not fetch stats for VA Lynchburg or NC Greensboro, skipping
+2025-12-27 16:30:48 ERROR    root: Team 'Dallas' not found in stats for 'points-per-game'
+2025-12-27 16:30:48 ERROR    root: Could not fetch stats for Dallas or SF Austin, skipping
+2025-12-27 16:30:49 ERROR    root: Team 'Cumberland' not found in stats for 'points-per-game'
+2025-12-27 16:30:49 ERROR    root: Could not fetch stats for Cumberland or Middle Tenn, skipping
+2025-12-27 16:31:50 INFO     root: populate_pregame_data: inserted/updated 55 rows, skipped 6 games.
+2025-12-27 16:31:50 INFO     root: Postprocessing CBB on 2025-12-21
+2025-12-27 16:33:18 INFO     root: Successfully processed 55 games. Odds updated for 55. Score updates skipped for 1 games.
+2025-12-27 16:33:18 INFO     root: Preprocessing NFL on 2025-12-20
+2025-12-27 16:35:20 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-12-27 16:35:20 INFO     root: Postprocessing NFL on 2025-12-20
+2025-12-27 16:35:26 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-12-27 16:35:26 INFO     root: Preprocessing NBA on 2025-12-20
+2025-12-27 16:37:00 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-12-27 16:37:00 INFO     root: Postprocessing NBA on 2025-12-20
+2025-12-27 16:37:17 INFO     root: Successfully processed 10 games. Odds updated for 10. Score updates skipped for 0 games.
+2025-12-27 16:37:17 INFO     root: Preprocessing CFB on 2025-12-20
+2025-12-27 16:37:17 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-20, sleeping 4 minutes before retry
+2025-12-27 16:43:00 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 16:43:00 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 16:43:00 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 16:43:20 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 16:43:20 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:43:20 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 16:43:20 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:43:20 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 16:43:20 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 16:44:02 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:44:02 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:44:02 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 16:44:02 INFO     root: Postprocessing CFB on 2025-12-20
+2025-12-27 16:45:12 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 16:45:12 INFO     root: Preprocessing CBB on 2025-12-20
+2025-12-27 16:46:55 ERROR    root: Team 'Lourdes' not found in stats for 'points-per-game'
+2025-12-27 16:46:55 ERROR    root: Could not fetch stats for Lourdes or Toledo, skipping
+2025-12-27 16:46:59 ERROR    root: Team 'Siena Heights' not found in stats for 'points-per-game'
+2025-12-27 16:46:59 ERROR    root: Could not fetch stats for Siena Heights or Detroit Mercy, skipping
+2025-12-27 16:47:06 ERROR    root: Team 'Houghton' not found in stats for 'points-per-game'
+2025-12-27 16:47:06 ERROR    root: Could not fetch stats for Houghton or Niagara, skipping
+2025-12-27 16:47:17 ERROR    root: Team 'Paul Quinn' not found in stats for 'points-per-game'
+2025-12-27 16:47:17 ERROR    root: Could not fetch stats for Paul Quinn or Prairie View, skipping
+2025-12-27 16:47:19 ERROR    root: Team 'Blue Mountain' not found in stats for 'points-per-game'
+2025-12-27 16:47:19 ERROR    root: Could not fetch stats for Blue Mountain or Lipscomb, skipping
+2025-12-27 16:47:20 ERROR    root: Team 'Harris Stowe' not found in stats for 'points-per-game'
+2025-12-27 16:47:20 ERROR    root: Could not fetch stats for Harris Stowe or Lindenwood, skipping
+2025-12-27 16:47:36 ERROR    root: Team 'Biblical Stud' not found in stats for 'points-per-game'
+2025-12-27 16:47:36 ERROR    root: Could not fetch stats for Biblical Stud or UT Rio Grande, skipping
+2025-12-27 16:48:03 ERROR    root: Team 'Bethesda' not found in stats for 'points-per-game'
+2025-12-27 16:48:03 ERROR    root: Could not fetch stats for Bethesda or Utah Valley, skipping
+2025-12-27 16:48:34 ERROR    root: Team 'SW Adventist' not found in stats for 'points-per-game'
+2025-12-27 16:48:34 ERROR    root: Could not fetch stats for SW Adventist or Texas A&M-CC, skipping
+2025-12-27 16:48:41 INFO     root: populate_pregame_data: inserted/updated 66 rows, skipped 9 games.
+2025-12-27 16:48:41 INFO     root: Postprocessing CBB on 2025-12-20
+2025-12-27 16:50:23 INFO     root: Successfully processed 66 games. Odds updated for 66. Score updates skipped for 0 games.
+2025-12-27 16:50:23 INFO     root: Preprocessing NFL on 2025-12-19
+2025-12-27 16:50:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 16:50:23 INFO     root: Postprocessing NFL on 2025-12-19
+2025-12-27 16:50:23 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 16:50:25 INFO     root: No games found in DB for NFL on 2025-12-19 to post-process.
+2025-12-27 16:50:25 INFO     root: Preprocessing NBA on 2025-12-19
+2025-12-27 16:51:49 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-12-27 16:51:49 INFO     root: Postprocessing NBA on 2025-12-19
+2025-12-27 16:51:58 INFO     root: Successfully processed 5 games. Odds updated for 5. Score updates skipped for 0 games.
+2025-12-27 16:51:58 INFO     root: Preprocessing CFB on 2025-12-19
+2025-12-27 16:53:37 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 16:53:37 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 16:53:37 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 16:53:58 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 16:53:58 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:53:58 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 16:53:58 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:53:58 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 16:53:58 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 16:54:40 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 16:54:40 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 16:54:40 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 16:54:40 INFO     root: Postprocessing CFB on 2025-12-19
+2025-12-27 16:55:51 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 16:55:51 INFO     root: Preprocessing CBB on 2025-12-19
+2025-12-27 16:57:26 ERROR    root: Team 'Brewton Parker' not found in stats for 'points-per-game'
+2025-12-27 16:57:26 ERROR    root: Could not fetch stats for Brewton Parker or S Carolina St, skipping
+2025-12-27 16:57:26 ERROR    root: Team 'Reinhardt' not found in stats for 'points-per-game'
+2025-12-27 16:57:26 ERROR    root: Could not fetch stats for Reinhardt or Samford, skipping
+2025-12-27 16:57:26 ERROR    root: Team 'Lehman' not found in stats for 'points-per-game'
+2025-12-27 16:57:26 ERROR    root: Could not fetch stats for Lehman or F Dickinson, skipping
+2025-12-27 16:57:28 ERROR    root: Team 'La Sierra' not found in stats for 'points-per-game'
+2025-12-27 16:57:28 ERROR    root: Could not fetch stats for La Sierra or CS Northridge, skipping
+2025-12-27 16:58:05 INFO     root: populate_pregame_data: inserted/updated 24 rows, skipped 4 games.
+2025-12-27 16:58:05 INFO     root: Postprocessing CBB on 2025-12-19
+2025-12-27 16:58:45 INFO     root: Successfully processed 24 games. Odds updated for 24. Score updates skipped for 0 games.
+2025-12-27 16:58:45 INFO     root: Preprocessing NFL on 2025-12-18
+2025-12-27 17:00:42 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-12-27 17:00:42 INFO     root: Postprocessing NFL on 2025-12-18
+2025-12-27 17:00:47 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-12-27 17:00:47 INFO     root: Preprocessing NBA on 2025-12-18
+2025-12-27 17:01:02 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/two-point-pct?date=2025-12-18, sleeping 4 minutes before retry
+2025-12-27 17:06:31 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-12-27 17:06:31 INFO     root: Postprocessing NBA on 2025-12-18
+2025-12-27 17:06:50 INFO     root: Successfully processed 12 games. Odds updated for 12. Score updates skipped for 0 games.
+2025-12-27 17:06:50 INFO     root: Preprocessing CFB on 2025-12-18
+2025-12-27 17:08:32 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-27 17:08:32 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-27 17:08:32 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-27 17:08:53 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-27 17:08:53 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 17:08:53 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-27 17:08:53 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 17:08:53 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-27 17:08:53 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-27 17:09:33 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-27 17:09:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-27 17:09:33 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-27 17:09:33 INFO     root: Postprocessing CFB on 2025-12-18
+2025-12-27 17:10:43 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 22 games.
+2025-12-27 17:10:43 INFO     root: Preprocessing CBB on 2025-12-18
+2025-12-27 17:12:15 ERROR    root: Team 'Toccoa Falls' not found in stats for 'points-per-game'
+2025-12-27 17:12:15 ERROR    root: Could not fetch stats for Toccoa Falls or Gardner-Webb, skipping
+2025-12-27 17:12:18 ERROR    root: Team 'Morris' not found in stats for 'points-per-game'
+2025-12-27 17:12:18 ERROR    root: Could not fetch stats for Morris or NC Asheville, skipping
+2025-12-27 17:12:24 ERROR    root: Team 'PSU Hazleton' not found in stats for 'points-per-game'
+2025-12-27 17:12:24 ERROR    root: Could not fetch stats for PSU Hazleton or Lehigh, skipping
+2025-12-27 17:12:59 ERROR    root: Team 'W Montana' not found in stats for 'points-per-game'
+2025-12-27 17:12:59 ERROR    root: Could not fetch stats for W Montana or Idaho St, skipping
+2025-12-27 17:13:01 ERROR    root: Team 'Nobel' not found in stats for 'points-per-game'
+2025-12-27 17:13:01 ERROR    root: Could not fetch stats for Nobel or CS Bakersfield, skipping
+2025-12-27 17:13:03 INFO     root: populate_pregame_data: inserted/updated 27 rows, skipped 5 games.
+2025-12-27 17:13:03 INFO     root: Postprocessing CBB on 2025-12-18
+2025-12-27 17:13:45 INFO     root: Successfully processed 27 games. Odds updated for 27. Score updates skipped for 0 games.
+2025-12-27 17:13:45 INFO     root: Preprocessing NFL on 2025-12-17
+2025-12-27 17:13:45 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-27 17:13:45 INFO     root: Postprocessing NFL on 2025-12-17
+2025-12-27 17:13:45 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-27 17:13:45 INFO     root: No games found in DB for NFL on 2025-12-17 to post-process.
+2025-12-27 17:13:45 INFO     root: Preprocessing NBA on 2025-12-17
+2025-12-27 17:15:07 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-12-27 17:15:07 INFO     root: Postprocessing NBA on 2025-12-17
+2025-12-27 17:15:13 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-12-27 17:15:13 INFO     root: Preprocessing CFB on 2025-12-17
+2025-12-28 11:52:24 INFO     root: Preprocessing NFL on 2025-12-28
+2025-12-28 11:54:36 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2025-12-28 11:54:36 INFO     root: Postprocessing NFL on 2025-12-28
+2025-12-28 11:54:55 INFO     root: Successfully processed 10 games. Odds updated for 10. Score updates skipped for 10 games.
+2025-12-28 11:54:55 INFO     root: Preprocessing NBA on 2025-12-28
+2025-12-28 11:56:21 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2025-12-28 11:56:21 INFO     root: Postprocessing NBA on 2025-12-28
+2025-12-28 11:56:33 INFO     root: Successfully processed 6 games. Odds updated for 6. Score updates skipped for 6 games.
+2025-12-28 11:56:33 INFO     root: Preprocessing CFB on 2025-12-28
+2025-12-28 11:56:34 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-28, sleeping 4 minutes before retry
+2025-12-28 12:02:02 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:02:02 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:02:02 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:02:23 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:02:23 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:02:23 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:02:23 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:02:23 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:02:23 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:03:17 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:03:17 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:03:17 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:03:17 INFO     root: Postprocessing CFB on 2025-12-28
+2025-12-28 12:04:29 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:04:29 INFO     root: Preprocessing CBB on 2025-12-28
+2025-12-28 12:06:03 ERROR    root: Team 'Arcadia' not found in stats for 'points-per-game'
+2025-12-28 12:06:03 ERROR    root: Could not fetch stats for Arcadia or Saint Joseph's, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'Alice Lloyd' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for Alice Lloyd or Morehead St, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'N Central' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for N Central or St Thomas, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'Dakota St' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for Dakota St or North Dakota, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'Union (KY)' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for Union (KY) or Wofford, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'Pfeiffer' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for Pfeiffer or High Point, skipping
+2025-12-28 12:06:08 ERROR    root: Team 'Ft Lauderdale' not found in stats for 'points-per-game'
+2025-12-28 12:06:08 ERROR    root: Could not fetch stats for Ft Lauderdale or FGCU, skipping
+2025-12-28 12:06:16 ERROR    root: Team 'Mount Marty' not found in stats for 'points-per-game'
+2025-12-28 12:06:16 ERROR    root: Could not fetch stats for Mount Marty or South Dakota, skipping
+2025-12-28 12:06:20 ERROR    root: Team 'Shenandoah' not found in stats for 'points-per-game'
+2025-12-28 12:06:20 ERROR    root: Could not fetch stats for Shenandoah or Radford, skipping
+2025-12-28 12:06:22 ERROR    root: Team 'Averett' not found in stats for 'points-per-game'
+2025-12-28 12:06:22 ERROR    root: Could not fetch stats for Averett or Longwood, skipping
+2025-12-28 12:06:27 ERROR    root: Team 'Biblical Stud' not found in stats for 'points-per-game'
+2025-12-28 12:06:27 ERROR    root: Could not fetch stats for Biblical Stud or Sam Houston, skipping
+2025-12-28 12:06:29 ERROR    root: Team 'Truett McCnnll' not found in stats for 'points-per-game'
+2025-12-28 12:06:29 ERROR    root: Could not fetch stats for Truett McCnnll or Presbyterian, skipping
+2025-12-28 12:06:30 ERROR    root: Team 'Columbia (SC)' not found in stats for 'points-per-game'
+2025-12-28 12:06:30 ERROR    root: Could not fetch stats for Columbia (SC) or Georgia St, skipping
+2025-12-28 12:06:35 ERROR    root: Team 'Fisk' not found in stats for 'points-per-game'
+2025-12-28 12:06:35 ERROR    root: Could not fetch stats for Fisk or Austin Peay, skipping
+2025-12-28 12:06:35 ERROR    root: Team 'McPherson' not found in stats for 'points-per-game'
+2025-12-28 12:06:35 ERROR    root: Could not fetch stats for McPherson or Kansas City, skipping
+2025-12-28 12:06:42 ERROR    root: Team 'Stanton' not found in stats for 'points-per-game'
+2025-12-28 12:06:42 ERROR    root: Could not fetch stats for Stanton or UCSD, skipping
+2025-12-28 12:06:48 INFO     root: populate_pregame_data: inserted/updated 25 rows, skipped 16 games.
+2025-12-28 12:06:48 INFO     root: Postprocessing CBB on 2025-12-28
+2025-12-28 12:07:34 INFO     root: Successfully processed 25 games. Odds updated for 25. Score updates skipped for 25 games.
+2025-12-28 12:07:34 INFO     root: Preprocessing NFL on 2025-12-27
+2025-12-28 12:09:40 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2025-12-28 12:09:40 INFO     root: Postprocessing NFL on 2025-12-27
+2025-12-28 12:09:47 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2025-12-28 12:09:47 INFO     root: Preprocessing NBA on 2025-12-27
+2025-12-28 12:09:52 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/2nd-half-points-per-game?date=2025-12-27, sleeping 4 minutes before retry
+2025-12-28 12:15:28 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-12-28 12:15:28 INFO     root: Postprocessing NBA on 2025-12-27
+2025-12-28 12:15:46 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2025-12-28 12:15:46 INFO     root: Preprocessing CFB on 2025-12-27
+2025-12-28 12:17:17 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:17:17 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:17:17 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:17:37 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:17:37 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:17:37 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:17:37 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:17:37 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:17:37 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:18:33 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:18:33 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:18:33 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:18:33 INFO     root: Postprocessing CFB on 2025-12-27
+2025-12-28 12:19:44 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:19:44 INFO     root: Preprocessing CBB on 2025-12-27
+2025-12-28 12:21:17 ERROR    root: Team 'Columbia (SC)' not found in stats for 'points-per-game'
+2025-12-28 12:21:17 ERROR    root: Could not fetch stats for Columbia (SC) or NC Wilmington, skipping
+2025-12-28 12:21:17 ERROR    root: Team 'Cleary' not found in stats for 'points-per-game'
+2025-12-28 12:21:17 ERROR    root: Could not fetch stats for Cleary or Duquesne, skipping
+2025-12-28 12:21:18 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 2 games.
+2025-12-28 12:21:18 INFO     root: Postprocessing CBB on 2025-12-27
+2025-12-28 12:21:23 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-12-28 12:21:23 INFO     root: Preprocessing NFL on 2025-12-26
+2025-12-28 12:21:24 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:21:24 INFO     root: Postprocessing NFL on 2025-12-26
+2025-12-28 12:21:24 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:21:24 INFO     root: No games found in DB for NFL on 2025-12-26 to post-process.
+2025-12-28 12:21:24 INFO     root: Preprocessing NBA on 2025-12-26
+2025-12-28 12:22:54 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2025-12-28 12:22:54 INFO     root: Postprocessing NBA on 2025-12-26
+2025-12-28 12:23:10 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2025-12-28 12:23:10 INFO     root: Preprocessing CFB on 2025-12-26
+2025-12-28 12:24:22 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/opponent-punt-attempts-per-game?date=2025-12-26, sleeping 4 minutes before retry
+2025-12-28 12:28:52 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:28:52 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:28:52 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:29:14 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:29:14 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:29:14 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:29:14 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:29:14 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:29:14 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:30:12 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:30:12 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:30:12 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:30:12 INFO     root: Postprocessing CFB on 2025-12-26
+2025-12-28 12:31:25 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:31:25 INFO     root: Preprocessing CBB on 2025-12-26
+2025-12-28 12:31:25 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:31:25 INFO     root: Postprocessing CBB on 2025-12-26
+2025-12-28 12:31:26 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:31:28 INFO     root: No games found in DB for CBB on 2025-12-26 to post-process.
+2025-12-28 12:31:28 INFO     root: Preprocessing NFL on 2025-12-25
+2025-12-28 12:33:36 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2025-12-28 12:33:36 INFO     root: Postprocessing NFL on 2025-12-25
+2025-12-28 12:33:48 INFO     root: Successfully processed 3 games. Odds updated for 3. Score updates skipped for 0 games.
+2025-12-28 12:33:48 INFO     root: Preprocessing NBA on 2025-12-25
+2025-12-28 12:35:21 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2025-12-28 12:35:21 INFO     root: Postprocessing NBA on 2025-12-25
+2025-12-28 12:35:32 INFO     root: Successfully processed 5 games. Odds updated for 5. Score updates skipped for 0 games.
+2025-12-28 12:35:32 INFO     root: Preprocessing CFB on 2025-12-25
+2025-12-28 12:35:32 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-25, sleeping 4 minutes before retry
+2025-12-28 12:41:04 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:41:04 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:41:04 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:41:27 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:41:27 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:41:27 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:41:27 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:41:27 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:41:27 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:42:26 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:42:26 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:42:26 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:42:26 INFO     root: Postprocessing CFB on 2025-12-25
+2025-12-28 12:43:36 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:43:36 INFO     root: Preprocessing CBB on 2025-12-25
+2025-12-28 12:43:36 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:43:36 INFO     root: Postprocessing CBB on 2025-12-25
+2025-12-28 12:43:36 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:43:39 INFO     root: No games found in DB for CBB on 2025-12-25 to post-process.
+2025-12-28 12:43:39 INFO     root: Preprocessing NFL on 2025-12-24
+2025-12-28 12:43:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:43:39 INFO     root: Postprocessing NFL on 2025-12-24
+2025-12-28 12:43:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:43:39 INFO     root: No games found in DB for NFL on 2025-12-24 to post-process.
+2025-12-28 12:43:39 INFO     root: Preprocessing NBA on 2025-12-24
+2025-12-28 12:43:40 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:43:40 INFO     root: Postprocessing NBA on 2025-12-24
+2025-12-28 12:43:40 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:43:40 INFO     root: No games found in DB for NBA on 2025-12-24 to post-process.
+2025-12-28 12:43:40 INFO     root: Preprocessing CFB on 2025-12-24
+2025-12-28 12:45:08 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:45:08 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:45:08 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:45:29 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:45:29 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:45:29 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:45:29 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:45:29 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:45:29 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:46:24 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:46:24 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:46:24 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:46:24 INFO     root: Postprocessing CFB on 2025-12-24
+2025-12-28 12:47:35 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:47:35 INFO     root: Preprocessing CBB on 2025-12-24
+2025-12-28 12:47:35 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:47:35 INFO     root: Postprocessing CBB on 2025-12-24
+2025-12-28 12:47:35 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:47:39 INFO     root: No games found in DB for CBB on 2025-12-24 to post-process.
+2025-12-28 12:47:39 INFO     root: Preprocessing NFL on 2025-12-23
+2025-12-28 12:47:39 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2025-12-28 12:47:39 INFO     root: Postprocessing NFL on 2025-12-23
+2025-12-28 12:47:39 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2025-12-28 12:47:39 INFO     root: No games found in DB for NFL on 2025-12-23 to post-process.
+2025-12-28 12:47:39 INFO     root: Preprocessing NBA on 2025-12-23
+2025-12-28 12:49:22 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
+2025-12-28 12:49:22 INFO     root: Postprocessing NBA on 2025-12-23
+2025-12-28 12:49:47 INFO     root: Successfully processed 14 games. Odds updated for 14. Score updates skipped for 0 games.
+2025-12-28 12:49:47 INFO     root: Preprocessing CFB on 2025-12-23
+2025-12-28 12:51:26 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2025-12-28 12:51:26 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2025-12-28 12:51:26 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2025-12-28 12:51:48 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2025-12-28 12:51:48 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:51:48 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2025-12-28 12:51:48 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:51:48 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2025-12-28 12:51:48 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2025-12-28 12:52:45 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2025-12-28 12:52:45 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2025-12-28 12:52:45 INFO     root: populate_pregame_data: inserted/updated 44 rows, skipped 7 games.
+2025-12-28 12:52:45 INFO     root: Postprocessing CFB on 2025-12-23
+2025-12-28 12:53:58 INFO     root: Successfully processed 44 games. Odds updated for 44. Score updates skipped for 16 games.
+2025-12-28 12:53:58 INFO     root: Preprocessing CBB on 2025-12-23
+2025-12-28 12:55:50 INFO     root: populate_pregame_data: inserted/updated 12 rows, skipped 0 games.
+2025-12-28 12:55:50 INFO     root: Postprocessing CBB on 2025-12-23
+2025-12-28 12:56:12 INFO     root: Successfully processed 12 games. Odds updated for 12. Score updates skipped for 0 games.
+2025-12-28 12:56:12 INFO     root: Preprocessing NFL on 2025-12-22
+2025-12-28 12:58:21 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2025-12-28 12:58:21 INFO     root: Postprocessing NFL on 2025-12-22
+2025-12-28 12:58:26 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2025-12-28 12:58:26 INFO     root: Preprocessing NBA on 2025-12-22
+2025-12-28 12:58:42 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/true-shooting-percentage?date=2025-12-22, sleeping 4 minutes before retry
+2026-01-02 16:19:22 INFO     root: Preprocessing NFL on 2026-01-02
+2026-01-02 16:19:23 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 16:19:23 INFO     root: Postprocessing NFL on 2026-01-02
+2026-01-02 16:19:23 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 16:19:27 INFO     root: No games found in DB for NFL on 2026-01-02 to post-process.
+2026-01-02 16:19:27 INFO     root: Preprocessing NBA on 2026-01-02
+2026-01-02 16:20:57 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2026-01-02 16:20:57 INFO     root: Postprocessing NBA on 2026-01-02
+2026-01-02 16:21:15 INFO     root: Successfully processed 10 games. Odds updated for 10. Score updates skipped for 10 games.
+2026-01-02 16:21:15 INFO     root: Preprocessing CFB on 2026-01-02
+2026-01-02 16:22:50 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 16:22:50 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 16:22:50 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 16:23:10 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 16:23:10 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:23:10 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 16:23:10 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:23:10 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 16:23:10 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 16:23:57 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:23:57 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:23:57 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 16:24:00 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:24:00 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:24:00 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 16:24:00 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 16:24:00 INFO     root: Postprocessing CFB on 2026-01-02
+2026-01-02 16:25:15 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 6 games.
+2026-01-02 16:25:15 INFO     root: Preprocessing CBB on 2026-01-02
+2026-01-02 16:27:37 INFO     root: populate_pregame_data: inserted/updated 33 rows, skipped 0 games.
+2026-01-02 16:27:37 INFO     root: Postprocessing CBB on 2026-01-02
+2026-01-02 16:28:32 INFO     root: Successfully processed 33 games. Odds updated for 33. Score updates skipped for 31 games.
+2026-01-02 16:28:32 INFO     root: Preprocessing NFL on 2026-01-01
+2026-01-02 16:28:33 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 16:28:33 INFO     root: Postprocessing NFL on 2026-01-01
+2026-01-02 16:28:33 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 16:28:36 INFO     root: No games found in DB for NFL on 2026-01-01 to post-process.
+2026-01-02 16:28:36 INFO     root: Preprocessing NBA on 2026-01-01
+2026-01-02 16:29:58 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2026-01-02 16:29:58 INFO     root: Postprocessing NBA on 2026-01-01
+2026-01-02 16:30:09 INFO     root: Successfully processed 5 games. Odds updated for 5. Score updates skipped for 0 games.
+2026-01-02 16:30:09 INFO     root: Preprocessing CFB on 2026-01-01
+2026-01-02 16:31:42 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 16:31:42 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 16:31:42 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 16:32:02 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 16:32:02 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:32:02 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 16:32:02 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:32:02 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 16:32:02 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 16:32:52 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:32:52 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:32:52 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 16:32:56 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:32:56 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:32:56 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 16:32:56 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 16:32:56 INFO     root: Postprocessing CFB on 2026-01-01
+2026-01-02 16:34:10 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 6 games.
+2026-01-02 16:34:10 INFO     root: Preprocessing CBB on 2026-01-01
+2026-01-02 16:35:41 ERROR    root: Team 'Elms' not found in stats for 'points-per-game'
+2026-01-02 16:35:41 ERROR    root: Could not fetch stats for Elms or Dartmouth, skipping
+2026-01-02 16:36:47 INFO     root: populate_pregame_data: inserted/updated 38 rows, skipped 1 games.
+2026-01-02 16:36:47 INFO     root: Postprocessing CBB on 2026-01-01
+2026-01-02 16:37:48 INFO     root: Successfully processed 38 games. Odds updated for 38. Score updates skipped for 0 games.
+2026-01-02 16:37:48 INFO     root: Preprocessing NFL on 2025-12-31
+2026-01-02 16:37:48 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 16:37:48 INFO     root: Postprocessing NFL on 2025-12-31
+2026-01-02 16:37:48 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 16:37:52 INFO     root: No games found in DB for NFL on 2025-12-31 to post-process.
+2026-01-02 16:37:52 INFO     root: Preprocessing NBA on 2025-12-31
+2026-01-02 16:39:22 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2026-01-02 16:39:22 INFO     root: Postprocessing NBA on 2025-12-31
+2026-01-02 16:39:40 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2026-01-02 16:39:40 INFO     root: Preprocessing CFB on 2025-12-31
+2026-01-02 16:41:13 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 16:41:13 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 16:41:13 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 16:41:34 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 16:41:34 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:41:34 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 16:41:34 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:41:34 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 16:41:34 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 16:42:21 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:42:21 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:42:21 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 16:42:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:42:24 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:42:24 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 16:42:24 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 16:42:24 INFO     root: Postprocessing CFB on 2025-12-31
+2026-01-02 16:43:38 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 6 games.
+2026-01-02 16:43:38 INFO     root: Preprocessing CBB on 2025-12-31
+2026-01-02 16:45:20 ERROR    root: Team 'Johnson Wales' not found in stats for 'points-per-game'
+2026-01-02 16:45:20 ERROR    root: Could not fetch stats for Johnson Wales or Brown, skipping
+2026-01-02 16:46:30 INFO     root: populate_pregame_data: inserted/updated 48 rows, skipped 1 games.
+2026-01-02 16:46:30 INFO     root: Postprocessing CBB on 2025-12-31
+2026-01-02 16:47:46 INFO     root: Successfully processed 48 games. Odds updated for 48. Score updates skipped for 0 games.
+2026-01-02 16:47:46 INFO     root: Preprocessing NFL on 2025-12-30
+2026-01-02 16:47:47 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 16:47:47 INFO     root: Postprocessing NFL on 2025-12-30
+2026-01-02 16:47:47 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 16:47:51 INFO     root: No games found in DB for NFL on 2025-12-30 to post-process.
+2026-01-02 16:47:51 INFO     root: Preprocessing NBA on 2025-12-30
+2026-01-02 16:49:11 INFO     root: populate_pregame_data: inserted/updated 4 rows, skipped 0 games.
+2026-01-02 16:49:11 INFO     root: Postprocessing NBA on 2025-12-30
+2026-01-02 16:49:21 INFO     root: Successfully processed 4 games. Odds updated for 4. Score updates skipped for 0 games.
+2026-01-02 16:49:21 INFO     root: Preprocessing CFB on 2025-12-30
+2026-01-02 16:50:56 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 16:50:56 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 16:50:56 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 16:51:16 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 16:51:16 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:51:16 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 16:51:16 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:51:16 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 16:51:16 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 16:52:03 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 16:52:03 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 16:52:03 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 16:52:06 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:52:06 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 16:52:06 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 16:52:06 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 16:52:06 INFO     root: Postprocessing CFB on 2025-12-30
+2026-01-02 16:53:19 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 16:53:19 INFO     root: Preprocessing CBB on 2025-12-30
+2026-01-02 16:55:00 ERROR    root: Team 'Centenary (LA)' not found in stats for 'points-per-game'
+2026-01-02 16:55:00 ERROR    root: Could not fetch stats for Centenary (LA) or Grambling, skipping
+2026-01-02 16:55:01 ERROR    root: Team 'ME Fort Kent' not found in stats for 'points-per-game'
+2026-01-02 16:55:01 ERROR    root: Could not fetch stats for ME Fort Kent or Maine, skipping
+2026-01-02 16:55:10 ERROR    root: Team 'Fisk' not found in stats for 'points-per-game'
+2026-01-02 16:55:10 ERROR    root: Could not fetch stats for Fisk or Alabama A&M, skipping
+2026-01-02 16:55:10 ERROR    root: Team 'PSU Brandywine' not found in stats for 'points-per-game'
+2026-01-02 16:55:10 ERROR    root: Could not fetch stats for PSU Brandywine or Morgan St, skipping
+2026-01-02 16:55:48 ERROR    root: Team 'Lincoln U (CA)' not found in stats for 'points-per-game'
+2026-01-02 16:55:48 ERROR    root: Could not fetch stats for Lincoln U (CA) or Long Beach St, skipping
+2026-01-02 16:55:50 INFO     root: populate_pregame_data: inserted/updated 34 rows, skipped 5 games.
+2026-01-02 16:55:50 INFO     root: Postprocessing CBB on 2025-12-30
+2026-01-02 16:56:46 INFO     root: Successfully processed 34 games. Odds updated for 34. Score updates skipped for 0 games.
+2026-01-02 16:56:46 INFO     root: Preprocessing NFL on 2025-12-29
+2026-01-02 16:58:46 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 0 games.
+2026-01-02 16:58:46 INFO     root: Postprocessing NFL on 2025-12-29
+2026-01-02 16:58:52 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2026-01-02 16:58:52 INFO     root: Preprocessing NBA on 2025-12-29
+2026-01-02 16:59:47 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-personal-fouls-per-game?date=2025-12-29, sleeping 4 minutes before retry
+2026-01-02 17:04:30 INFO     root: populate_pregame_data: inserted/updated 11 rows, skipped 0 games.
+2026-01-02 17:04:30 INFO     root: Postprocessing NBA on 2025-12-29
+2026-01-02 17:04:50 INFO     root: Successfully processed 11 games. Odds updated for 11. Score updates skipped for 0 games.
+2026-01-02 17:04:50 INFO     root: Preprocessing CFB on 2025-12-29
+2026-01-02 17:06:23 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 17:06:23 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 17:06:23 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 17:06:43 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 17:06:43 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:06:43 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 17:06:43 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:06:43 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 17:06:43 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 17:07:31 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:07:31 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:07:31 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 17:07:35 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:07:35 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:07:35 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 17:07:35 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 17:07:35 INFO     root: Postprocessing CFB on 2025-12-29
+2026-01-02 17:08:50 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 17:08:50 INFO     root: Preprocessing CBB on 2025-12-29
+2026-01-02 17:10:57 ERROR    root: Team 'SUNY Canton' not found in stats for 'points-per-game'
+2026-01-02 17:10:57 ERROR    root: Could not fetch stats for SUNY Canton or NJIT, skipping
+2026-01-02 17:10:57 ERROR    root: Team 'Illinois Tech' not found in stats for 'points-per-game'
+2026-01-02 17:10:57 ERROR    root: Could not fetch stats for Illinois Tech or Illinois Chicago, skipping
+2026-01-02 17:10:57 ERROR    root: Team 'Elmira' not found in stats for 'points-per-game'
+2026-01-02 17:10:57 ERROR    root: Could not fetch stats for Elmira or Binghamton, skipping
+2026-01-02 17:11:00 ERROR    root: Team 'GA College' not found in stats for 'points-per-game'
+2026-01-02 17:11:00 ERROR    root: Could not fetch stats for GA College or S Florida, skipping
+2026-01-02 17:11:13 ERROR    root: Team 'Earlham' not found in stats for 'points-per-game'
+2026-01-02 17:11:13 ERROR    root: Could not fetch stats for Earlham or Ball St, skipping
+2026-01-02 17:11:13 ERROR    root: Team 'Concord' not found in stats for 'points-per-game'
+2026-01-02 17:11:13 ERROR    root: Could not fetch stats for Concord or Akron, skipping
+2026-01-02 17:11:39 ERROR    root: Team 'Mobile' not found in stats for 'points-per-game'
+2026-01-02 17:11:39 ERROR    root: Could not fetch stats for Mobile or S Alabama, skipping
+2026-01-02 17:11:50 ERROR    root: Team "B'tine Mesa" not found in stats for 'points-per-game'
+2026-01-02 17:11:50 ERROR    root: Could not fetch stats for B'tine Mesa or N Arizona, skipping
+2026-01-02 17:12:09 ERROR    root: Team 'La Sierra' not found in stats for 'points-per-game'
+2026-01-02 17:12:09 ERROR    root: Could not fetch stats for La Sierra or UNLV, skipping
+2026-01-02 17:12:11 INFO     root: populate_pregame_data: inserted/updated 59 rows, skipped 9 games.
+2026-01-02 17:12:11 INFO     root: Postprocessing CBB on 2025-12-29
+2026-01-02 17:13:46 INFO     root: Successfully processed 59 games. Odds updated for 59. Score updates skipped for 0 games.
+2026-01-02 17:13:46 INFO     root: Preprocessing NFL on 2025-12-28
+2026-01-02 17:16:03 INFO     root: populate_pregame_data: inserted/updated 10 rows, skipped 0 games.
+2026-01-02 17:16:03 INFO     root: Postprocessing NFL on 2025-12-28
+2026-01-02 17:16:22 INFO     root: Successfully processed 10 games. Odds updated for 10. Score updates skipped for 0 games.
+2026-01-02 17:16:22 INFO     root: Preprocessing NBA on 2025-12-28
+2026-01-02 17:17:46 INFO     root: populate_pregame_data: inserted/updated 6 rows, skipped 0 games.
+2026-01-02 17:17:46 INFO     root: Postprocessing NBA on 2025-12-28
+2026-01-02 17:17:56 INFO     root: Successfully processed 6 games. Odds updated for 6. Score updates skipped for 0 games.
+2026-01-02 17:17:56 INFO     root: Preprocessing CFB on 2025-12-28
+2026-01-02 17:17:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-28, sleeping 4 minutes before retry
+2026-01-02 17:23:32 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 17:23:32 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 17:23:32 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 17:23:52 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 17:23:52 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:23:52 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 17:23:52 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:23:52 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 17:23:52 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 17:24:42 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:24:42 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:24:42 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 17:24:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:24:45 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:24:45 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 17:24:45 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 17:24:45 INFO     root: Postprocessing CFB on 2025-12-28
+2026-01-02 17:25:59 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 17:25:59 INFO     root: Preprocessing CBB on 2025-12-28
+2026-01-02 17:27:41 ERROR    root: Team 'Arcadia' not found in stats for 'points-per-game'
+2026-01-02 17:27:41 ERROR    root: Could not fetch stats for Arcadia or Saint Joseph's, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'Alice Lloyd' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for Alice Lloyd or Morehead St, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'N Central' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for N Central or St Thomas, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'Dakota St' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for Dakota St or North Dakota, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'Union (KY)' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for Union (KY) or Wofford, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'Pfeiffer' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for Pfeiffer or High Point, skipping
+2026-01-02 17:27:45 ERROR    root: Team 'Ft Lauderdale' not found in stats for 'points-per-game'
+2026-01-02 17:27:45 ERROR    root: Could not fetch stats for Ft Lauderdale or FGCU, skipping
+2026-01-02 17:27:52 ERROR    root: Team 'Mount Marty' not found in stats for 'points-per-game'
+2026-01-02 17:27:52 ERROR    root: Could not fetch stats for Mount Marty or South Dakota, skipping
+2026-01-02 17:27:55 ERROR    root: Team 'Shenandoah' not found in stats for 'points-per-game'
+2026-01-02 17:27:55 ERROR    root: Could not fetch stats for Shenandoah or Radford, skipping
+2026-01-02 17:27:57 ERROR    root: Team 'Averett' not found in stats for 'points-per-game'
+2026-01-02 17:27:57 ERROR    root: Could not fetch stats for Averett or Longwood, skipping
+2026-01-02 17:28:02 ERROR    root: Team 'Biblical Stud' not found in stats for 'points-per-game'
+2026-01-02 17:28:02 ERROR    root: Could not fetch stats for Biblical Stud or Sam Houston, skipping
+2026-01-02 17:28:04 ERROR    root: Team 'Truett McCnnll' not found in stats for 'points-per-game'
+2026-01-02 17:28:04 ERROR    root: Could not fetch stats for Truett McCnnll or Presbyterian, skipping
+2026-01-02 17:28:06 ERROR    root: Team 'Columbia (SC)' not found in stats for 'points-per-game'
+2026-01-02 17:28:06 ERROR    root: Could not fetch stats for Columbia (SC) or Georgia St, skipping
+2026-01-02 17:28:11 ERROR    root: Team 'Fisk' not found in stats for 'points-per-game'
+2026-01-02 17:28:11 ERROR    root: Could not fetch stats for Fisk or Austin Peay, skipping
+2026-01-02 17:28:11 ERROR    root: Team 'McPherson' not found in stats for 'points-per-game'
+2026-01-02 17:28:11 ERROR    root: Could not fetch stats for McPherson or Kansas City, skipping
+2026-01-02 17:28:18 ERROR    root: Team 'Stanton' not found in stats for 'points-per-game'
+2026-01-02 17:28:18 ERROR    root: Could not fetch stats for Stanton or UCSD, skipping
+2026-01-02 17:28:21 INFO     root: populate_pregame_data: inserted/updated 25 rows, skipped 16 games.
+2026-01-02 17:28:21 INFO     root: Postprocessing CBB on 2025-12-28
+2026-01-02 17:29:02 INFO     root: Successfully processed 25 games. Odds updated for 25. Score updates skipped for 0 games.
+2026-01-02 17:29:02 INFO     root: Preprocessing NFL on 2025-12-27
+2026-01-02 17:31:08 INFO     root: populate_pregame_data: inserted/updated 2 rows, skipped 0 games.
+2026-01-02 17:31:08 INFO     root: Postprocessing NFL on 2025-12-27
+2026-01-02 17:31:15 INFO     root: Successfully processed 2 games. Odds updated for 2. Score updates skipped for 0 games.
+2026-01-02 17:31:15 INFO     root: Preprocessing NBA on 2025-12-27
+2026-01-02 17:31:57 WARNING  root: 403 Forbidden at https://www.teamrankings.com/nba/stat/opponent-effective-field-goal-pct?date=2025-12-27, sleeping 4 minutes before retry
+2026-01-02 17:36:53 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2026-01-02 17:36:53 INFO     root: Postprocessing NBA on 2025-12-27
+2026-01-02 17:37:09 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2026-01-02 17:37:09 INFO     root: Preprocessing CFB on 2025-12-27
+2026-01-02 17:38:47 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 17:38:47 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 17:38:47 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 17:39:07 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 17:39:07 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:39:07 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 17:39:07 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:39:07 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 17:39:07 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 17:39:54 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:39:54 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:39:54 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 17:39:57 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:39:57 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:39:57 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 17:39:57 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 17:39:57 INFO     root: Postprocessing CFB on 2025-12-27
+2026-01-02 17:41:11 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 17:41:11 INFO     root: Preprocessing CBB on 2025-12-27
+2026-01-02 17:42:40 ERROR    root: Team 'Columbia (SC)' not found in stats for 'points-per-game'
+2026-01-02 17:42:40 ERROR    root: Could not fetch stats for Columbia (SC) or NC Wilmington, skipping
+2026-01-02 17:42:40 ERROR    root: Team 'Cleary' not found in stats for 'points-per-game'
+2026-01-02 17:42:40 ERROR    root: Could not fetch stats for Cleary or Duquesne, skipping
+2026-01-02 17:42:42 INFO     root: populate_pregame_data: inserted/updated 1 rows, skipped 2 games.
+2026-01-02 17:42:42 INFO     root: Postprocessing CBB on 2025-12-27
+2026-01-02 17:42:44 INFO     root: Successfully processed 1 games. Odds updated for 1. Score updates skipped for 0 games.
+2026-01-02 17:42:44 INFO     root: Preprocessing NFL on 2025-12-26
+2026-01-02 17:42:44 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 17:42:44 INFO     root: Postprocessing NFL on 2025-12-26
+2026-01-02 17:42:44 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 17:42:44 INFO     root: No games found in DB for NFL on 2025-12-26 to post-process.
+2026-01-02 17:42:44 INFO     root: Preprocessing NBA on 2025-12-26
+2026-01-02 17:44:15 INFO     root: populate_pregame_data: inserted/updated 9 rows, skipped 0 games.
+2026-01-02 17:44:15 INFO     root: Postprocessing NBA on 2025-12-26
+2026-01-02 17:44:32 INFO     root: Successfully processed 9 games. Odds updated for 9. Score updates skipped for 0 games.
+2026-01-02 17:44:32 INFO     root: Preprocessing CFB on 2025-12-26
+2026-01-02 17:45:27 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/opponent-passing-yards-pct?date=2025-12-26, sleeping 4 minutes before retry
+2026-01-02 17:50:05 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 17:50:05 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 17:50:05 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 17:50:24 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 17:50:24 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:50:24 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 17:50:24 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:50:24 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 17:50:24 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 17:51:10 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 17:51:10 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 17:51:10 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 17:51:14 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:51:14 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 17:51:14 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 17:51:14 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 17:51:14 INFO     root: Postprocessing CFB on 2025-12-26
+2026-01-02 17:52:28 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 17:52:28 INFO     root: Preprocessing CBB on 2025-12-26
+2026-01-02 17:52:29 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 17:52:29 INFO     root: Postprocessing CBB on 2025-12-26
+2026-01-02 17:52:29 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 17:52:29 INFO     root: No games found in DB for CBB on 2025-12-26 to post-process.
+2026-01-02 17:52:29 INFO     root: Preprocessing NFL on 2025-12-25
+2026-01-02 17:54:43 INFO     root: populate_pregame_data: inserted/updated 3 rows, skipped 0 games.
+2026-01-02 17:54:43 INFO     root: Postprocessing NFL on 2025-12-25
+2026-01-02 17:54:50 INFO     root: Successfully processed 3 games. Odds updated for 3. Score updates skipped for 0 games.
+2026-01-02 17:54:50 INFO     root: Preprocessing NBA on 2025-12-25
+2026-01-02 17:56:22 INFO     root: populate_pregame_data: inserted/updated 5 rows, skipped 0 games.
+2026-01-02 17:56:22 INFO     root: Postprocessing NBA on 2025-12-25
+2026-01-02 17:56:32 INFO     root: Successfully processed 5 games. Odds updated for 5. Score updates skipped for 0 games.
+2026-01-02 17:56:32 INFO     root: Preprocessing CFB on 2025-12-25
+2026-01-02 17:56:33 WARNING  root: 403 Forbidden at https://www.teamrankings.com/college-football/stat/points-per-game?date=2025-12-25, sleeping 4 minutes before retry
+2026-01-02 18:02:17 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 18:02:17 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 18:02:17 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 18:02:38 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 18:02:38 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 18:02:38 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 18:02:38 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 18:02:38 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 18:02:38 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 18:03:27 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 18:03:27 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 18:03:27 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 18:03:31 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 18:03:31 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 18:03:31 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 18:03:31 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 18:03:31 INFO     root: Postprocessing CFB on 2025-12-25
+2026-01-02 18:04:45 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 18:04:45 INFO     root: Preprocessing CBB on 2025-12-25
+2026-01-02 18:04:46 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 18:04:46 INFO     root: Postprocessing CBB on 2025-12-25
+2026-01-02 18:04:46 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 18:04:49 INFO     root: No games found in DB for CBB on 2025-12-25 to post-process.
+2026-01-02 18:04:49 INFO     root: Preprocessing NFL on 2025-12-24
+2026-01-02 18:04:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 18:04:50 INFO     root: Postprocessing NFL on 2025-12-24
+2026-01-02 18:04:50 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 18:04:50 INFO     root: No games found in DB for NFL on 2025-12-24 to post-process.
+2026-01-02 18:04:50 INFO     root: Preprocessing NBA on 2025-12-24
+2026-01-02 18:04:50 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 18:04:50 INFO     root: Postprocessing NBA on 2025-12-24
+2026-01-02 18:04:50 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 18:04:50 INFO     root: No games found in DB for NBA on 2025-12-24 to post-process.
+2026-01-02 18:04:50 INFO     root: Preprocessing CFB on 2025-12-24
+2026-01-02 18:06:36 ERROR    root: Team 'SC State' not found in stats for 'points-per-game'
+2026-01-02 18:06:36 ERROR    root: Team 'Prairie View' not found in stats for 'points-per-game'
+2026-01-02 18:06:36 ERROR    root: Could not fetch stats for SC State or Prairie View, skipping
+2026-01-02 18:06:56 ERROR    root: Team 'Montana' not found in stats for 'points-per-game'
+2026-01-02 18:06:56 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 18:06:56 ERROR    root: Could not fetch stats for Montana or Montana St, skipping
+2026-01-02 18:06:56 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 18:06:56 ERROR    root: Team 'Villanova' not found in stats for 'points-per-game'
+2026-01-02 18:06:56 ERROR    root: Could not fetch stats for Illinois St or Villanova, skipping
+2026-01-02 18:07:44 ERROR    root: Team 'Illinois St' not found in stats for 'points-per-game'
+2026-01-02 18:07:44 ERROR    root: Team 'Montana St' not found in stats for 'points-per-game'
+2026-01-02 18:07:44 ERROR    root: Could not fetch stats for Illinois St or Montana St, skipping
+2026-01-02 18:07:47 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 18:07:47 ERROR    root: Team 'TBD' not found in stats for 'points-per-game'
+2026-01-02 18:07:47 ERROR    root: Could not fetch stats for TBD or TBD, skipping
+2026-01-02 18:07:47 INFO     root: populate_pregame_data: inserted/updated 46 rows, skipped 5 games.
+2026-01-02 18:07:47 INFO     root: Postprocessing CFB on 2025-12-24
+2026-01-02 18:08:59 INFO     root: Successfully processed 46 games. Odds updated for 46. Score updates skipped for 5 games.
+2026-01-02 18:08:59 INFO     root: Preprocessing CBB on 2025-12-24
+2026-01-02 18:08:59 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 18:08:59 INFO     root: Postprocessing CBB on 2025-12-24
+2026-01-02 18:09:00 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 18:09:02 INFO     root: No games found in DB for CBB on 2025-12-24 to post-process.
+2026-01-02 18:09:02 INFO     root: Preprocessing NFL on 2025-12-23
+2026-01-02 18:09:03 INFO     root: populate_pregame_data: inserted/updated 0 rows, skipped 0 games.
+2026-01-02 18:09:03 INFO     root: Postprocessing NFL on 2025-12-23
+2026-01-02 18:09:03 WARNING  root: Scoreboard was empty or could not be fetched. No games to process.
+2026-01-02 18:09:03 INFO     root: No games found in DB for NFL on 2025-12-23 to post-process.
+2026-01-02 18:09:03 INFO     root: Preprocessing NBA on 2025-12-23
+2026-01-02 18:10:50 INFO     root: populate_pregame_data: inserted/updated 14 rows, skipped 0 games.
+2026-01-02 18:10:50 INFO     root: Postprocessing NBA on 2025-12-23
+2026-01-02 18:11:15 INFO     root: Successfully processed 14 games. Odds updated for 14. Score updates skipped for 0 games.
+2026-01-02 18:11:15 INFO     root: Preprocessing CFB on 2025-12-23

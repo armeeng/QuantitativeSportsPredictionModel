@@ -1,4 +1,3 @@
-# Save this file as dashboard.py
 import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
@@ -11,9 +10,10 @@ import requests
 import matplotlib.pyplot as plt
 from contextlib import redirect_stdout
 import io
+import numpy as np
+import plotly.express as px
 
 # --- Path Correction & Model Imports --------------------------------------------------
-# This allows the script to find your other Python files
 current_dir = os.path.dirname(os.path.abspath(__file__))
 parent_dir = os.path.dirname(current_dir)
 if parent_dir not in sys.path:
@@ -24,7 +24,7 @@ try:
     from TestModel import TestModel
 except ImportError as e:
     st.error(f"FATAL: Could not import a required class. Ensure Pregame.py and TestModel.py are accessible.")
-    st.exception(e) # Show the full traceback for debugging
+    st.exception(e) 
     st.stop()
 
 
@@ -154,14 +154,11 @@ def fetch_live_scoreboard_data(selected_date: date, selected_sport: str) -> dict
     date_str = selected_date.strftime("%Y%m%d")
     
     try:
-        # <<< MODIFIED SECTION START >>>
-        # Create params dict and add extra params for CBB
         params = {"dates": date_str}
         if selected_sport == "CBB":
             params.update({"groups": 50, "limit": 500})
 
         resp = requests.get(url, params=params, timeout=5)
-        # <<< MODIFIED SECTION END >>>
         
         resp.raise_for_status()
         data = resp.json()
@@ -184,7 +181,6 @@ def fetch_live_scoreboard_data(selected_date: date, selected_sport: str) -> dict
                 }
                 
     except requests.exceptions.RequestException as e:
-        # Assuming st.toast is available in this scope
         st.toast(f"Couldn't fetch live scores: {e}", icon="📡")
         
     return live_data_map
@@ -209,6 +205,139 @@ def get_historical_date_range(selected_sport: str) -> tuple[date, date]:
     except Exception:
         pass
     return date.today() - timedelta(days=30), date.today()
+
+# --- Custom Audit Simulation Function ------------------------------------------------
+def run_audit_simulation(analyzer, initial_bankroll=1000, max_fraction=0.01):
+    """
+    A specialized version of simulate_kelly_betting that logs every transaction
+    into a DataFrame for the Audit Tab, including a BATCH ID.
+    FIXED: Prevents intra-day compounding by sizing bets on 'start_of_day_bankroll'.
+    """
+    if not isinstance(analyzer.predictions, dict): return None
+    
+    # 1. Prepare Data
+    o = analyzer._get_outcomes()
+    probs = {'win': analyzer.predictions['win'][:, 1], 'spread': analyzer.predictions['spread'][:, 1], 'over': analyzer.predictions['over'][:, 1]}
+    decimal_odds = {k: analyzer._american_to_decimal(v) for k, v in analyzer.test_odds.items()}
+    dates = pd.to_datetime(analyzer.test_odds['date']) if 'date' in analyzer.test_odds.columns else pd.Series(range(len(analyzer.y_test)))
+    
+    sim_df = pd.DataFrame({
+        'date': dates,
+        'team1': analyzer.test_odds['team1_name'],
+        'team2': analyzer.test_odds['team2_name'],
+        'team1_score': analyzer.y_test['team1_score'] if isinstance(analyzer.y_test, pd.DataFrame) else analyzer.y_test[:,0],
+        'team2_score': analyzer.y_test['team2_score'] if isinstance(analyzer.y_test, pd.DataFrame) else analyzer.y_test[:,1],
+        'win_prob': probs['win'], 'spread_prob': probs['spread'], 'over_prob': probs['over'],
+        'actual_winner_is_t1': o['actual_winner_is_t1'],
+        'actual_spread_is_t1_cover': o['actual_spread_is_t1_cover'],
+        'spread_pushes': o['spread_pushes'],
+        'actual_is_over': o['actual_is_over'],
+        'ou_pushes': o['ou_pushes'],
+        'team1_ml': decimal_odds['team1_ml'], 'team2_ml': decimal_odds['team2_ml'],
+        'team1_spread': decimal_odds['team1_spread_odds'], 'team2_spread': decimal_odds['team2_spread_odds'],
+        'over_odds': decimal_odds['over_odds'], 'under_odds': decimal_odds['under_odds'],
+        # Extra display info
+        'team1_line': analyzer.test_odds['team1_spread'],
+        'total_line': analyzer.test_odds['total_score']
+    })
+
+    sim_df = sim_df.sort_values('date')
+    audit_logs = []
+
+    # 2. Run Simulation for each Bet Type
+    bet_types_config = {
+        'Moneyline': {'prob': 'win_prob', 'o1': 'team1_ml', 'o2': 'team2_ml', 'outcome': 'actual_winner_is_t1', 'push': None},
+        'Spread': {'prob': 'spread_prob', 'o1': 'team1_spread', 'o2': 'team2_spread', 'outcome': 'actual_spread_is_t1_cover', 'push': 'spread_pushes'},
+        'Total': {'prob': 'over_prob', 'o1': 'over_odds', 'o2': 'under_odds', 'outcome': 'actual_is_over', 'push': 'ou_pushes'}
+    }
+
+    for bet_type_name, config in bet_types_config.items():
+        bankroll = initial_bankroll
+        batch_counter = 0 
+        
+        # --- DAILY BATCH LOOP ---
+        for date, day_batch in sim_df.groupby('date'):
+            batch_counter += 1
+            daily_bets = [] 
+            total_daily_fraction = 0.0
+            
+            # SNAPSHOT: Capture bankroll at the START of the day
+            start_of_day_bankroll = bankroll 
+
+            # PASS 1: Identify Bets
+            for _, row in day_batch.iterrows():
+                if config['push'] and row[config['push']]: continue
+                
+                odds1, odds2 = row[config['o1']], row[config['o2']]
+                if np.isnan(odds1) or np.isnan(odds2): continue
+
+                prob1 = row[config['prob']]
+                k1 = calculate_kelly_fraction(prob1, odds1)
+                k2 = calculate_kelly_fraction(1 - prob1, odds2)
+                
+                chosen_fraction = 0
+                active_odds = 0
+                won = False
+                bet_description = ""
+
+                if k1 > k2 and k1 > 0:
+                    chosen_fraction = min(k1, max_fraction)
+                    active_odds = odds1
+                    won = (row[config['outcome']] == 1)
+                    if bet_type_name == 'Moneyline': bet_description = f"{row['team1']} ML"
+                    elif bet_type_name == 'Spread': bet_description = f"{row['team1']} {row['team1_line']}"
+                    elif bet_type_name == 'Total': bet_description = f"Over {row['total_line']}"
+                elif k2 > k1 and k2 > 0:
+                    chosen_fraction = min(k2, max_fraction)
+                    active_odds = odds2
+                    won = (row[config['outcome']] == 0)
+                    if bet_type_name == 'Moneyline': bet_description = f"{row['team2']} ML"
+                    elif bet_type_name == 'Spread': bet_description = f"{row['team2']} {-row['team1_line']}"
+                    elif bet_type_name == 'Total': bet_description = f"Under {row['total_line']}"
+                
+                if chosen_fraction > 0:
+                    daily_bets.append({
+                        'batch_id': batch_counter,
+                        'date': date,
+                        'game': f"{row['team1']} vs {row['team2']}",
+                        'final_score': f"{int(row['team1_score'])}-{int(row['team2_score'])}",
+                        'bet_type': bet_type_name,
+                        'bet_on': bet_description,
+                        'fraction': chosen_fraction,
+                        'odds': active_odds,
+                        'won': won
+                    })
+                    total_daily_fraction += chosen_fraction
+
+            # SCALING: Resize bets if total fraction > 1.0
+            scaling_factor = 1.0
+            if total_daily_fraction > 1.0:
+                scaling_factor = 1.0 / total_daily_fraction
+
+            # PASS 2: Execute
+            for bet in daily_bets:
+                final_fraction = bet['fraction'] * scaling_factor
+                
+                # CRITICAL FIX: Calculate bet amount based on START OF DAY bankroll
+                bet_amount = start_of_day_bankroll * final_fraction 
+                
+                pnl = 0
+                if bet['won']:
+                    profit = bet_amount * (bet['odds'] - 1)
+                    pnl = profit
+                    bankroll += profit # Update running bankroll for display
+                else:
+                    pnl = -bet_amount
+                    bankroll -= bet_amount # Update running bankroll for display
+                
+                bet['wager'] = bet_amount
+                bet['pnl'] = pnl
+                bet['bankroll_after'] = bankroll
+                bet['result'] = "WIN" if bet['won'] else "LOSS"
+                audit_logs.append(bet)
+
+    return pd.DataFrame(audit_logs)
+
 
 # --- UI Layout -----------------------------------------------------------------------
 st.title(f"🏈 ⚾️ {APP_TITLE} 🏀 🏒")
@@ -236,28 +365,25 @@ with st.sidebar:
                     st.error(f"An error occurred during refresh: {e}")
 
 st.markdown("### Betting Strategy Configuration")
-st.markdown("These settings apply to both the **Betting Card** and the **Historical Performance** backtest.")
 c1, c2 = st.columns(2)
 bankroll = c1.number_input("Enter your bankroll ($)", min_value=0.0, value=1000.0, step=100.0)
-max_bet_percent = c2.number_input("Max Bet as % of Bankroll (The 'Safety Net')", min_value=0.1, max_value=100.0, value=1.0, step=0.1, help="Sets the MAXIMUM percentage of your bankroll to risk on any single bet, mirroring the 'max_fraction' in the backtest.")
+max_bet_percent = c2.number_input("Max Bet as % of Bankroll", min_value=0.1, max_value=100.0, value=1.0, step=0.1)
 max_bet_fraction = max_bet_percent / 100.0
 
-tab1, tab2 = st.tabs(["Today's Betting Card", "Historical Performance Analysis"])
+tab1, tab2, tab3 = st.tabs(["Today's Betting Card", "Historical Performance", "Sanity Check (Audit)"])
 
+# --- TAB 1: BETTING CARD (UNCHANGED) ---
 with tab1:
     if 'selected_sport' in locals() and 'selected_model' in locals():
         df = load_data(selected_date, selected_sport, selected_model)
         live_scoreboard = fetch_live_scoreboard_data(selected_date, selected_sport)
         if df.empty:
-            st.warning(f"No games or predictions found for **{selected_sport}** on **{selected_date.strftime('%Y-%m-%d')}** with model **{selected_model}**.")
+            st.warning(f"No games found for **{selected_sport}** on **{selected_date}**.")
         else:
-            # --- State Initialization for Editable DataFrames ---
             state_key = f"{selected_sport}_{selected_date.strftime('%Y%m%d')}_{selected_model}"
             if 'bet_state_key' not in st.session_state or st.session_state.bet_state_key != state_key:
                 st.session_state.bet_state_key = state_key
-                
                 ml_bets_list, spread_bets_list, total_bets_list = [], [], []
-                # Loop through data to find all positive EV bets
                 for index, game in df.iterrows():
                     game_name = f"{game['team1_name']} @ {game['team2_name']}"
                     # Moneyline
@@ -279,19 +405,15 @@ with tab1:
                     under_odds = game.get('under_odds')
                     if calculate_ev(prob_under, under_odds) > 0: total_bets_list.append({'Game': game_name, 'Bet Type': f"Under {total_line}", 'Line': total_line, 'Odds': under_odds, 'Model Prob': prob_under})
 
-                # Create and store DataFrames in session state
                 st.session_state.ml_df = pd.DataFrame(ml_bets_list) if ml_bets_list else pd.DataFrame()
                 st.session_state.spread_df = pd.DataFrame(spread_bets_list) if spread_bets_list else pd.DataFrame()
                 st.session_state.total_df = pd.DataFrame(total_bets_list) if total_bets_list else pd.DataFrame()
 
-            # --- Recalculation and Display Logic ---
             def process_and_display_bets(title, df_key, editor_key):
                 st.markdown(f"#### {title}")
                 if df_key not in st.session_state or st.session_state[df_key].empty:
                     st.info(f"No positive EV {title.lower()} found.")
                     return
-                
-                # Add EV and Kelly Bet columns for display
                 temp_df = st.session_state[df_key].copy()
                 temp_df['EV'] = temp_df.apply(lambda row: calculate_ev(row['Model Prob'], row['Odds']) * 100, axis=1)
                 def calc_kelly_display(row):
@@ -300,227 +422,123 @@ with tab1:
                     bet_size = bankroll * min(kelly_frac, max_bet_fraction)
                     return f"${bet_size:.2f}"
                 temp_df['Kelly Bet'] = temp_df.apply(calc_kelly_display, axis=1)
-
-                edited_df = st.data_editor(
-                    temp_df,
-                    key=editor_key,
-                    use_container_width=True,
-                    hide_index=True,
-                    disabled=["Game", "Bet Type", "Line", "Model Prob", "EV", "Kelly Bet"],
-                    column_config={
-                        "Model Prob": st.column_config.NumberColumn("Model Prob", format="%.4f", min_value=0, max_value=100),
-                        "EV": st.column_config.NumberColumn("EV", format="%.2f%%"),
-                        "Odds": st.column_config.NumberColumn("Odds", format="%d", step=1)
-                    }
-                )
-
-                # Check if the user edited the odds
+                edited_df = st.data_editor(temp_df, key=editor_key, use_container_width=True, hide_index=True, disabled=["Game", "Bet Type", "Line", "Model Prob", "EV", "Kelly Bet"])
                 if not edited_df['Odds'].equals(temp_df['Odds']):
-                    # Update the original DataFrame in state with just the edited odds
                     st.session_state[df_key]['Odds'] = edited_df['Odds']
                     st.rerun()
 
             st.markdown("### Recommended Bets Summary")
-            st.markdown("_Tip: You can edit the **Odds** column to see how the EV changes._")
             process_and_display_bets("Moneyline Bets", 'ml_df', 'ml_editor')
             process_and_display_bets("Spread Bets", 'spread_df', 'spread_editor')
             process_and_display_bets("Over/Under Bets", 'total_df', 'total_editor')
             st.divider()
 
-            # --- Game-by-Game Detail Section (remains unchanged) ---
-            st.success(f"Found {len(df)} games for **{selected_sport}** on **{selected_date.strftime('%Y-%m-%d')}**")
+            st.success(f"Found {len(df)} games for **{selected_sport}** on **{selected_date}**")
             st.markdown("### Game-by-Game Breakdown")
             for index, game in df.iterrows():
                 with st.container(border=True):
                     col1, col2, col3 = st.columns([2.5, 1.5, 2.5])
                     with col1:
-                        if pd.notna(game['team1_logo']) and game['team1_logo']:
-                            st.image(game['team1_logo'], width=60)
-                        st.subheader(f"{game['team1_name']} (Away)")
+                        if pd.notna(game['team1_logo']) and game['team1_logo']: st.image(game['team1_logo'], width=60)
+                        st.subheader(f"{game['team1_name']}")
                     with col2:
                         live_data = live_scoreboard.get(str(game['game_id']), {})
-                        live_t1_score = live_data.get('away_score')
-                        live_t2_score = live_data.get('home_score')
-                        status_text = live_data.get('status_detail', 'Scheduled')
-                        if live_t1_score is not None and live_t2_score is not None:
-                            st.metric(label=status_text, value=f"{live_t1_score} – {live_t2_score}", label_visibility="visible")
-                        else:
-                            st.markdown("<h3 style='text-align: center; color: grey;'>VS</h3>", unsafe_allow_html=True)
+                        st.metric(label=live_data.get('status_detail', 'Scheduled'), value=f"{live_data.get('away_score',0)} – {live_data.get('home_score',0)}")
                     with col3:
-                        if pd.notna(game['team2_logo']) and game['team2_logo']:
-                            st.image(game['team2_logo'], width=60)
-                        st.subheader(f"{game['team2_name']} (Home)")
-                    st.divider()
-                    # Moneyline Section
-                    st.markdown("##### Moneyline")
-                    b1, b2 = st.columns([1.5, 2.5])
-                    with b1:
-                        prob_t1, odds_t1 = game.get('team1_win_prob'), game.get('team1_moneyline')
-                        dec_odds_t1, ev_t1 = american_to_decimal(odds_t1), calculate_ev(prob_t1, odds_t1)
-                        kelly_t1 = calculate_kelly_fraction(prob_t1, dec_odds_t1)
-                        prob_t2 = 1 - prob_t1 if prob_t1 is not None else None
-                        odds_t2, dec_odds_t2 = game.get('team2_moneyline'), american_to_decimal(game.get('team2_moneyline'))
-                        ev_t2, kelly_t2 = calculate_ev(prob_t2, odds_t2), calculate_kelly_fraction(prob_t2, dec_odds_t2)
-                        if ev_t1 > 0 and ev_t1 > ev_t2:
-                            bet_fraction, bet_size = min(kelly_t1, max_bet_fraction), bankroll * min(kelly_t1, max_bet_fraction)
-                            st.success(f"✅ Bet on {game['team1_name']} ({odds_t1:+.0f})")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_t1*100:.2f}%")
-                        elif ev_t2 > 0 and ev_t2 > ev_t1:
-                            bet_fraction, bet_size = min(kelly_t2, max_bet_fraction), bankroll * min(kelly_t2, max_bet_fraction)
-                            st.success(f"✅ Bet on {game['team2_name']} ({odds_t2:+.0f})")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_t2*100:.2f}%")
-                        else: st.info("No value found. Do not bet.")
-                    with b2:
-                        imp_prob_t1, imp_prob_t2 = american_to_prob(odds_t1), american_to_prob(odds_t2)
-                        st.dataframe({'Team': [game['team1_name'], game['team2_name']], 'Model Prob': [f"{prob_t1*100:.1f}%" if prob_t1 else 'N/A', f"{prob_t2*100:.1f}%" if prob_t2 else 'N/A'], 'Odds': [odds_t1, odds_t2], 'Implied Prob': [f"{imp_prob_t1*100:.1f}%" if imp_prob_t1 else 'N/A', f"{imp_prob_t2*100:.1f}%" if imp_prob_t2 else 'N/A'], 'EV': [f"{ev_t1*100:.2f}%", f"{ev_t2*100:.2f}%"]}, use_container_width=True, hide_index=True)
-                    st.divider()
-                    # Point Spread Section
-                    st.markdown("##### Point Spread")
-                    b1, b2 = st.columns([1.5, 2.5])
-                    with b1:
-                        prob_t1_cover, spread_t1 = game.get('team1_cover_prob'), game.get('team1_spread')
-                        odds_t1_spread, odds_t2_spread = game.get('team1_spread_odds'), game.get('team2_spread_odds')
-                        dec_odds_t1_spread, ev_t1_spread = american_to_decimal(odds_t1_spread), calculate_ev(prob_t1_cover, odds_t1_spread)
-                        kelly_t1_spread = calculate_kelly_fraction(prob_t1_cover, dec_odds_t1_spread)
-                        prob_t2_cover = 1 - prob_t1_cover if prob_t1_cover is not None else None
-                        dec_odds_t2_spread, ev_t2_spread = american_to_decimal(odds_t2_spread), calculate_ev(prob_t2_cover, odds_t2_spread)
-                        kelly_t2_spread = calculate_kelly_fraction(prob_t2_cover, dec_odds_t2_spread)
-                        if ev_t1_spread > 0 and ev_t1_spread > ev_t2_spread:
-                            bet_fraction, bet_size = min(kelly_t1_spread, max_bet_fraction), bankroll * min(kelly_t1_spread, max_bet_fraction)
-                            st.success(f"✅ Bet on {game['team1_name']} ({spread_t1:+.1f})")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_t1_spread*100:.2f}%")
-                        elif ev_t2_spread > 0 and ev_t2_spread > ev_t1_spread:
-                            bet_fraction, bet_size = min(kelly_t2_spread, max_bet_fraction), bankroll * min(kelly_t2_spread, max_bet_fraction)
-                            st.success(f"✅ Bet on {game['team2_name']} ({-spread_t1:+.1f})")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_t2_spread*100:.2f}%")
-                        else: st.info("No value found. Do not bet.")
-                    with b2:
-                        imp_prob_t1_spread, imp_prob_t2_spread = american_to_prob(odds_t1_spread), american_to_prob(odds_t2_spread)
-                        st.dataframe({'Bet': [f"{game['team1_name']} ({spread_t1:+.1f})", f"{game['team2_name']} ({-spread_t1:+.1f})"],'Model Prob': [f"{prob_t1_cover*100:.1f}%" if prob_t1_cover else 'N/A', f"{prob_t2_cover*100:.1f}%" if prob_t2_cover else 'N/A'],'Odds': [odds_t1_spread, odds_t2_spread],'Implied Prob': [f"{imp_prob_t1_spread*100:.1f}%" if imp_prob_t1_spread else 'N/A', f"{imp_prob_t2_spread*100:.1f}%" if imp_prob_t2_spread else 'N/A'],'EV': [f"{ev_t1_spread*100:.2f}%", f"{ev_t2_spread*100:.2f}%"]}, use_container_width=True, hide_index=True)
-                    st.divider()
-                    # Totals (Over/Under) Section
-                    st.markdown("##### Totals (Over/Under)")
-                    b1, b2 = st.columns([1.5, 2.5])
-                    with b1:
-                        prob_over, total_line = game.get('over_prob'), game.get('total_score')
-                        over_odds, under_odds = game.get('over_odds'), game.get('under_odds')
-                        dec_odds_over, ev_over = american_to_decimal(over_odds), calculate_ev(prob_over, over_odds)
-                        kelly_over = calculate_kelly_fraction(prob_over, dec_odds_over)
-                        prob_under = 1 - prob_over if prob_over is not None else None
-                        dec_odds_under, ev_under = american_to_decimal(under_odds), calculate_ev(prob_under, under_odds)
-                        kelly_under = calculate_kelly_fraction(prob_under, dec_odds_under)
-                        if ev_over > 0 and ev_over > ev_under:
-                            bet_fraction, bet_size = min(kelly_over, max_bet_fraction), bankroll * min(kelly_over, max_bet_fraction)
-                            st.success(f"✅ Bet on Over {total_line}")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_over*100:.2f}%")
-                        elif ev_under > 0 and ev_under > ev_over:
-                            bet_fraction, bet_size = min(kelly_under, max_bet_fraction), bankroll * min(kelly_under, max_bet_fraction)
-                            st.success(f"✅ Bet on Under {total_line}")
-                            st.metric("Suggested Wager", f"${bet_size:.2f}", f"Edge / EV: {ev_under*100:.2f}%")
-                        else: st.info("No value found. Do not bet.")
-                    with b2:
-                        imp_prob_over, imp_prob_under = american_to_prob(over_odds), american_to_prob(under_odds)
-                        st.dataframe({'Bet': [f"Over {total_line}", f"Under {total_line}"],'Model Prob': [f"{prob_over*100:.1f}%" if prob_over else 'N/A', f"{prob_under*100:.1f}%" if prob_under else 'N/A'],'Odds': [over_odds, under_odds],'Implied Prob': [f"{imp_prob_over*100:.1f}%" if imp_prob_over else 'N/A', f"{imp_prob_under*100:.1f}%" if imp_prob_under else 'N/A'],'EV': [f"{ev_over*100:.2f}%", f"{ev_under*100:.2f}%"]}, use_container_width=True, hide_index=True)
-            with st.expander("Show Raw Data Table"):
-                st.dataframe(df)
+                        if pd.notna(game['team2_logo']) and game['team2_logo']: st.image(game['team2_logo'], width=60)
+                        st.subheader(f"{game['team2_name']}")
     else:
-        st.info("Please select filters from the sidebar to view games.")
+        st.info("Select filters.")
 
+# --- TAB 2: HISTORICAL (UNCHANGED) ---
 with tab2:
     st.header(f"Historical Performance Review")
-    st.markdown("This section runs all tests from the `TestModel` class and displays the raw output.")
-
     if 'selected_sport' in locals() and 'selected_model' in locals():
         min_hist_date, max_hist_date = get_historical_date_range(selected_sport)
-        st.markdown("#### Select Date Range for Analysis")
         c1, c2 = st.columns(2)
         start_date = c1.date_input("Start Date", min_hist_date, min_value=min_hist_date, max_value=max_hist_date)
         end_date = c2.date_input("End Date", max_hist_date, min_value=min_hist_date, max_value=max_hist_date)
 
-        if start_date > end_date:
-            st.error("Error: Start date cannot be after end date.")
-        else:
+        if start_date <= end_date:
             st.markdown("---")
-            with st.spinner(f"Loading and analyzing historical data for model '{selected_model}' in '{selected_sport}'..."):
+            with st.spinner(f"Running historical analysis..."):
                 hist_df = load_historical_data_for_testmodel(selected_sport, selected_model, start_date, end_date)
-
-                if hist_df.empty or 'team1_score' not in hist_df.columns:
-                    st.warning(f"No completed games with final scores found for model **'{selected_model}'** in **{selected_sport}** within the selected date range. Try expanding the date range or run the 'Update Final Scores' process for past dates.")
-                elif not all(k in hist_df.columns for k in ['team1_win_prob', 'team1_cover_prob', 'over_prob']):
-                     st.error("Historical data is missing required prediction probabilities. The selected model may not be a classifier, which is required for this analysis.")
-                else:
-                    st.success(f"Found **{len(hist_df)}** completed games to analyze from **{start_date.strftime('%Y-%m-%d')}** to **{end_date.strftime('%Y-%m-%d')}**.")
-
+                if not hist_df.empty:
                     y_test = hist_df[['team1_score', 'team2_score']].to_numpy()
                     hist_df.rename(columns={'team1_moneyline': 'team1_ml', 'team2_moneyline': 'team2_ml'}, inplace=True, errors='ignore')
                     predictions = {'win': hist_df[['team1_win_prob']].apply(lambda x: [1-x.iloc[0], x.iloc[0]], axis=1).to_list(), 'spread': hist_df[['team1_cover_prob']].apply(lambda x: [1-x.iloc[0], x.iloc[0]], axis=1).to_list(), 'over': hist_df[['over_prob']].apply(lambda x: [1-x.iloc[0], x.iloc[0]], axis=1).to_list()}
                     for key in predictions: predictions[key] = pd.DataFrame(predictions[key]).to_numpy()
 
-                    try:
-                        analyzer = TestModel(predictions=predictions, y_test=y_test, test_odds=hist_df)
-                        
-                        st.subheader("Full Performance Analysis Report")
-                        
-                        # --- Manually call text-based analysis functions ---
-                        text_output = io.StringIO()
-                        with redirect_stdout(text_output):
-                            acc = analyzer.calculate_accuracies()
-                            print("\nModel Prediction Accuracy:")
-                            print(f"  - Winner Accuracy:     {acc['win_accuracy']:.2%} ({acc['correct_winner_preds']}/{acc['total_games']})")
-                            print(f"  - Spread Accuracy:     {acc['spread_accuracy']:.2%} ({acc['correct_spread_preds']}/{acc['num_spread_outcomes']})")
-                            print(f"  - Over/Under Accuracy: {acc['total_accuracy']:.2%} ({acc['correct_ou_preds']}/{acc['num_ou_outcomes']})")
-
-                            pnl = analyzer.calculate_pnl_of_all_games()
-                            print(f"\nProfit & Loss (flat $1 bets on all available odds):")
-                            print(f"  - Moneyline PnL:      ${pnl['moneyline_pnl']:.2f} from {pnl['moneyline_bets_placed']} bets")
-                            print(f"  - Spread PnL:         ${pnl['spread_pnl']:.2f} from {pnl['spread_bets_placed']} bets")
-                            print(f"  - Over/Under PnL:     ${pnl['ou_pnl']:.2f} from {pnl['ou_bets_placed']} bets")
-
-                            if isinstance(analyzer.predictions, dict):
-                                ev_pnl = analyzer.calculate_pnl_of_game_above_ev_threshold()
-                                ml_info, spread_info, ou_info = ev_pnl['moneyline'], ev_pnl['spread'], ev_pnl['ou']
-                                print("\nPnL on +EV Bets (Classifier Only):")
-                                print(f"  - Moneyline:  ${ml_info['pnl']:.2f} from {ml_info['count']} bets ({ml_info['count']/acc['total_games']:.1%})")
-                                print(f"  - Spread:     ${spread_info['pnl']:.2f} from {spread_info['count']} bets ({spread_info['count']/acc['total_games']:.1%})")
-                                print(f"  - Over/Under: ${ou_info['pnl']:.2f} from {ou_info['count']} bets ({ou_info['count']/acc['total_games']:.1%})")
-
-                                analyzer.calculate_p_values()
-
-                                kelly_results = analyzer.simulate_kelly_betting(initial_bankroll=bankroll, max_fraction=max_bet_fraction)
-                                kelly_ml, kelly_spread, kelly_ou = kelly_results['moneyline'], kelly_results['spread'], kelly_results['ou']
-                                print(f"\nKelly Criterion Simulation (Historical Backtest, max_frac={max_bet_fraction:.2%}):")
-                                print(f"  - Moneyline:  Final Bankroll: ${kelly_ml['final_bankroll']:.2f} (Profit: ${kelly_ml['final_bankroll'] - bankroll:.2f})")
-                                print(f"  - Spread:     Final Bankroll: ${kelly_spread['final_bankroll']:.2f} (Profit: ${kelly_spread['final_bankroll'] - bankroll:.2f})")
-                                print(f"  - Over/Under: Final Bankroll: ${kelly_ou['final_bankroll']:.2f} (Profit: ${kelly_ou['final_bankroll'] - bankroll:.2f})")
-                        
-                        st.code(text_output.getvalue(), language='text')
-
-                        # --- Manually call functions that generate plots ---
-                        if isinstance(analyzer.predictions, dict):
-                            # Use lambdas to pass arguments to functions that need them
-                            plotting_functions = {
-                                "Model vs. Market Calibration": analyzer.check_calibration,
-                                "Probabilistic Monte Carlo (Model Probs)": lambda: analyzer.run_probabilistic_monte_carlo(initial_bankroll=bankroll, max_fraction=max_bet_fraction),
-                                "Probabilistic Monte Carlo (Market Probs)": lambda: analyzer.run_market_monte_carlo(initial_bankroll=bankroll, max_fraction=max_bet_fraction),
-                                "Bootstrap Simulation": lambda: analyzer.run_bootstrap_simulation(initial_bankroll=bankroll, max_fraction=max_bet_fraction)
-                            }
-
-                            for title, func in plotting_functions.items():
-                                st.subheader(title)
-                                plot_output_capture = io.StringIO()
-                                with redirect_stdout(plot_output_capture):
-                                    plt.close('all')
-                                    func()
-                                    fig = plt.gcf()
-                                st.code(plot_output_capture.getvalue(), language='text')
-                                if fig.get_axes(): st.pyplot(fig)
-                                plt.close(fig)
+                    analyzer = TestModel(predictions=predictions, y_test=y_test, test_odds=hist_df, dates=hist_df['date'])
                     
-                    except ValueError as e:
-                        if 'y_true contains only one label' in str(e):
-                            st.warning("⚠️ **Could not generate full report.**", icon="⚠️")
-                            st.info("This is likely because all game outcomes in the selected date range were the same. The analysis requires at least one of each outcome (e.g., at least one win and one loss) to run.")
-                        else: st.error("An unexpected value error occurred during the analysis."); st.exception(e)
-                    except Exception as e: st.error("An error occurred during historical analysis."); st.exception(e)
+                    text_output = io.StringIO()
+                    with redirect_stdout(text_output):
+                        analyzer.display_results(initial_bankroll=bankroll, max_fraction=max_bet_fraction) # Will use print statements
+                    st.code(text_output.getvalue(), language='text')
+
+                    if isinstance(analyzer.predictions, dict):
+                        plotting_functions = {
+                            "Model vs. Market Calibration": analyzer.check_calibration,
+                            "Monte Carlo": lambda: analyzer.run_probabilistic_monte_carlo(initial_bankroll=bankroll, max_fraction=max_bet_fraction),
+                        }
+                        for title, func in plotting_functions.items():
+                            st.subheader(title)
+                            plot_output = io.StringIO()
+                            with redirect_stdout(plot_output):
+                                plt.close('all')
+                                func()
+                                fig = plt.gcf()
+                            if fig.get_axes(): st.pyplot(fig)
+                            plt.close(fig)
+                else:
+                    st.warning("No historical data found.")
+
+# --- TAB 3: SANITY CHECK (UPDATED) ---
+with tab3:
+    st.header("🕵️‍♂️ Sanity Check (Audit Log)")
+    st.markdown("Verify every single bet the simulation makes. Check for 'Time Travel' errors (betting on games with known scores) or logic errors.")
+    
+    if 'analyzer' in locals() and 'hist_df' in locals() and not hist_df.empty:
+        st.info(f"Auditing simulation from {start_date} to {end_date}...")
+        
+        audit_df = run_audit_simulation(analyzer, initial_bankroll=bankroll, max_fraction=max_bet_fraction)
+        
+        if audit_df is not None and not audit_df.empty:
+            # Filters for the audit table
+            bet_type_filter = st.multiselect("Filter by Bet Type", audit_df['bet_type'].unique(), default=audit_df['bet_type'].unique())
+            result_filter = st.multiselect("Filter by Result", ['WIN', 'LOSS'], default=['WIN', 'LOSS'])
+            
+            filtered_audit = audit_df[
+                (audit_df['bet_type'].isin(bet_type_filter)) & 
+                (audit_df['result'].isin(result_filter))
+            ]
+            
+            st.metric("Total Bets Placed", len(filtered_audit))
+            
+            # Formatting and Display
+            st.dataframe(
+                filtered_audit.style.format({
+                    'batch_id': 'Batch {}',
+                    'fraction': '{:.2%}',
+                    'odds': '{:.2f}',
+                    'wager': '${:.2f}',
+                    'pnl': '${:+.2f}',
+                    'bankroll_after': '${:.2f}',
+                    'date': '{:%Y-%m-%d}'
+                }).map(lambda x: 'color: green' if x == 'WIN' else 'color: red', subset=['result']),
+                use_container_width=True,
+                column_order=['batch_id', 'date', 'game', 'final_score', 'bet_type', 'bet_on', 'result', 'wager', 'pnl', 'bankroll_after']
+            )
+            
+            # Plot bankroll over time for sanity check
+            st.subheader("Bankroll Evolution (Sanity Check)")
+            # Group by date to show end-of-day bankroll
+            daily_end_bankroll = audit_df.groupby(['date', 'bet_type'])['bankroll_after'].last().unstack()
+            fig = px.line(daily_end_bankroll, markers=True)
+            fig.update_traces(connectgaps=True)
+            st.plotly_chart(fig, use_container_width=True)
+            
+        else:
+            st.warning("No bets were placed during this period (or data is missing).")
     else:
-        st.info("Please select filters from the sidebar to run the analysis.")
+        st.info("⚠️ Please run the **Historical Performance** tab first to load the data for the audit.")

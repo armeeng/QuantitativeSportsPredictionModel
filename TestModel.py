@@ -12,7 +12,7 @@ class TestModel:
     betting odds and adds accuracy calculations, along with Kelly Criterion betting simulation.
     NEW: Adds two simulation methods: a probabilistic Monte Carlo and a more realistic Bootstrap simulation.
     """
-    def __init__(self, predictions, y_test, test_odds):
+    def __init__(self, predictions, y_test, test_odds, dates=None):
         """
         Initializes the TestModel with the data from an MLModel instance.
         Args:
@@ -25,6 +25,7 @@ class TestModel:
         self.test_odds = test_odds
         # Cache outcomes to avoid recalculating
         self._outcomes = None
+        self.dates = pd.to_datetime(dates) if dates is not None else None
 
     @staticmethod
     def _calculate_profit(odds, bet_amount=1.0):
@@ -279,30 +280,122 @@ class TestModel:
         }
         
     def simulate_kelly_betting(self, initial_bankroll=1000, max_fraction=0.01):
-        if not isinstance(self.predictions, dict): return {k: {'final_bankroll': np.nan, 'bets_placed': 0, 'total_wagered': np.nan} for k in ['moneyline', 'spread', 'ou']}
-        o, bankrolls, bets_placed, total_wagered = self._get_outcomes(), {'moneyline': initial_bankroll, 'spread': initial_bankroll, 'ou': initial_bankroll}, {'moneyline': 0, 'spread': 0, 'ou': 0}, {'moneyline': 0.0, 'spread': 0.0, 'ou': 0.0}
-        probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
-        decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
-        for i in range(len(self.y_test)):
-            for bet_type, sides in {'moneyline': ('team1_ml', 'team2_ml', 'win', 'actual_winner_is_t1', None), 
-                                    'spread': ('team1_spread_odds', 'team2_spread_odds', 'spread', 'actual_spread_is_t1_cover', 'spread_pushes'),
-                                    'ou': ('over_odds', 'under_odds', 'over', 'actual_is_over', 'ou_pushes')}.items():
-                if sides[4] and o[sides[4]][i]: continue
-                odds1, odds2 = decimal_odds[sides[0]][i], decimal_odds[sides[1]][i]
-                if np.isnan(odds1) or np.isnan(odds2): continue
-                prob1 = probs[sides[2]][i]
-                kelly1, kelly2 = self._calculate_kelly_fraction(prob1, odds1), self._calculate_kelly_fraction(1 - prob1, odds2)
-                if kelly1 > 0 or kelly2 > 0:
-                    bet_on_side1 = kelly1 > kelly2
-                    fraction = min(kelly1 if bet_on_side1 else kelly2, max_fraction)
-                    bet_amount = bankrolls[bet_type] * fraction
-                    if bet_amount > 0:
-                        total_wagered[bet_type] += bet_amount
-                        won = (bet_on_side1 == o[sides[3]][i])
-                        odds_to_use = odds1 if bet_on_side1 else odds2
-                        bankrolls[bet_type] += bet_amount * (odds_to_use - 1) if won else -bet_amount
-                        bets_placed[bet_type] += 1
-        return {k: {'final_bankroll': v, 'bets_placed': bets_placed[k], 'total_wagered': total_wagered[k]} for k, v in bankrolls.items()}
+            """
+            Simulates Kelly betting with DAILY batching.
+            Updated to scale down bets if the total daily fraction exceeds 100% of the bankroll.
+            """
+            if not isinstance(self.predictions, dict):
+                return {k: {'final_bankroll': np.nan, 'bets_placed': 0, 'total_wagered': np.nan, 'roi': np.nan} 
+                        for k in ['moneyline', 'spread', 'ou']}
+
+            if self.dates is None:
+                print("WARNING: No dates provided for Kelly Simulation. Defaulting to sequential indexing.")
+                self.dates = pd.Series(range(len(self.y_test)))
+
+            # 1. Prepare Data
+            o = self._get_outcomes()
+            probs = {'win': self.predictions['win'][:, 1], 'spread': self.predictions['spread'][:, 1], 'over': self.predictions['over'][:, 1]}
+            decimal_odds = {k: self._american_to_decimal(v) for k, v in self.test_odds.items()}
+            
+            sim_df = pd.DataFrame({
+                'date': self.dates.values,
+                'win_prob': probs['win'], 'spread_prob': probs['spread'], 'over_prob': probs['over'],
+                'actual_winner_is_t1': o['actual_winner_is_t1'],
+                'actual_spread_is_t1_cover': o['actual_spread_is_t1_cover'],
+                'spread_pushes': o['spread_pushes'],
+                'actual_is_over': o['actual_is_over'],
+                'ou_pushes': o['ou_pushes'],
+                'team1_ml': decimal_odds['team1_ml'], 'team2_ml': decimal_odds['team2_ml'],
+                'team1_spread': decimal_odds['team1_spread_odds'], 'team2_spread': decimal_odds['team2_spread_odds'],
+                'over_odds': decimal_odds['over_odds'], 'under_odds': decimal_odds['under_odds']
+            })
+
+            sim_df = sim_df.sort_values('date')
+            results = {}
+
+            # 2. Run Simulation for each Bet Type
+            bet_types_config = {
+                'moneyline': {'prob': 'win_prob', 'o1': 'team1_ml', 'o2': 'team2_ml', 'outcome': 'actual_winner_is_t1', 'push': None},
+                'spread': {'prob': 'spread_prob', 'o1': 'team1_spread', 'o2': 'team2_spread', 'outcome': 'actual_spread_is_t1_cover', 'push': 'spread_pushes'},
+                'ou': {'prob': 'over_prob', 'o1': 'over_odds', 'o2': 'under_odds', 'outcome': 'actual_is_over', 'push': 'ou_pushes'}
+            }
+
+            for bet_type, config in bet_types_config.items():
+                bankroll = initial_bankroll
+                total_wagered = 0.0
+                bets_placed = 0
+                
+                # --- DAILY BATCH LOOP ---
+                for date, day_batch in sim_df.groupby('date'):
+                    daily_pnl = 0
+                    daily_bets = [] # Store potential bets here first
+                    total_daily_fraction = 0.0
+
+                    # PASS 1: Identify potential bets and sum their fractions
+                    for _, row in day_batch.iterrows():
+                        if config['push'] and row[config['push']]: continue
+                        
+                        odds1, odds2 = row[config['o1']], row[config['o2']]
+                        if np.isnan(odds1) or np.isnan(odds2): continue
+
+                        prob1 = row[config['prob']]
+                        k1 = self._calculate_kelly_fraction(prob1, odds1)
+                        k2 = self._calculate_kelly_fraction(1 - prob1, odds2)
+                        
+                        chosen_fraction = 0
+                        active_odds = 0
+                        won = False
+
+                        if k1 > k2 and k1 > 0:
+                            chosen_fraction = min(k1, max_fraction)
+                            active_odds = odds1
+                            won = (row[config['outcome']] == 1)
+                        elif k2 > k1 and k2 > 0:
+                            chosen_fraction = min(k2, max_fraction)
+                            active_odds = odds2
+                            won = (row[config['outcome']] == 0)
+                        
+                        if chosen_fraction > 0:
+                            daily_bets.append({
+                                'fraction': chosen_fraction,
+                                'odds': active_odds,
+                                'won': won
+                            })
+                            total_daily_fraction += chosen_fraction
+
+                    # SCALING: Ensure we don't bet >100% of bankroll
+                    scaling_factor = 1.0
+                    if total_daily_fraction > 1.0:
+                        scaling_factor = 1.0 / total_daily_fraction
+
+                    # PASS 2: Execute bets
+                    for bet in daily_bets:
+                        # Scale the fraction
+                        final_fraction = bet['fraction'] * scaling_factor
+                        bet_amount = bankroll * final_fraction
+                        
+                        if bet_amount > 0:
+                            bets_placed += 1
+                            total_wagered += bet_amount
+                            
+                            if bet['won']:
+                                daily_pnl += bet_amount * (bet['odds'] - 1)
+                            else:
+                                daily_pnl -= bet_amount
+
+                    # End of Day: Update Bankroll
+                    bankroll += daily_pnl
+
+                # Calculate ROI
+                roi = ((bankroll - initial_bankroll) / total_wagered * 100) if total_wagered > 0 else 0
+                results[bet_type] = {
+                    'final_bankroll': bankroll,
+                    'bets_placed': bets_placed,
+                    'total_wagered': total_wagered,
+                    'roi': roi
+                }
+
+            return results
 
     def run_probabilistic_monte_carlo(self, n_simulations=1000, initial_bankroll=1000, max_fraction=0.01):
         """Runs a Monte Carlo simulation based on the model's probabilities."""
@@ -518,83 +611,84 @@ class TestModel:
         plt.tight_layout(rect=[0, 0, 1, 0.96])
         #plt.show()
 
-    def display_results(self, initial_bankroll=1000, n_simulations=1000):
-        """Displays the calculated accuracies and PnL."""
-        acc = self.calculate_accuracies()
-        print("\nModel Prediction Accuracy:")
-        print(f"  - Winner Accuracy:     {acc['win_accuracy']:.2%} ({acc['correct_winner_preds']}/{acc['total_games']})")
-        print(f"  - Spread Accuracy:     {acc['spread_accuracy']:.2%} ({acc['correct_spread_preds']}/{acc['num_spread_outcomes']})")
-        print(f"  - Over/Under Accuracy: {acc['total_accuracy']:.2%} ({acc['correct_ou_preds']}/{acc['num_ou_outcomes']})")
+    def display_results(self, initial_bankroll=1000, n_simulations=1000, max_fraction=0.01):
+            """Displays the calculated accuracies and PnL."""
+            acc = self.calculate_accuracies()
+            print("\nModel Prediction Accuracy:")
+            print(f"  - Winner Accuracy:     {acc['win_accuracy']:.2%} ({acc['correct_winner_preds']}/{acc['total_games']})")
+            print(f"  - Spread Accuracy:     {acc['spread_accuracy']:.2%} ({acc['correct_spread_preds']}/{acc['num_spread_outcomes']})")
+            print(f"  - Over/Under Accuracy: {acc['total_accuracy']:.2%} ({acc['correct_ou_preds']}/{acc['num_ou_outcomes']})")
 
-        pnl = self.calculate_pnl_of_all_games()
-        print(f"\nProfit & Loss (flat $1 bets on all available odds):")
-
-        # Moneyline
-        wagered_ml = pnl['moneyline_bets_placed']
-        roi_ml = (pnl['moneyline_pnl'] / wagered_ml * 100) if wagered_ml > 0 else 0
-        print(f"  - Moneyline:      ${pnl['moneyline_pnl']:>8.2f} PnL from {pnl['moneyline_bets_placed']:<4} bets. Total Wagered: ${wagered_ml:.2f}, ROI: {roi_ml:.2f}%")
-
-        # Spread
-        wagered_spread = pnl['spread_bets_placed']
-        roi_spread = (pnl['spread_pnl'] / wagered_spread * 100) if wagered_spread > 0 else 0
-        print(f"  - Spread:         ${pnl['spread_pnl']:>8.2f} PnL from {pnl['spread_bets_placed']:<4} bets. Total Wagered: ${wagered_spread:.2f}, ROI: {roi_spread:.2f}%")
-
-        # Over/Under
-        wagered_ou = pnl['ou_bets_placed']
-        roi_ou = (pnl['ou_pnl'] / wagered_ou * 100) if wagered_ou > 0 else 0
-        print(f"  - Over/Under:     ${pnl['ou_pnl']:>8.2f} PnL from {pnl['ou_bets_placed']:<4} bets. Total Wagered: ${wagered_ou:.2f}, ROI: {roi_ou:.2f}%")
-
-        if isinstance(self.predictions, dict):
-            ev_pnl = self.calculate_pnl_of_game_above_ev_threshold()
-            print("\nPnL on +EV Bets (Classifier Only):")
+            pnl = self.calculate_pnl_of_all_games()
+            print(f"\nProfit & Loss (flat $1 bets on all available odds):")
 
             # Moneyline
-            ml_info = ev_pnl['moneyline']
-            wagered_ml_ev = ml_info['count']
-            roi_ml_ev = (ml_info['pnl'] / wagered_ml_ev * 100) if wagered_ml_ev > 0 else 0
-            print(f"  - Moneyline:      ${ml_info['pnl']:>8.2f} PnL from {ml_info['count']:<4} bets. Total Wagered: ${wagered_ml_ev:.2f}, ROI: {roi_ml_ev:.2f}%")
+            wagered_ml = pnl['moneyline_bets_placed']
+            roi_ml = (pnl['moneyline_pnl'] / wagered_ml * 100) if wagered_ml > 0 else 0
+            print(f"  - Moneyline:      ${pnl['moneyline_pnl']:>8.2f} PnL from {pnl['moneyline_bets_placed']:<4} bets. Total Wagered: ${wagered_ml:.2f}, ROI: {roi_ml:.2f}%")
 
             # Spread
-            spread_info = ev_pnl['spread']
-            wagered_spread_ev = spread_info['count']
-            roi_spread_ev = (spread_info['pnl'] / wagered_spread_ev * 100) if wagered_spread_ev > 0 else 0
-            print(f"  - Spread:         ${spread_info['pnl']:>8.2f} PnL from {spread_info['count']:<4} bets. Total Wagered: ${wagered_spread_ev:.2f}, ROI: {roi_spread_ev:.2f}%")
+            wagered_spread = pnl['spread_bets_placed']
+            roi_spread = (pnl['spread_pnl'] / wagered_spread * 100) if wagered_spread > 0 else 0
+            print(f"  - Spread:         ${pnl['spread_pnl']:>8.2f} PnL from {pnl['spread_bets_placed']:<4} bets. Total Wagered: ${wagered_spread:.2f}, ROI: {roi_spread:.2f}%")
 
             # Over/Under
-            ou_info = ev_pnl['ou']
-            wagered_ou_ev = ou_info['count']
-            roi_ou_ev = (ou_info['pnl'] / wagered_ou_ev * 100) if wagered_ou_ev > 0 else 0
-            print(f"  - Over/Under:     ${ou_info['pnl']:>8.2f} PnL from {ou_info['count']:<4} bets. Total Wagered: ${wagered_ou_ev:.2f}, ROI: {roi_ou_ev:.2f}%")
+            wagered_ou = pnl['ou_bets_placed']
+            roi_ou = (pnl['ou_pnl'] / wagered_ou * 100) if wagered_ou > 0 else 0
+            print(f"  - Over/Under:     ${pnl['ou_pnl']:>8.2f} PnL from {pnl['ou_bets_placed']:<4} bets. Total Wagered: ${wagered_ou:.2f}, ROI: {roi_ou:.2f}%")
 
-            self.calculate_p_values()
+            if isinstance(self.predictions, dict):
+                ev_pnl = self.calculate_pnl_of_game_above_ev_threshold()
+                print("\nPnL on +EV Bets (Classifier Only):")
 
-            kelly_results = self.simulate_kelly_betting(initial_bankroll=initial_bankroll)
-            print(f"\nKelly Criterion Simulation (Historical Backtest):")
+                # Moneyline
+                ml_info = ev_pnl['moneyline']
+                wagered_ml_ev = ml_info['count']
+                roi_ml_ev = (ml_info['pnl'] / wagered_ml_ev * 100) if wagered_ml_ev > 0 else 0
+                print(f"  - Moneyline:      ${ml_info['pnl']:>8.2f} PnL from {ml_info['count']:<4} bets. Total Wagered: ${wagered_ml_ev:.2f}, ROI: {roi_ml_ev:.2f}%")
 
-            # Moneyline
-            kelly_ml = kelly_results['moneyline']
-            profit_ml = kelly_ml['final_bankroll'] - initial_bankroll
-            wagered_ml = kelly_ml['total_wagered']
-            roi_ml = (profit_ml / wagered_ml * 100) if wagered_ml > 0 else 0
-            print(f"  - Moneyline:  Profit: ${profit_ml:>8.2f}. Total Wagered: ${wagered_ml:,.2f}, ROI: {roi_ml:.2f}%. Final Bankroll: ${kelly_ml['final_bankroll']:,.2f}")
+                # Spread
+                spread_info = ev_pnl['spread']
+                wagered_spread_ev = spread_info['count']
+                roi_spread_ev = (spread_info['pnl'] / wagered_spread_ev * 100) if wagered_spread_ev > 0 else 0
+                print(f"  - Spread:         ${spread_info['pnl']:>8.2f} PnL from {spread_info['count']:<4} bets. Total Wagered: ${wagered_spread_ev:.2f}, ROI: {roi_spread_ev:.2f}%")
 
-            # Spread
-            kelly_spread = kelly_results['spread']
-            profit_spread = kelly_spread['final_bankroll'] - initial_bankroll
-            wagered_spread = kelly_spread['total_wagered']
-            roi_spread = (profit_spread / wagered_spread * 100) if wagered_spread > 0 else 0
-            print(f"  - Spread:     Profit: ${profit_spread:>8.2f}. Total Wagered: ${wagered_spread:,.2f}, ROI: {roi_spread:.2f}%. Final Bankroll: ${kelly_spread['final_bankroll']:,.2f}")
+                # Over/Under
+                ou_info = ev_pnl['ou']
+                wagered_ou_ev = ou_info['count']
+                roi_ou_ev = (ou_info['pnl'] / wagered_ou_ev * 100) if wagered_ou_ev > 0 else 0
+                print(f"  - Over/Under:     ${ou_info['pnl']:>8.2f} PnL from {ou_info['count']:<4} bets. Total Wagered: ${wagered_ou_ev:.2f}, ROI: {roi_ou_ev:.2f}%")
 
-            # Over/Under
-            kelly_ou = kelly_results['ou']
-            profit_ou = kelly_ou['final_bankroll'] - initial_bankroll
-            wagered_ou = kelly_ou['total_wagered']
-            roi_ou = (profit_ou / wagered_ou * 100) if wagered_ou > 0 else 0
-            print(f"  - Over/Under: Profit: ${profit_ou:>8.2f}. Total Wagered: ${wagered_ou:,.2f}, ROI: {roi_ou:.2f}%. Final Bankroll: ${kelly_ou['final_bankroll']:,.2f}")
-            
-            self.check_calibration()
-            self.run_probabilistic_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
-            self.run_market_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
-            self.run_bootstrap_simulation(n_simulations=n_simulations, initial_bankroll=initial_bankroll)
+                self.calculate_p_values()
 
-        print("\n------------------------------------")
+                # --- CHANGE IS HERE: Passing max_fraction ---
+                kelly_results = self.simulate_kelly_betting(initial_bankroll=initial_bankroll, max_fraction=max_fraction)
+                print(f"\nKelly Criterion Simulation (Historical Backtest) [Max Bet: {max_fraction:.1%}]:")
+
+                # Moneyline
+                kelly_ml = kelly_results['moneyline']
+                profit_ml = kelly_ml['final_bankroll'] - initial_bankroll
+                wagered_ml = kelly_ml['total_wagered']
+                roi_ml = (profit_ml / wagered_ml * 100) if wagered_ml > 0 else 0
+                print(f"  - Moneyline:  Profit: ${profit_ml:>8.2f}. Total Wagered: ${wagered_ml:,.2f}, ROI: {roi_ml:.2f}%. Final Bankroll: ${kelly_ml['final_bankroll']:,.2f}")
+
+                # Spread
+                kelly_spread = kelly_results['spread']
+                profit_spread = kelly_spread['final_bankroll'] - initial_bankroll
+                wagered_spread = kelly_spread['total_wagered']
+                roi_spread = (profit_spread / wagered_spread * 100) if wagered_spread > 0 else 0
+                print(f"  - Spread:     Profit: ${profit_spread:>8.2f}. Total Wagered: ${wagered_spread:,.2f}, ROI: {roi_spread:.2f}%. Final Bankroll: ${kelly_spread['final_bankroll']:,.2f}")
+
+                # Over/Under
+                kelly_ou = kelly_results['ou']
+                profit_ou = kelly_ou['final_bankroll'] - initial_bankroll
+                wagered_ou = kelly_ou['total_wagered']
+                roi_ou = (profit_ou / wagered_ou * 100) if wagered_ou > 0 else 0
+                print(f"  - Over/Under: Profit: ${profit_ou:>8.2f}. Total Wagered: ${wagered_ou:,.2f}, ROI: {roi_ou:.2f}%. Final Bankroll: ${kelly_ou['final_bankroll']:,.2f}")
+                
+                self.check_calibration()
+                self.run_probabilistic_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll, max_fraction=max_fraction)
+                self.run_market_monte_carlo(n_simulations=n_simulations, initial_bankroll=initial_bankroll, max_fraction=max_fraction)
+                self.run_bootstrap_simulation(n_simulations=n_simulations, initial_bankroll=initial_bankroll, max_fraction=max_fraction)
+
+            print("\n------------------------------------")
