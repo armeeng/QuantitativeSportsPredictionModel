@@ -27,7 +27,7 @@ STATS_COLUMN = "stats"
 TOP_N_FEATURES_TO_LIST = 50
 
 # 1. CHOOSE THE SPORT TO RUN THE ANALYSIS ON
-SPORT_TO_RUN = 'CFB' # Options: 'NBA', 'NFL', 'CFB', 'CBB', 'MLB'
+SPORT_TO_RUN = 'CBB' # Options: 'NBA', 'NFL', 'CFB', 'CBB', 'MLB'
 
 # 2. CHOOSE THE TARGET VARIABLE
 # Options: 'team1_wins', 'team1_covers', 'over'
@@ -96,12 +96,12 @@ def run_univariate_feature_test(X: np.ndarray, y: pd.Series, feature_names: list
 
             # Create a pipeline to scale data before fitting the logistic regression
             #model = lgb.LGBMClassifier(objective='binary', random_state=42, verbosity=-1)
-            #model = make_pipeline(StandardScaler(), LogisticRegression(random_state=42))
-            model = xgb.XGBClassifier(
-                objective='binary:logistic',  # Use 'binary:logistic' for probabilities
-                random_state=42,              # For reproducibility, matching your original code
-                eval_metric='logloss'         # Suppresses a warning about the default eval metric
-            )
+            model = make_pipeline(StandardScaler(), LogisticRegression(random_state=42))
+            # model = xgb.XGBClassifier(
+            #     objective='binary:logistic',  # Use 'binary:logistic' for probabilities
+            #     random_state=42,              # For reproducibility, matching your original code
+            #     eval_metric='logloss'         # Suppresses a warning about the default eval metric
+            # )
             model.fit(X_train, y_train)
             
             probabilities = model.predict_proba(X_val)[:, 1]

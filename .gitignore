@@ -10,3 +10,5 @@ Feature_Importance_copy/
 .idea/
 models_old/
 models_current/
+*.xlsx
+*.txt

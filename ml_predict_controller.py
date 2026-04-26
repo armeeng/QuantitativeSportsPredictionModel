@@ -51,7 +51,7 @@ def main():
     
     # Get today's date to query for future games
     today_str = date.today().strftime('%Y-%m-%d')
-    today_str = '2025-08-10'
+    today_str = '2026-03-16'
 
     # 2. Loop through each model file to make predictions
     for model_name in model_files:

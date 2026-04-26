@@ -29,8 +29,8 @@ except ImportError as e:
 # ==============================================================================
 # --- MAIN CONFIGURATION ---
 # ==============================================================================
-SPORT_TO_RUN = 'CFB'
-CANDIDATE_FEATURES = [85, 105, 107, 156, 157, 158, 159, 160, 210, 244, 245, 246, 247, 248, 252, 254, 255, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 308, 319, 320, 409, 907, 908, 909, 910, 911, 1018, 1019, 1020, 1021, 1022, 1089, 1094, 1096, 1099, 1101, 1104, 1106, 1109, 1111]
+SPORT_TO_RUN = 'CBB'
+CANDIDATE_FEATURES = [48, 64, 69, 71, 72, 73, 157, 159, 160, 231, 232, 233, 234, 239, 241, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 282, 284, 285, 355, 360, 675, 760, 761, 762, 763, 764, 769, 771, 778, 779, 780, 781, 782, 922, 927, 928, 929, 930, 931, 948]
 SEASONS = {
     'NBA': [('21-22', '2021-10-18', '2022-06-20'), ('22-23', '2022-10-17', '2023-06-20'), ('23-24', '2023-10-23', '2024-06-20'), ('24-25', '2024-10-21', '2025-06-20')],
     'NFL': [('21-22', '2021-09-08', '2022-02-15'), ('22-23', '2022-09-07', '2023-02-15'), ('23-24', '2023-09-06', '2024-02-15'), ('24-25', '2024-09-04', '2025-02-15')],
@@ -71,12 +71,12 @@ def parse_output(output_text: str) -> dict:
 
 # --- CORE LOGIC: TRAINING & EVALUATION (Unchanged) ---------------------------
 def run_training_for_combination(num_feat: list, train_query: str, test_query: str):
-    MODEL_TYPE, COLUMN = "xgboost_classifier", "stats"
+    MODEL_TYPE, COLUMN = "logistic_regression", "stats"
     MODEL_NAME = build_model_name(MODEL_TYPE, COLUMN, SPORT_TO_RUN)
     model = MLModel(
         MODEL_NAME, MODEL_TYPE, column=COLUMN, hyperparameter_tuning=False, random_state=130,
         numerical_feature_indices=num_feat, categorical_feature_names=[],
-        include_market_spread=True, include_market_total=True,
+        include_market_spread=False, include_market_total=False,
         feature_engineering_mode='differential', calibrate_model=False,
     )
     model.train(train_query, test_query)
